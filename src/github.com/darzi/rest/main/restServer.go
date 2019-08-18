@@ -5,11 +5,6 @@ import (
 	"net/http"
 )
 
-// import _ "github.com/jinzhu/gorm/dialects/mysql"
-// import _ "github.com/jinzhu/gorm/dialects/postgres"
-// import _ "github.com/jinzhu/gorm/dialects/sqlite"
-// import _ "github.com/jinzhu/gorm/dialects/mssql"
-
 type User struct {
 	Name  string `json:"name" xml:"name" form:"name" query:"name"`
 	Email string `json:"email" xml:"email" form:"email" query:"email"`

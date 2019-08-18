@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/darzi/backend/models"
+	"github.com/darzi/backend/schema"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"time"
 )
 
 // import _ "github.com/jinzhu/gorm/dialects/mysql"
@@ -12,55 +13,46 @@ import (
 // import _ "github.com/jinzhu/gorm/dialects/sqlite"
 // import _ "github.com/jinzhu/gorm/dialects/mssql"
 
-type Model struct {
-	ID        uint `gorm:"primary_key"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	//DeletedAt *time.Time `sql:"index"`	//Will help to perform deletion as soft
-}
-
-type ModelNoPK struct {
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	//DeletedAt *time.Time `sql:"index"`	//Will help to perform deletion as soft
-}
-
-type Product struct {
-	Model
-	Code  string
-	Price uint
-}
-
 func main() {
 	db, err := gorm.Open("mysql", "root:Password1@/darzi?charset=utf8&parseTime=True&loc=Local")
 
 	if err != nil {
+		fmt.Println("Error: " + err.Error())
 		fmt.Println("Not Working :(")
 	}
 
 	defer db.Close()
 
-	// Migrate the schema
-	db.AutoMigrate(&Product{})
+	schema.CreateMySQLSchema(db)
 
-	// Create
-	db.Create(&Product{Code: "L12121", Price: 1000})
-	db.Create(&Product{Code: "L12122", Price: 2000})
-	db.Create(&Product{Code: "L12123", Price: 3000})
-	db.Create(&Product{Code: "L12124", Price: 4000})
+	db.Create(&models.User{Username: "nabbaasi", Password: "x"})
+
+	customer := &models.Customer{}
+	customer.FirstName = "Customer"
+	customer.LastName = "Abbasi"
+	customer.MobileNumber = "03012525461"
+	customer.Status = "in_process"
+	db.Create(&models.Customer{Person: customer.Person})
+
+	worker := &models.Worker{}
+	worker.FirstName = "Noman Ali"
+	worker.LastName = "Abbasi"
+	worker.MobileNumber = "03012525461"
+	db.Create(&models.Worker{Person: worker.Person})
 
 	// Read
-	var product Product
-	db.First(&product, 1) // find product with id 1
-	fmt.Println(product)
+	var user models.User
+	db.First(&user, "username = ?", "nabbasi") // find user with username nabbasi
+	fmt.Println(user)
 
-	db.First(&product, "code = ? and price = ?", "L12122", 2000) // find product with code l1212
-	fmt.Println(product)
+	db.First(&user, "username = ? and password = ?", "nabbaasi", "x") // find user with username and password
+	fmt.Println(user)
 
-	// Update - update product's price to 2000
-	db.Model(&product).Update("Price", 2000)
-	fmt.Println(product)
+	// Update - update user's username
+	update := db.Model(&user).Update("username", "nabbasi")
+	fmt.Println(update.RowsAffected)
 
-	// Delete - delete product
-	db.Delete(&product)
+	// Delete - delete user
+	//db.Delete(&user)
+	schema.DropSchema(db)
 }
