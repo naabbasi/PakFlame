@@ -31,7 +31,8 @@ func main() {
 		// return c.XML(http.StatusCreated, u)
 	})
 
-	e.Static("/static", "static")
+	e.Static("/static", "assets")
+	e.File("/", "views/index.html")
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
