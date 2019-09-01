@@ -1,7 +1,10 @@
-echo GOPATH=E:\Learning\go-lang\workspace\darzi
+echo Compiling and Generating webassembly
 set GOOS=js
 set GOARCH=wasm
+set WASM_EXEC_PATH=%GOROOT%\misc\wasm\wasm_exec.js
 
-%GOROOT%\bin\go build -o ../frontend/assets/lib.wasm hello.go
+echo GOROOT %GOROOT%
+echo GOPATH %GOPATH%
 
-xcopy /Y %GOROOT%\misc\wasm\wasm_exec.js %cd%\..\frontend\assets\js\
+%GOROOT%\bin\go build -o ../app/build/static/lib.wasm hello.go
+xcopy "%GOROOT%\misc\wasm\wasm_exec.js" "../app/build/static/js"

@@ -16,3 +16,5 @@ vendor
 .idea
 pkg
 bin
+node_modules
+build

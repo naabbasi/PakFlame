@@ -3,16 +3,18 @@ package main
 import (
 	"github.com/labstack/echo"
 	"net/http"
+	"strconv"
 )
 
 type User struct {
+	ID    int64  `json: "id"`
 	Name  string `json:"name" xml:"name" form:"name" query:"name"`
 	Email string `json:"email" xml:"email" form:"email" query:"email"`
 }
 
 func main() {
 	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
+	e.GET("/hello", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
@@ -31,8 +33,8 @@ func main() {
 		// return c.XML(http.StatusCreated, u)
 	})
 
-	e.Static("/static", "assets")
-	e.File("/", "views/index.html")
+	e.Static("/static", "app/static")
+	e.Static("/", "app")
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
@@ -40,8 +42,9 @@ func main() {
 // e.GET("/users/:id", getUser)
 func getUser(c echo.Context) error {
 	// User ID from path `users/:id`
-	id := c.Param("id")
-	return c.String(http.StatusOK, id)
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	//return c.String(http.StatusOK, id)
+	return c.JSON(http.StatusCreated, &User{ID: id, Name: "Noman Ali Abbasi"})
 }
 
 // e.GET("/users/:id", updateUser)

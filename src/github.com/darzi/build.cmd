@@ -1,15 +1,22 @@
 @echo off
-set current_dir = %cd%
+set GOOS=windows
+set GOARCH=amd64
+
+echo GOROOT %GOROOT%
+echo GOPATH %GOPATH%
 
 %GOROOT%\bin\dep ensure
 
-%GOROOT%\bin\go build -o ../../../bin/app.exe github.com/darzi/rest/main
+%GOROOT%\bin\go build -o ../../../bin/app.exe github.com/darzi/rest/main/
 
-cd webassembly
-
-call buildWebAssembly.cmd
+cd app
+call npm run build
 
 cd ..
+cd webassembly
+call buildWebAssembly.cmd
 
-xcopy /E /Y frontend\assets %cd%\..\..\..\bin\assets\
-xcopy /E /Y frontend\views %cd%\..\..\..\bin\views\
+echo Copying frontend to bin folder
+cd ..
+echo %cd%
+xcopy /E /Y app\build\* ..\..\..\bin\app\
