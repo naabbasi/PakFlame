@@ -1,9 +1,17 @@
 package main
 
 import (
+	"github.com/darzi/backend"
+	"github.com/darzi/backend/models"
+	"github.com/darzi/backend/schema"
+	"github.com/darzi/rest/api"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"net/http"
 	"strconv"
+
+	"github.com/darzi/config"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 type User struct {
@@ -14,16 +22,48 @@ type User struct {
 
 func main() {
 	e := echo.New()
-	e.GET("/hello", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.OPTIONS},
+		AllowCredentials: true,
+		ExposeHeaders:    []string{echo.HeaderContentDisposition},
+	}))
+
+	config := config.NewConfig()
+	db := backend.NewDB(config)
+	schema.CreatePostgreSQLSchema(db.GetDBConnection())
+
+	customers := api.NewCustomer(e)
+	customers.GetCustomers()
+	customers.AddCustomer()
+	customers.DeleteCustomer()
+
+	workers := api.NewWorker(e)
+	workers.Get()
+	workers.AddWorker()
+	workers.DeleteWorker()
+
+	//e.POST("/api/users", saveUser)
+	e.GET("/api/users/:id", getUser)
+	e.PUT("/api/users/:id", updateUser)
+	//e.DELETE("/api/users/:id", deleteUser)
+
+	e.GET("/api/users", func(c echo.Context) error {
+		u := new(models.Customer)
+		u.FirstName = "Will be fetch from DB"
+		u.LastName = "Will be fetch from DB"
+		u.MobileNumber = "Will be fetch from DB"
+		u.Status = "Will be fetch from DB"
+
+		if err := c.Bind(u); err != nil {
+			return err
+		}
+		return c.JSON(http.StatusOK, u)
+		// or
+		// return c.XML(http.StatusCreated, u)
 	})
 
-	//e.POST("/users", saveUser)
-	e.GET("/users/:id", getUser)
-	e.PUT("/users/:id", updateUser)
-	//e.DELETE("/users/:id", deleteUser)
-
-	e.POST("/users", func(c echo.Context) error {
+	e.POST("/api/users", func(c echo.Context) error {
 		u := new(User)
 		if err := c.Bind(u); err != nil {
 			return err
@@ -39,7 +79,7 @@ func main() {
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
-// e.GET("/users/:id", getUser)
+// e.GET("/api/users/:id", getUser)
 func getUser(c echo.Context) error {
 	// User ID from path `users/:id`
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
@@ -47,14 +87,14 @@ func getUser(c echo.Context) error {
 	return c.JSON(http.StatusCreated, &User{ID: id, Name: "Noman Ali Abbasi"})
 }
 
-// e.GET("/users/:id", updateUser)
+// e.GET("/api/users/:id", updateUser)
 func updateUser(c echo.Context) error {
 	// User ID from path `users/:id`
 	id := c.Param("id")
 	return c.String(http.StatusOK, id)
 }
 
-//e.GET("/show", show)
+//e.GET("/api/show", show)
 func show(c echo.Context) error {
 	// Get team and member from the query string
 	team := c.QueryParam("team")
@@ -62,7 +102,7 @@ func show(c echo.Context) error {
 	return c.String(http.StatusOK, "team:"+team+", member:"+member)
 }
 
-// e.POST("/save", save)
+// e.POST("/api/save", save)
 func save(c echo.Context) error {
 	// Get name and email
 	name := c.FormValue("name")

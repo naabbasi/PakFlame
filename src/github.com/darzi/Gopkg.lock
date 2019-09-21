@@ -2,27 +2,19 @@
 
 
 [[projects]]
-  digest = "1:e692d16fdfbddb94e9e4886aaf6c08bdbae5cb4ac80651445de9181b371c6e46"
-  name = "github.com/go-sql-driver/mysql"
+  digest = "1:6098222470fe0172157ce9bbef5d2200df4edde17ee649c5d6e48330e4afa4c6"
+  name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
   pruneopts = ""
-  revision = "72cd26f257d44c1114970e19afddcd812016007e"
-  version = "v1.4.1"
-
-[[projects]]
-  digest = "1:ad92aa49f34cbc3546063c7eb2cabb55ee2278b72842eda80e2a20a8a06a8d73"
-  name = "github.com/google/uuid"
-  packages = ["."]
-  pruneopts = ""
-  revision = "0cd6bf5da1e1c83f8b45653022c74f71af0538a4"
-  version = "v1.1.1"
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
 
 [[projects]]
   digest = "1:3755c1a3de6404d58d7767562d00a84ee4a507df69a1490c9cebb931d7b11b96"
   name = "github.com/jinzhu/gorm"
   packages = [
     ".",
-    "dialects/mysql",
+    "dialects/postgres",
   ]
   pruneopts = ""
   revision = "836fb2c19d84dac7b0272958dfb9af7cf0d0ade4"
@@ -37,23 +29,41 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:d301a9ef97a225925f76c4eef7a21498af4c7a2b9e2a3135904cc3ef064d4301"
+  digest = "1:4beb546223497fdc767dd15f2f48e271598817cecda2beaf2ad7bf43282d5bf7"
   name = "github.com/labstack/echo"
-  packages = ["."]
+  packages = [
+    ".",
+    "middleware",
+  ]
   pruneopts = ""
-  revision = "88a9ad73ec5303231a3b843960cefaa8fe666510"
-  version = "v4.1.10"
+  revision = "38772c686c76b501f94bd6cd5b77f5842e93b559"
+  version = "v3.3.10"
 
 [[projects]]
   digest = "1:a9554efb4c5688083ede9e3df301f2aac7575d48d0fe4d7df5734c9534d73600"
   name = "github.com/labstack/gommon"
   packages = [
+    "bytes",
     "color",
     "log",
+    "random",
   ]
   pruneopts = ""
   revision = "4919956f6fb227b548f004da27c7c6b20fba499f"
   version = "v0.3.0"
+
+[[projects]]
+  digest = "1:f4216047c24ab66fb757045febd7dac4edc6f4ad9f6c0063d0755d654d04f25e"
+  name = "github.com/lib/pq"
+  packages = [
+    ".",
+    "hstore",
+    "oid",
+    "scram",
+  ]
+  pruneopts = ""
+  revision = "3427c32cb71afc948325f299f040e53c1dd78979"
+  version = "v1.2.0"
 
 [[projects]]
   digest = "1:d260ca4db8ced0871a1c06440b1e5835e2d982ed660ca529957d67f28cf24592"
@@ -139,22 +149,15 @@
   revision = "342b2e1fbaa52c93f31447ad2c6abc048c63e475"
   version = "v0.3.2"
 
-[[projects]]
-  digest = "1:47f391ee443f578f01168347818cb234ed819521e49e4d2c8dd2fb80d48ee41a"
-  name = "google.golang.org/appengine"
-  packages = ["cloudsql"]
-  pruneopts = ""
-  revision = "b2f4a3cf3c67576a2ee09e1fe62656a5086ce880"
-  version = "v1.6.1"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/google/uuid",
     "github.com/jinzhu/gorm",
-    "github.com/jinzhu/gorm/dialects/mysql",
+    "github.com/jinzhu/gorm/dialects/postgres",
     "github.com/labstack/echo",
+    "github.com/labstack/echo/middleware",
+    "github.com/labstack/gommon/log",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
