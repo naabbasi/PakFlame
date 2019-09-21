@@ -11,7 +11,6 @@ export default class Worker extends GenericComponent {
     constructor() {
         super();
         this.state = {};
-        //this.workerservice = new workerservice();
         this.save = this.save.bind(this);
         this.delete = this.delete.bind(this);
         this.onWorkerSelect = this.onWorkerSelect.bind(this);
