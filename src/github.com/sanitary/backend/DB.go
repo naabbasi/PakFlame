@@ -2,9 +2,9 @@ package backend
 
 import (
 	"fmt"
-	"github.com/darzi/config"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/gommon/log"
+	"github.com/sanitary/config"
 )
 
 type db struct {

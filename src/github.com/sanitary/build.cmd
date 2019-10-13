@@ -7,7 +7,7 @@ echo GOPATH %GOPATH%
 
 %GOROOT%\bin\dep ensure
 
-%GOROOT%\bin\go build -o ../../../bin/app.exe github.com/darzi/rest/main/
+%GOROOT%\bin\go build -o ../../../bin/AbuZarTrader.exe github.com/sanitary/rest/main/
 
 cd app
 call npm run build

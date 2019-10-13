@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/darzi/backend"
-	"github.com/darzi/backend/models"
-	"github.com/darzi/backend/schema"
-	"github.com/darzi/config"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/sanitary/backend"
+	"github.com/sanitary/backend/models"
+	"github.com/sanitary/backend/schema"
+	"github.com/sanitary/config"
 )
 
 // import _ "github.com/jinzhu/gorm/dialects/mysql"
@@ -16,7 +16,7 @@ import (
 
 func main() {
 	//db, err := gorm.Open("postgres", "username=root host=127.0.0.1 port=")
-	/*db, err := gorm.Open("mysql", "root:Password1@/darzi?charset=utf8&parseTime=True&loc=Local")
+	/*db, err := gorm.Open("mysql", "root:Password1@/sanitary?charset=utf8&parseTime=True&loc=Local")
 
 	if err != nil {
 		fmt.Println("Error: " + err.Error())

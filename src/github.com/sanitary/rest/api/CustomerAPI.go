@@ -1,10 +1,10 @@
 package api
 
 import (
-	"github.com/darzi/backend/models"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
+	"github.com/sanitary/backend/models"
 	"net/http"
 )
 

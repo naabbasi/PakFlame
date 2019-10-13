@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/darzi/backend/models"
 	"github.com/labstack/echo"
+	"github.com/sanitary/backend/models"
 	"log"
 	"net/http"
 )

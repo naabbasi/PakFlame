@@ -1,8 +1,8 @@
 package schema
 
 import (
-	"github.com/darzi/backend/models"
 	"github.com/jinzhu/gorm"
+	"github.com/sanitary/backend/models"
 )
 
 func CreateMySQLSchema(db *gorm.DB) {

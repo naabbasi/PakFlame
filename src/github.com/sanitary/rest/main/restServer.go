@@ -1,17 +1,17 @@
 package main
 
 import (
-	"github.com/darzi/backend"
-	"github.com/darzi/backend/models"
-	"github.com/darzi/backend/schema"
-	"github.com/darzi/rest/api"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/sanitary/backend"
+	"github.com/sanitary/backend/models"
+	"github.com/sanitary/backend/schema"
+	"github.com/sanitary/rest/api"
 	"net/http"
 	"strconv"
 
-	"github.com/darzi/config"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/sanitary/config"
 )
 
 type User struct {

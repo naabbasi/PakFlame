@@ -18,6 +18,6 @@ func NewConfig() *Config {
 		Username:     "root",
 		Password:     "",
 		Host:         "localhost",
-		DatabaseName: "darzi",
+		DatabaseName: "sanitary",
 	}
 }
