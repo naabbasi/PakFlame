@@ -21,7 +21,7 @@ type customers struct {
 	echo *echo.Echo
 }
 
-var allCustomer = make([]models.Customer, 10)
+var allCustomer []*models.Customer
 
 func NewCustomer(e *echo.Echo) *customers {
 	return &customers{echo: e}
@@ -29,32 +29,37 @@ func NewCustomer(e *echo.Echo) *customers {
 
 func (customer *customers) GetCustomers() {
 	customer.echo.GET(CustomerEndPoint, func(c echo.Context) error {
-		var customer = [...]models.Customer{
-			{
-				Status: "active",
-				Person: models.Person{FirstName: "Noman Ali", LastName: "Abbasi", MobileNumber: "03012525461"},
-			}, {
-				Status: "delivered",
-				Person: models.Person{FirstName: "Farhan Ali", LastName: "Abbasi", MobileNumber: "03012525461"},
-			}, {
-				Status: "in_progress",
-				Person: models.Person{FirstName: "Arsalan Ali", LastName: "Abbasi", MobileNumber: "03012525461"},
-			},
+		customer1 := &models.Customer{
+			Status: "active",
+			Person: models.Person{FirstName: "Noman Ali", LastName: "Abbasi", MobileNumber: "03012525461"},
 		}
 
-		return c.JSON(http.StatusOK, customer)
+		customer2 := &models.Customer{
+			Status: "active",
+			Person: models.Person{FirstName: "Farhan Ali", LastName: "REST", MobileNumber: "03012525461"},
+		}
+
+		customer3 := &models.Customer{
+			Status: "active",
+			Person: models.Person{FirstName: "Arsalan Ali", LastName: "REST", MobileNumber: "03012525461"},
+		}
+
+		allCustomer = append(allCustomer, customer1, customer2, customer3)
+
+		return c.JSON(http.StatusOK, allCustomer)
 	})
 }
 
 func (customer *customers) AddCustomer() {
 	customer.echo.POST(CustomerEndPoint, func(c echo.Context) error {
-		customer := new(models.Customer)
-		if err := c.Bind(customer); err != nil {
+		cus := new(models.Customer)
+		if err := c.Bind(cus); err != nil {
 			return err
 		}
-		log.Printf("Customer saved with %s", customer)
+		log.Printf("Customer saved with %s", cus)
 
-		return c.JSON(http.StatusCreated, customer)
+		allCustomer = append(allCustomer, cus)
+		return c.JSON(http.StatusCreated, allCustomer)
 	})
 }
 

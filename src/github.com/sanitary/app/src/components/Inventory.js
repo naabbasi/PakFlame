@@ -7,7 +7,7 @@ import {InputText} from "primereact/inputtext";
 
 import {GenericComponent} from "./GenericComponent";
 
-export default class Customer extends GenericComponent {
+export default class Inventory extends GenericComponent {
     constructor() {
         super();
         this.state = {};
@@ -44,7 +44,8 @@ export default class Customer extends GenericComponent {
                 // handle success
                 console.log(response);
                 if(response.status === 201){
-                    this.setState({customers: response.data, selectedCustomer:null, customer: null, displayDialog:false});
+                    customers.push(response.data);
+                    this.setState({customers:customers, selectedCustomer:null, customer: null, displayDialog:false});
                 }
             })
             .catch(function (error) {
@@ -97,11 +98,11 @@ export default class Customer extends GenericComponent {
     }
 
     render() {
-        let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>Customers Information</div>;
+        let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>Inventory Information</div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
             <Button style={{float:'left'}} label="Add" icon="pi pi-plus" onClick={this.addNew}/>
-        </div>;
+        </div>
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
             <Button label="Delete" icon="pi pi-times" onClick={this.delete}/>
@@ -114,10 +115,12 @@ export default class Customer extends GenericComponent {
                     <DataTable value={this.state.customers} paginator={true} rows={15}  header={header} footer={footer}
                                selectionMode="single" selection={this.state.selectedCustomer} onSelectionChange={e => this.setState({selectedCustomer: e.value})}
                                onRowSelect={this.onCustomerSelect}>
-                        <Column field="firstname" header="First Name" sortable={true} />
-                        <Column field="lastname" header="Last Name" sortable={true} />
-                        <Column field="mobileNumber" header="Mobile Number" sortable={true} />
-                        <Column field="status" header="Status" sortable={true} />
+                        <Column field="firstname" header="Item Name" sortable={true} />
+                        <Column field="status" header="Quantity" sortable={true} />
+                        <Column field="lastname" header="Purchase Date" sortable={true} />
+                        <Column field="lastname" header="Purchase Rate" sortable={true} />
+                        <Column field="mobileNumber" header="Wholesale Rate" sortable={true} />
+                        <Column field="status" header="Retail Rate" sortable={true} />
                     </DataTable>
 
                     <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Customer Details" modal={true} footer={dialogFooter} onHide={() => this.setState({displayDialog: false})}>

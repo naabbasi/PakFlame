@@ -11,6 +11,8 @@ const (
 	WorkerEndPoint = "/api/workers"
 )
 
+var allWorkers []*models.Worker
+
 type workers struct {
 	echo *echo.Echo
 }
@@ -21,38 +23,50 @@ func NewWorker(e *echo.Echo) workers {
 
 func (worker *workers) Get() {
 	worker.echo.GET(WorkerEndPoint, func(c echo.Context) error {
-		u := [...]models.Worker{
-			{
-				Status:  "working",
-				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
-				Person: models.Person{
-					FirstName:    "Noman Ali",
-					LastName:     "Abbasi",
-					MobileNumber: "03012525461",
-				},
-			}, {
-				Status:  "left",
-				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
-				Person: models.Person{
-					FirstName:    "Farhan Ali",
-					LastName:     "Abbasi",
-					MobileNumber: "03012525461",
-				},
+		worker1 := &models.Worker{
+			Status:  "working",
+			Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+			Person: models.Person{
+				FirstName:    "Noman Ali",
+				LastName:     "Abbasi",
+				MobileNumber: "03012525461",
 			},
 		}
 
-		return c.JSON(http.StatusOK, u)
+		worker2 := &models.Worker{
+			Status:  "working",
+			Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+			Person: models.Person{
+				FirstName:    "Arsalan Ali",
+				LastName:     "Abbasi",
+				MobileNumber: "03012525461",
+			},
+		}
+
+		worker3 := &models.Worker{
+			Status:  "left",
+			Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+			Person: models.Person{
+				FirstName:    "Farhan Ali",
+				LastName:     "Abbasi",
+				MobileNumber: "03012525461",
+			},
+		}
+
+		allWorkers = append(allWorkers, worker1, worker2, worker3)
+		return c.JSON(http.StatusOK, allWorkers)
 	})
 }
 func (worker *workers) AddWorker() {
 	worker.echo.POST(WorkerEndPoint, func(c echo.Context) error {
-		customer := new(models.Customer)
-		if err := c.Bind(customer); err != nil {
+		worker := new(models.Worker)
+		if err := c.Bind(worker); err != nil {
 			return err
 		}
-		log.Printf("Worker saved with %s", customer.FirstName)
+		log.Printf("Worker saved with %s", worker.FirstName)
 
-		return c.JSON(http.StatusCreated, customer)
+		allWorkers = append(allWorkers, worker)
+		return c.JSON(http.StatusCreated, allWorkers)
 	})
 }
 

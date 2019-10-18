@@ -23,6 +23,7 @@ func CreatePostgreSQLSchema(db *gorm.DB) {
 	db.Model(&models.User{}).AddUniqueIndex("idx_username", "username")
 	db.Model(&models.Worker{}).AddUniqueIndex("idx_worker_mobile_number", "mobile_number")
 	db.Model(&models.Worker{}).AddUniqueIndex("idx_customer_mobile_number", "mobile_number")
+	db.Model(&models.Iventory{})
 	//db.Model(&models.User{}).AddUniqueIndex("idx_username","username","password")
 }
 

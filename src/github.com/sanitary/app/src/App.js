@@ -4,6 +4,7 @@ import './App.css';
 
 import {Menubar} from "../node_modules/primereact/menubar";
 import Login from "./components/Main";
+import Inventory from "./components/Inventory";
 
 const Customer = lazy(() => import ("./components/Customer"));
 const Worker = lazy(() => import ("./components/Worker"));
@@ -18,6 +19,11 @@ const items = [
         label: 'Workers',
         icon:'pi pi-fw pi-file',
         command:()=>{ window.location.hash="workers"; }
+    },
+    {
+        label:'Inventory',
+        icon:'pi pi-fw pi-trash',
+        command:()=>{ window.location.hash="inventory"; }
     },
     {
         label:'Delete',
@@ -43,6 +49,7 @@ function App() {
             <Route exact path="/customers" component={WaitingComponent(Customer)}></Route>
             <Route exact path="/workers" component={WaitingComponent(Worker)}></Route>
             <Route path="/customer1" render={(props) => <PropDemo name="Noman ALi" />}></Route>
+            <Route path="/inventory" component={Inventory}></Route>
         </HashRouter>
     </div>
   );

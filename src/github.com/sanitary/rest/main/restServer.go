@@ -43,6 +43,11 @@ func main() {
 	workers.AddWorker()
 	workers.DeleteWorker()
 
+	inventories := api.NewInventory(e)
+	inventories.GetItems()
+	inventories.AddItem()
+	inventories.DeleteItem()
+
 	//e.POST("/api/users", saveUser)
 	e.GET("/api/users/:id", getUser)
 	e.PUT("/api/users/:id", updateUser)

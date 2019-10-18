@@ -50,3 +50,11 @@ type Payment struct {
 	Remaining float64 `json:"remaining" xml:"remaining" form:"remaining" query:"remaining"`
 	Total     float64 `json:"total" xml:"total" form:"total" query:"total"`
 }
+
+type Iventory struct {
+	Model
+	ItemName      string  `json:"item_name" xml:"item_name" form:"item_name" query:"item_name"`
+	PurchaseRate  float64 `json:"purchase_rate" xml:"purchase_rate" form:"purchase_rate" query:"purchase_rate"`
+	WholesaleRate float64 `json:"wholesale_rate" xml:"wholesale_rate" form:"wholesale_rate" query:"wholesale_rate"`
+	RetailRate    float64 `json:"retail_rate" xml:"retail_rate" form:"retail_rate" query:"retail_rate"`
+}
