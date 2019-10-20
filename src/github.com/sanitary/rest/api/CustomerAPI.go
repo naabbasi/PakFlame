@@ -29,22 +29,30 @@ func NewCustomer(e *echo.Echo) *customers {
 
 func (customer *customers) GetCustomers() {
 	customer.echo.GET(CustomerEndPoint, func(c echo.Context) error {
-		customer1 := &models.Customer{
-			Status: "active",
-			Person: models.Person{FirstName: "Noman Ali", LastName: "Abbasi", MobileNumber: "03012525461"},
+		customers := []*models.Customer{
+			{
+				Status: "active",
+				Person: models.Person{FirstName: "Noman Ali", LastName: "Abbasi", MobileNumber: "03012525461",
+					Model: models.Model{ID: 1},
+				},
+			},
+			{
+				Status: "active",
+				Person: models.Person{FirstName: "Farhan Ali", LastName: "REST", MobileNumber: "03012525461",
+					Model: models.Model{ID: 2},
+				},
+			},
+			{
+				Status: "active",
+				Person: models.Person{FirstName: "Arsalan Ali", LastName: "REST", MobileNumber: "03012525461",
+					Model: models.Model{ID: 3},
+				},
+			},
 		}
 
-		customer2 := &models.Customer{
-			Status: "active",
-			Person: models.Person{FirstName: "Farhan Ali", LastName: "REST", MobileNumber: "03012525461"},
+		if len(allCustomer) == 0 {
+			allCustomer = append(allCustomer, customers...)
 		}
-
-		customer3 := &models.Customer{
-			Status: "active",
-			Person: models.Person{FirstName: "Arsalan Ali", LastName: "REST", MobileNumber: "03012525461"},
-		}
-
-		allCustomer = append(allCustomer, customer1, customer2, customer3)
 
 		return c.JSON(http.StatusOK, allCustomer)
 	})
@@ -63,14 +71,27 @@ func (customer *customers) AddCustomer() {
 	})
 }
 
+func (customer *customers) UpdateCustomer() {
+	customer.echo.PUT(CustomerEndPoint, func(c echo.Context) error {
+		cus := new(models.Customer)
+		if err := c.Bind(cus); err != nil {
+			return err
+		}
+		log.Printf("Customer updated with %s", cus)
+
+		allCustomer = append(allCustomer, cus)
+		return c.JSON(http.StatusOK, allCustomer)
+	})
+}
+
 func (customer *customers) DeleteCustomer() {
 	customer.echo.DELETE(CustomerEndPoint, func(c echo.Context) error {
 		customer := new(models.Customer)
 		if err := c.Bind(customer); err != nil {
 			return err
 		}
-		log.Printf("Customer deleted with %s", customer.FirstName)
+		log.Printf("Customer deleted with %s", customer)
 
-		return c.JSON(http.StatusOK, customer)
+		return c.JSON(http.StatusNoContent, customer)
 	})
 }

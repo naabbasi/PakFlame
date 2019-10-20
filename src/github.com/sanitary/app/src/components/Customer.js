@@ -55,19 +55,48 @@ export default class Customer extends GenericComponent {
                 // always executed
             });
         }
-        else
-            customers[this.findSelectedcustomerIndex()] = this.state.customer;
-
-
+        else{
+            this.axios.put('/customers',this.state.customer)
+                .then( response => {
+                    // handle success
+                    console.log(response);
+                    if(response.status === 200){
+                        this.setState({customers: response.data, selectedCustomer:null, customer: null, displayDialog:false});
+                    }
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+                .finally(function () {
+                    // always executed
+                });
+            //this.setState({customers: customers, selectedCustomer:null, customer: null, displayDialog:false});
+        }
     }
 
     delete() {
-        let index = this.findSelectedcustomerIndex();
-        this.setState({
-            customers: this.state.customers.filter((val,i) => i !== index),
-            selectedCustomer: null,
-            customer: null,
-            displayDialog: false});
+        this.axios.delete('/customers', { data: { ...this.state.selectedCustomer}})
+        .then( response => {
+            // handle success
+            console.log(response);
+            if(response.status === 200){
+                this.setState({customers: response.data, selectedCustomer:null, customer: null, displayDialog:false});
+                let index = this.findSelectedcustomerIndex();
+                this.setState({
+                    customers: this.state.customers.filter((val,i) => i !== index),
+                    selectedCustomer: null,
+                    customer: null,
+                    displayDialog: false});
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .finally(function () {
+            // always executed
+        });
     }
 
     findSelectedcustomerIndex() {

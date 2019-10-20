@@ -10,6 +10,7 @@ import (
 type db struct {
 	Dialect string
 	URL     string
+	Debug   bool
 }
 
 func NewDB(config *config.Config) *db {
@@ -24,7 +25,7 @@ func NewDB(config *config.Config) *db {
 		url = fmt.Sprintf("mysql://%s:%s@%s:%s/%s?sslmode=disable", config.Username, config.Password, config.Host, config.Port, config.DatabaseName)
 	}
 
-	return &db{Dialect: dialect, URL: url}
+	return &db{Dialect: dialect, URL: url, Debug: config.Debug}
 }
 
 func (db *db) GetDBConnection() *gorm.DB {
@@ -33,6 +34,10 @@ func (db *db) GetDBConnection() *gorm.DB {
 
 	if err != nil {
 		log.Errorf("Error occurred: ", err.Error())
+	}
+
+	if db.Debug {
+		connection = connection.Debug()
 	}
 
 	return connection

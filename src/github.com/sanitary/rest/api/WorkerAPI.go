@@ -53,12 +53,29 @@ func (worker *workers) Get() {
 			},
 		}
 
-		allWorkers = append(allWorkers, worker1, worker2, worker3)
+		if len(allWorkers) == 0 {
+			allWorkers = append(allWorkers, worker1, worker2, worker3)
+		}
+
 		return c.JSON(http.StatusOK, allWorkers)
 	})
 }
+
 func (worker *workers) AddWorker() {
 	worker.echo.POST(WorkerEndPoint, func(c echo.Context) error {
+		worker := new(models.Worker)
+		if err := c.Bind(worker); err != nil {
+			return err
+		}
+		log.Printf("Worker saved with %s", worker.FirstName)
+
+		allWorkers = append(allWorkers, worker)
+		return c.JSON(http.StatusCreated, allWorkers)
+	})
+}
+
+func (worker *workers) UpdateWorker() {
+	worker.echo.PUT(WorkerEndPoint, func(c echo.Context) error {
 		worker := new(models.Worker)
 		if err := c.Bind(worker); err != nil {
 			return err
@@ -78,6 +95,6 @@ func (worker *workers) DeleteWorker() {
 		}
 		log.Printf("Worker deleted with %s", customer.FirstName)
 
-		return c.JSON(http.StatusOK, customer)
+		return c.JSON(http.StatusNoContent, customer)
 	})
 }

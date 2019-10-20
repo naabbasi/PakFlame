@@ -32,7 +32,7 @@ func main() {
 
 	schema.CreatePostgreSQLSchema(db)
 
-	db.Debug().Create(&models.User{Username: "\uFDF2", Password: "x"})
+	db.Create(&models.User{Username: "\uFDF2", Password: "x"})
 
 	customer := &models.Customer{}
 	customer.FirstName = "Customer"
@@ -46,6 +46,17 @@ func main() {
 	worker.LastName = "Abbasi"
 	worker.MobileNumber = "03012525461"
 	db.Create(&models.Worker{Person: worker.Person})
+
+	company := &models.Company{}
+	company.CompanyName = "Company 1"
+	company.MobileNumber = "03012525461"
+	db.Create(company)
+
+	inventory := &models.Inventory{}
+	inventory.ItemName = "Noman Ali"
+	inventory.WholesaleRate = 555
+	inventory.CompanyId = company.ID
+	db.Create(inventory)
 
 	// Read
 	var user models.User
