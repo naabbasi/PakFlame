@@ -4,9 +4,6 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/labstack/gommon/log"
-	"github.com/sanitary/backend"
-	"github.com/sanitary/backend/schema"
-	"github.com/sanitary/config"
 	"github.com/sanitary/rest/api"
 
 	"net/http"
@@ -39,9 +36,9 @@ func main() {
 
 		//e.Use(middleware.BasicAuth(middleware.BasicAuthConfig{}))
 
-		config := config.NewConfig()
+		/*config := config.NewConfig()
 		db := backend.NewDB(config)
-		schema.CreatePostgreSQLSchema(db.GetDBConnection())
+		schema.CreatePostgreSQLSchema(db.GetDBConnection())*/
 
 		customers := api.NewCustomer(e)
 		customers.GetCustomers()
