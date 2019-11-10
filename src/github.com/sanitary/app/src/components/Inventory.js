@@ -7,8 +7,8 @@ import {InputText} from "primereact/inputtext";
 import {AutoComplete} from 'primereact/autocomplete';
 
 import {GenericComponent} from "./GenericComponent";
-import {Fieldset} from "primereact/fieldset";
 import {Dropdown} from "primereact/dropdown";
+import Navigation from "./layout/Navigation";
 
 export default class Inventory extends GenericComponent {
     constructor() {
@@ -133,6 +133,7 @@ export default class Inventory extends GenericComponent {
 
     onItemStatusChange(e) {
         console.log(e.value)
+        this.setState({itemStatus: e.value});
         this.updateProperty('itemStatus', e.value.status);
     }
 
@@ -184,8 +185,8 @@ export default class Inventory extends GenericComponent {
         ];
 
         let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
-            Inventory Information
-            <div style={{'textAlign':'left'}}>
+            <div style={{float: 'left'}}>Inventory Information</div>
+            <div style={{'textAlign':'left', float: 'right'}}>
                 <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
                 <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search Item(s)" size="50"/>
             </div>
@@ -212,34 +213,111 @@ export default class Inventory extends GenericComponent {
 
         return (
             <div>
-                <div className="content-section implementation">
-                    <DataTable value={this.state.inventories} paginator={true} rows={10}  header={header} footer={footer}
-                               scrollable={true} selectionMode="single" selection={this.state.selectedInventory}
-                               onSelectionChange={e => this.setState({selectedInventory: e.value})}
-                               onRowSelect={this.onInventorySelect} globalFilter={this.state.globalFilter} emptyMessage="No records found">
+                <Navigation>
+                    <div className="content-section implementation">
+                        <DataTable value={this.state.inventories} paginator={true} rows={25}  header={header} footer={footer}
+                                   scrollable={true} scrollHeight="700px"
+                                   selectionMode="single" selection={this.state.selectedInventory}
+                                   onSelectionChange={e => this.setState({selectedInventory: e.value})}
+                                   onRowSelect={this.onInventorySelect} globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
 
-                        <Column field="itemName" header="Item Name" sortable={true} />
-                        <Column field="quantities" header="Quantity" sortable={true} style={{textAlign: 'right'}}/>
-                        <Column field="quantityAlert" header="Quantity Alert" sortable={true} style={{textAlign: 'right'}}/>
-                        <Column field="createdAt" header="Purchase Date" sortable={true} />
-                        <Column field="purchaseRate" header="Purchase Rate" sortable={true} style={{textAlign: 'right'}}/>
-                        <Column field="wholesaleRate" header="Wholesale Rate" sortable={true} style={{textAlign: 'right'}}/>
-                        <Column field="retailRate" header="Retail Rate" sortable={true} style={{textAlign: 'right'}}/>
-                        <Column field="itemStatus" header="Status" sortable={true}/>
-                    </DataTable>
+                            <Column field="itemName" header="Item Name" sortable={true} />
+                            <Column field="quantities" header="Quantity" sortable={true} style={{textAlign: 'right'}}/>
+                            <Column field="quantityAlert" header="Quantity Alert" sortable={true} style={{textAlign: 'right'}}/>
+                            <Column field={"createdAt"} header="Purchase Date" sortable={true} style={{textAlign: 'center', overflowWrap: 'break-word'}}/>
+                            <Column field="purchaseRate" header="Purchase Rate" sortable={true} style={{textAlign: 'right'}}/>
+                            <Column field="wholesaleRate" header="Wholesale Rate" sortable={true} style={{textAlign: 'right'}}/>
+                            <Column field="retailRate" header="Retail Rate" sortable={true} style={{textAlign: 'right'}}/>
+                            <Column field="itemStatus" header="Status" sortable={true}/>
+                        </DataTable>
 
-                    <Dialog visible={this.state.displayItemDialog} style={{width: '60%'}} header="Inventory Details"
-                            modal={true} footer={dialogItemFooter} closable={true} maximizable={false}
-                            onHide={() => this.setState({company: null, displayItemDialog: false})}
-                            onShow={this.loadCompanies.bind(this)}>
-                        {
-                            this.state.newInventory &&
-                            <div className="p-grid">
+                        <Dialog visible={this.state.displayItemDialog} style={{width: '60%'}} header="Inventory Details"
+                                modal={true} footer={dialogItemFooter} closable={true} maximizable={false}
+                                onHide={() => this.setState({company: null, displayItemDialog: false})}
+                                onShow={this.loadCompanies.bind(this)}>
+                            {
+                                this.state.newInventory &&
+                                <div className="p-grid">
+                                    <div className="p-col-12">
+                                        <div className="p-grid">
+                                            <div className="p-col p-fluid" style={{padding:'.5em'}}>
+                                                <AutoComplete id="companyName" dropdown={true}  field="companyName"
+                                                              placeholder="Please Select Company Name"
+                                                              readonly={false}
+                                                              maxLength={250}
+                                                              value={this.state.company} onChange={(e) => this.setState({company:  e.value})}
+                                                              suggestions={this.state.companySuggestions} completeMethod={this.suggestCompanies.bind(this)} />
+                                            </div>
+                                        </div>
+
+                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                            <div className="p-col" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                <InputText id="itemName" maxLength={250} onChange={(e) => {this.updateProperty('itemName', e.target.value)}} value={this.state.newInventory.itemName}/>
+                                                <label htmlFor="itemName">Item Name</label>
+                                            </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                            <div className="p-col-6" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText id="quantity" onChange={(e) => {this.updateProperty('quantities', e.target.value)}} value={this.state.newInventory.quantities}/>
+                                                <label htmlFor="quantity">Quantity</label>
+                                            </span>
+                                            </div>
+
+                                            <div className="p-col-6" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText id="quantityAlert" onChange={(e) => {this.updateProperty('quantityAlert', e.target.value)}} value={this.state.newInventory.quantityAlert}/>
+                                                <label htmlFor="quantityAlert">Quantity Alert</label>
+                                            </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                            <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText id="purchaseRate" onChange={(e) => {this.updateProperty('purchaseRate', e.target.value)}} value={this.state.newInventory.purchaseRate}/>
+                                                    <label htmlFor="purchaseRate">Purchase Rate</label>
+                                                </span>
+                                            </div>
+
+                                            <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText id="wholesaleRate" onChange={(e) => {this.updateProperty('wholesaleRate', e.target.value)}} value={this.state.newInventory.wholesaleRate}/>
+                                                    <label htmlFor="wholesaleRate">Wholesale Rate</label>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                            <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText id="retailRate" onChange={(e) => {this.updateProperty('retailRate', e.target.value)}} value={this.state.newInventory.retailRate}/>
+                                                    <label htmlFor="retailRate">Retail Rate</label>
+                                                </span>
+                                            </div>
+                                            <div className="p-col-6 p-fluid" style={{padding:'.75em'}}>
+                                                <Dropdown value={this.state.itemStatus} options={itemStatusOptions} onChange={this.onItemStatusChange} placeholder="Select Item Status" optionLabel="label"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </Dialog>
+
+                        <Dialog visible={this.state.displayCompanyDialog} style={{width: '60%'}} header="Company Details"
+                                modal={true} footer={dialogCompanyFooter} closable={true} maximizable={true}
+                                onHide={() => this.setState({company: null, displayCompanyDialog: false})}
+                                onShow={this.loadCompanies.bind(this)}>
+                            {
+                                this.state.addCompany &&
                                 <div className="p-col-12">
                                     <div className="p-grid">
-                                        <div className="p-col-fixed" style={{padding:'.75em', width: '24%'}}><label htmlFor="companyName">Company Name</label></div>
                                         <div className="p-col p-fluid" style={{padding:'.5em'}}>
                                             <AutoComplete id="companyName" dropdown={true}  field="companyName"
+                                                          placeholder="Please Select Company Name"
                                                           readonly={false}
                                                           maxLength={250}
                                                           value={this.state.company} onChange={(e) => this.setState({company:  e.value})}
@@ -247,80 +325,19 @@ export default class Inventory extends GenericComponent {
                                         </div>
                                     </div>
 
-                                    <div className="p-grid">
-                                        <div className="p-col-fixed" style={{padding:'.75em', width: '24%'}}><label htmlFor="itemName">Item Name</label></div>
-                                        <div className="p-col p-fluid" style={{padding:'.5em'}}>
-                                            <InputText id="itemName" maxLength={250} onChange={(e) => {this.updateProperty('itemName', e.target.value)}} value={this.state.newInventory.itemName}/>
-                                        </div>
-                                    </div>
-
-                                    <div className="p-grid">
-                                        <div className="p-col-fixed" style={{padding:'.75em', width: '24%'}}><label htmlFor="quantity">Quantity</label></div>
-                                        <div className="p-col" style={{padding:'.5em'}}>
-                                            <InputText id="quantity" onChange={(e) => {this.updateProperty('quantities', e.target.value)}} value={this.state.newInventory.quantities}/>
-                                        </div>
-
-                                        <div className="p-col-fixed" style={{padding:'.75em', width: '24%'}}><label htmlFor="quantityAlert">Quantity Alert</label></div>
-                                        <div className="p-col" style={{padding:'.5em'}}>
-                                            <InputText id="quantityAlert" onChange={(e) => {this.updateProperty('quantityAlert', e.target.value)}} value={this.state.newInventory.quantityAlert}/>
-                                        </div>
-                                    </div>
-
-                                    <div className="p-grid">
-                                        <div className="p-col-fixed" style={{padding:'.75em', width: '24%'}}><label htmlFor="purchaseRate">Purchase Rate</label></div>
-                                        <div className="p-col" style={{padding:'.5em'}}>
-                                            <InputText id="purchaseRate" onChange={(e) => {this.updateProperty('purchaseRate', e.target.value)}} value={this.state.newInventory.purchaseRate}/>
-                                        </div>
-
-                                        <div className="p-col-fixed" style={{padding:'.75em', width: '24%'}}><label htmlFor="wholesaleRate">Wholesale Rate</label></div>
-                                        <div className="p-col" style={{padding:'.5em'}}>
-                                            <InputText id="wholesaleRate" onChange={(e) => {this.updateProperty('wholesaleRate', e.target.value)}} value={this.state.newInventory.wholesaleRate}/>
-                                        </div>
-                                    </div>
-
-                                    <div className="p-grid">
-                                        <div className="p-col-fixed" style={{padding:'.75em', width: '24%'}}><label htmlFor="retailRate">Retail Rate</label></div>
-                                        <div className="p-col" style={{padding:'.5em'}}>
-                                            <InputText id="retailRate" onChange={(e) => {this.updateProperty('retailRate', e.target.value)}} value={this.state.newInventory.retailRate}/>
-                                        </div>
-
-                                        <div className="p-col-fixed" style={{padding:'.75em', width: '24%'}}><label htmlFor="itemStatus">Item Status</label></div>
-                                        <div className="p-col" style={{padding:'.5em'}}>
-                                            <Dropdown value={this.state.itemStatus} options={itemStatusOptions} onChange={this.onItemStatusChange} placeholder="Select a Status" optionLabel="label"/>
+                                    <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                <InputText id="mobileNumber" onChange={(e) => {this.updateCompanyProperty('mobileNumber', e.target.value)}} value={this.state.addCompany.mobileNumber}/>
+                                                <label htmlFor="mobileNumber">Contact Information</label>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        }
-                    </Dialog>
-
-                    <Dialog visible={this.state.displayCompanyDialog} style={{width: '60%'}} header="Company Details"
-                            modal={true} footer={dialogCompanyFooter} closable={true} maximizable={true}
-                            onHide={() => this.setState({company: null, displayCompanyDialog: false})}
-                            onShow={this.loadCompanies.bind(this)}>
-                        {
-                            this.state.addCompany &&
-                            <div className="p-col-12">
-                                <div className="p-grid">
-                                    <div className="p-col-fixed" style={{padding:'.75em', width: '24%'}}><label htmlFor="companyName">Company Name</label></div>
-                                    <div className="p-col p-fluid" style={{padding:'.5em'}}>
-                                        <AutoComplete id="companyName" dropdown={true}  field="companyName"
-                                                      readonly={false}
-                                                      maxLength={250}
-                                                      value={this.state.company} onChange={(e) => this.setState({company:  e.value})}
-                                                      suggestions={this.state.companySuggestions} completeMethod={this.suggestCompanies.bind(this)} />
-                                    </div>
-                                </div>
-                                <div className="p-grid">
-                                    <div className="p-col-fixed" style={{padding:'.75em', width: '24%'}}><label htmlFor="mobileNumber">Contact Number {this.state.addCompany.companyName}</label></div>
-                                    <div className="p-col p-fluid" style={{padding:'.5em'}}>
-                                        <InputText id="mobileNumber" onChange={(e) => {this.updateCompanyProperty('mobileNumber', e.target.value)}} value={this.state.addCompany.mobileNumber}/>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </Dialog>
-                </div>
+                            }
+                        </Dialog>
+                    </div>
+                </Navigation>
             </div>
         );
     }

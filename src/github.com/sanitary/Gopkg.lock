@@ -10,15 +10,15 @@
   version = "v3.2.0"
 
 [[projects]]
-  digest = "1:3755c1a3de6404d58d7767562d00a84ee4a507df69a1490c9cebb931d7b11b96"
+  digest = "1:9e6061d60fb018cec58795a2e645c6012312f8e7db1efaf7db25df5cbf3f7a2e"
   name = "github.com/jinzhu/gorm"
   packages = [
     ".",
     "dialects/postgres",
   ]
   pruneopts = ""
-  revision = "836fb2c19d84dac7b0272958dfb9af7cf0d0ade4"
-  version = "v1.9.10"
+  revision = "81c17a7e2529c59efc4e74c5b32c1fb71fb12fa2"
+  version = "v1.9.11"
 
 [[projects]]
   digest = "1:a7b97371fb9af808b6a4fcc6693276ef7869bb1f282c3c87038c6c7e74ef4ae6"
@@ -66,20 +66,20 @@
   version = "v1.2.0"
 
 [[projects]]
-  digest = "1:d260ca4db8ced0871a1c06440b1e5835e2d982ed660ca529957d67f28cf24592"
+  digest = "1:9b58ad18b38cf0d44b1d006fce319e45f200eafa406fe7f65fe0d0194b9f7a9f"
   name = "github.com/mattn/go-colorable"
   packages = ["."]
   pruneopts = ""
-  revision = "8029fb3788e5a4a9c00e415f586a6d033f5d38b3"
-  version = "v0.1.2"
+  revision = "98ec13f34aabf44cc914c65a1cfb7b9bc815aef1"
+  version = "v0.1.4"
 
 [[projects]]
-  digest = "1:afc2714dedf683e571932f94f8a8ec444679eb84e076e021f63de871c5bc6cb1"
+  digest = "1:5794dadc5456af270fc564d98efbfa1f3627cd6c733ca772d14409793772064f"
   name = "github.com/mattn/go-isatty"
   packages = ["."]
   pruneopts = ""
-  revision = "e1f7b56ace729e4a73a29a6b4fac6cd5fcda7ab3"
-  version = "v0.0.9"
+  revision = "88ba11cfdc67c7588b30042edf244b2875f892b6"
+  version = "v0.0.10"
 
 [[projects]]
   digest = "1:857a9ecd5cb13379ecc8f798f6e6b6b574c98b9355657d91e068275f1120aaf7"
@@ -90,39 +90,39 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:1ad3ae8a5edf223abb8435e16ccc0696ce886c6f889e100809122e931e7423b2"
+  digest = "1:c8b536f08002f0916e288eb66b7d961e3a854542f50532255a7c737edd22987a"
   name = "github.com/valyala/fasttemplate"
   packages = ["."]
   pruneopts = ""
-  revision = "8b5e4e491ab636663841c42ea3c5a9adebabaf36"
-  version = "v1.0.1"
+  revision = "8fcc7a99b5795b7c3e95172237cf93282fc339a9"
+  version = "v1.1.0"
 
 [[projects]]
   branch = "master"
-  digest = "1:086760278d762dbb0e9a26e09b57f04c89178c86467d8d94fae47d64c222f328"
+  digest = "1:47cd7b63835b62da6a8c3817fafde2e07aaf952ce170a6ecafedb06946be6ddb"
   name = "golang.org/x/crypto"
   packages = [
     "acme",
     "acme/autocert",
   ]
   pruneopts = ""
-  revision = "4def268fd1a49955bfb3dda92fe3db4f924f2285"
-
-[[projects]]
-  branch = "release-branch.go1.10"
-  digest = "1:57cdbf612d6928a01850051b5c09972262244ae131a40dfea4c37fd525742db5"
-  name = "golang.org/x/net"
-  packages = ["idna"]
-  pruneopts = ""
-  revision = "0ed95abb35c445290478a5348a7b38bb154135fd"
+  revision = "8986dd9e96cf0a6f74da406c005ba3df38527c04"
 
 [[projects]]
   branch = "master"
-  digest = "1:6a8bd8cb9a92bd007831755e08d5f62810ecf6718e70cc38f0a85a91819a9497"
+  digest = "1:e77333c281709270f3de8b3b2248ff5ae580691c79f5744d9080b35e46018707"
+  name = "golang.org/x/net"
+  packages = ["idna"]
+  pruneopts = ""
+  revision = "0deb6923b6d97481cb43bc1043fe5b72a0143032"
+
+[[projects]]
+  branch = "master"
+  digest = "1:a155b7400cb9270dda3f63651160c0349a9e16855975956c79e618e9f30c160c"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = ""
-  revision = "fde4db37ae7ad8191b03d30d27f258b5291ae4e3"
+  revision = "f43be2a4598cf3a47be9f94f0c28197ed9eae611"
 
 [[projects]]
   digest = "1:740b51a55815493a8d0f2b1e0d0ae48fe48953bf7eaf3fcc4198823bf67768c0"

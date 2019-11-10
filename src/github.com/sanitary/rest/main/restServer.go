@@ -27,9 +27,9 @@ func main() {
 		e := echo.New()
 		e.HideBanner = true
 		e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-			AllowOrigins: []string{"http://" + strings.ToLower(hostname) + ":3000", "http://localhost:3000"},
-			AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-			//AllowMethods: 	  []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.OPTIONS},
+			AllowOrigins:     []string{"http://" + strings.ToLower(hostname) + ":3000", "http://localhost:3000"},
+			AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAccessControlAllowCredentials},
+			AllowMethods:     []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.OPTIONS},
 			AllowCredentials: true,
 			ExposeHeaders:    []string{echo.HeaderContentDisposition},
 		}))

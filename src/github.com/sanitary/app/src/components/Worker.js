@@ -5,6 +5,7 @@ import {Column} from "primereact/column";
 import {Dialog} from "primereact/dialog";
 import {InputText} from "primereact/inputtext";
 import {GenericComponent} from "./GenericComponent";
+import Navigation from "./layout/Navigation";
 
 export default class Worker extends GenericComponent {
 
@@ -82,7 +83,13 @@ export default class Worker extends GenericComponent {
     }
 
     render() {
-        let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>Workers Information</div>;
+        let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
+            <div style={{float: 'left'}}>Worker Information</div>
+            <div style={{'textAlign':'left', float: 'right'}}>
+                <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
+                <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search Worker(s)" size="50"/>
+            </div>
+        </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
             <Button style={{float:'left'}} label="Add" icon="pi pi-plus" onClick={this.addNew}/>
@@ -95,50 +102,54 @@ export default class Worker extends GenericComponent {
 
         return (
             <div>
-                <div className="content-section implementation">
-                    <DataTable value={this.state.workers} paginator={true} rows={15}  header={header} footer={footer}
-                               selectionMode="single" selection={this.state.selectedWorker} onSelectionChange={e => this.setState({selectedWorker: e.value})}
-                               onRowSelect={this.onWorkerSelect}>
-                        <Column field="firstname" header="First Name" sortable={true} />
-                        <Column field="lastname" header="Last Name" sortable={true} />
-                        <Column field="mobileNumber" header="Mobile Number" sortable={true} />
-                        <Column field="address" header="Address" sortable={true} style={{textAlign: 'center'}} />
-                        <Column field="status" header="Status" sortable={true} style={{textAlign: 'center'}} />
-                    </DataTable>
+                <Navigation>
+                    <div className="content-section implementation">
+                        <DataTable value={this.state.workers} paginator={true} rows={25}  header={header} footer={footer}
+                                   scrollable={true} scrollHeight="700px"
+                                   selectionMode="single" selection={this.state.selectedWorker} onSelectionChange={e => this.setState({selectedWorker: e.value})}
+                                   onRowSelect={this.onWorkerSelect}
+                                   globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
+                            <Column field="firstname" header="First Name" sortable={true} />
+                            <Column field="lastname" header="Last Name" sortable={true} />
+                            <Column field="mobileNumber" header="Mobile Number" sortable={true} />
+                            <Column field="address" header="Address" sortable={true} style={{textAlign: 'center'}} />
+                            <Column field="status" header="Status" sortable={true} style={{textAlign: 'center'}} />
+                        </DataTable>
 
-                    <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="worker Details" modal={true} footer={dialogFooter} onHide={() => this.setState({displayDialog: false})}>
-                        {
-                            this.state.worker &&
+                        <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="worker Details" modal={true} footer={dialogFooter} onHide={() => this.setState({displayDialog: false})}>
+                            {
+                                this.state.worker &&
 
-                            <div className="p-grid p-fluid">
-                                <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="firstname">First Name</label></div>
-                                <div className="p-col-8" style={{padding:'.5em'}}>
-                                    <InputText id="firstname" onChange={(e) => {this.updateProperty('firstname', e.target.value)}} value={this.state.worker.firstname}/>
+                                <div className="p-grid p-fluid">
+                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="firstname">First Name</label></div>
+                                    <div className="p-col-8" style={{padding:'.5em'}}>
+                                        <InputText id="firstname" onChange={(e) => {this.updateProperty('firstname', e.target.value)}} value={this.state.worker.firstname}/>
+                                    </div>
+
+                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="lastname">Year</label></div>
+                                    <div className="p-col-8" style={{padding:'.5em'}}>
+                                        <InputText id="lastname" onChange={(e) => {this.updateProperty('lastname', e.target.value)}} value={this.state.worker.lastname}/>
+                                    </div>
+
+                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="mobileNumber">Mobile Number</label></div>
+                                    <div className="p-col-8" style={{padding:'.5em'}}>
+                                        <InputText id="mobileNumber" onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.worker.mobileNumber}/>
+                                    </div>
+
+                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="status">Status</label></div>
+                                    <div className="p-col-8" style={{padding:'.5em'}}>
+                                        <InputText id="status" onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.worker.status}/>
+                                    </div>
+
+                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="address">Address</label></div>
+                                    <div className="p-col-8" style={{padding:'.5em'}}>
+                                        <InputText id="status" onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.worker.address}/>
+                                    </div>
                                 </div>
-
-                                <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="lastname">Year</label></div>
-                                <div className="p-col-8" style={{padding:'.5em'}}>
-                                    <InputText id="lastname" onChange={(e) => {this.updateProperty('lastname', e.target.value)}} value={this.state.worker.lastname}/>
-                                </div>
-
-                                <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="mobileNumber">Mobile Number</label></div>
-                                <div className="p-col-8" style={{padding:'.5em'}}>
-                                    <InputText id="mobileNumber" onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.worker.mobileNumber}/>
-                                </div>
-
-                                <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="status">Status</label></div>
-                                <div className="p-col-8" style={{padding:'.5em'}}>
-                                    <InputText id="status" onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.worker.status}/>
-                                </div>
-
-                                <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="address">Address</label></div>
-                                <div className="p-col-8" style={{padding:'.5em'}}>
-                                    <InputText id="status" onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.worker.address}/>
-                                </div>
-                            </div>
-                        }
-                    </Dialog>
-                </div>
+                            }
+                        </Dialog>
+                    </div>
+                </Navigation>
             </div>
         );
     }

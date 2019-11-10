@@ -23,38 +23,610 @@ func NewWorker(e *echo.Echo) workers {
 
 func (worker *workers) Get() {
 	worker.echo.GET(WorkerEndPoint, func(c echo.Context) error {
-		worker1 := &models.Worker{
-			Status:  "working",
-			Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
-			Person: models.Person{
-				FirstName:    "Noman Ali",
-				LastName:     "Abbasi",
-				MobileNumber: "03012525461",
+		worker1 := []*models.Worker{
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
 			},
-		}
-
-		worker2 := &models.Worker{
-			Status:  "working",
-			Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
-			Person: models.Person{
-				FirstName:    "Arsalan Ali",
-				LastName:     "Abbasi",
-				MobileNumber: "03012525461",
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
 			},
-		}
-
-		worker3 := &models.Worker{
-			Status:  "left",
-			Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
-			Person: models.Person{
-				FirstName:    "Farhan Ali",
-				LastName:     "Abbasi",
-				MobileNumber: "03012525461",
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			}, {
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Noman Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Arsalan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
+			},
+			{
+				Status:  "working",
+				Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
+				Person: models.Person{
+					FirstName:    "Farhan Ali",
+					LastName:     "Abbasi",
+					MobileNumber: "03012525461",
+				},
 			},
 		}
 
 		if len(allWorkers) == 0 {
-			allWorkers = append(allWorkers, worker1, worker2, worker3)
+			allWorkers = append(allWorkers, worker1...)
 		}
 
 		return c.JSON(http.StatusOK, allWorkers)
