@@ -41,4 +41,6 @@ export class GenericComponent extends Component {
             return Promise.reject(error);
         });
     }
+
+    byId = (id) => document.getElementById(id);
 }

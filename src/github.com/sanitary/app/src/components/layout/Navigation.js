@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {Menubar} from "primereact/menubar";
+import {GenericComponent} from "../GenericComponent";
 
-export default class Navigation extends Component {
+export default class Navigation extends GenericComponent {
     constructor() {
         super();
     }
@@ -35,11 +36,12 @@ export default class Navigation extends Component {
 
         return (
             <div>
-                <div style={{width: '20%', float: 'right', lineHeight: '42px', textAlign: 'right', marginRight: '5px'}}>
-                    <span className="pi pi-fw pi-user"></span>
-                    <span>Abdul Waris</span>
-                </div>
-                <Menubar model={items}></Menubar>
+                <Menubar model={items}>
+                    <div style={{float: 'right', lineHeight: '42px', textAlign: 'right', marginRight: '5px'}}>
+                        <span className="pi pi-fw pi-user"></span>
+                        <span>Abdul Waris</span>
+                    </div>
+                </Menubar>
                 {this.props.children}
             </div>
         )

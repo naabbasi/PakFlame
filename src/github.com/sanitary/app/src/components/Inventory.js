@@ -9,6 +9,7 @@ import {AutoComplete} from 'primereact/autocomplete';
 import {GenericComponent} from "./GenericComponent";
 import {Dropdown} from "primereact/dropdown";
 import Navigation from "./layout/Navigation";
+import {Message} from "primereact/message";
 
 export default class Inventory extends GenericComponent {
     constructor() {
@@ -224,7 +225,7 @@ export default class Inventory extends GenericComponent {
                             <Column field="itemName" header="Item Name" sortable={true} />
                             <Column field="quantities" header="Quantity" sortable={true} style={{textAlign: 'right'}}/>
                             <Column field="quantityAlert" header="Quantity Alert" sortable={true} style={{textAlign: 'right'}}/>
-                            <Column field={"createdAt"} header="Purchase Date" sortable={true} style={{textAlign: 'center', overflowWrap: 'break-word'}}/>
+                            <Column field="createdAt" header="Purchase Date" sortable={true} style={{textAlign: 'center', overflowWrap: 'break-word'}}/>
                             <Column field="purchaseRate" header="Purchase Rate" sortable={true} style={{textAlign: 'right'}}/>
                             <Column field="wholesaleRate" header="Wholesale Rate" sortable={true} style={{textAlign: 'right'}}/>
                             <Column field="retailRate" header="Retail Rate" sortable={true} style={{textAlign: 'right'}}/>
@@ -262,14 +263,14 @@ export default class Inventory extends GenericComponent {
                                         <div className="p-grid" style={{ paddingTop: '10px'}}>
                                             <div className="p-col-6" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText id="quantity" onChange={(e) => {this.updateProperty('quantities', e.target.value)}} value={this.state.newInventory.quantities}/>
+                                                <InputText id="quantity" keyfilter="pint" onChange={(e) => {this.updateProperty('quantities', e.target.value)}} value={this.state.newInventory.quantities}/>
                                                 <label htmlFor="quantity">Quantity</label>
                                             </span>
                                             </div>
 
                                             <div className="p-col-6" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText id="quantityAlert" onChange={(e) => {this.updateProperty('quantityAlert', e.target.value)}} value={this.state.newInventory.quantityAlert}/>
+                                                <InputText id="quantityAlert" keyfilter="pint" onChange={(e) => {this.updateProperty('quantityAlert', e.target.value)}} value={this.state.newInventory.quantityAlert}/>
                                                 <label htmlFor="quantityAlert">Quantity Alert</label>
                                             </span>
                                             </div>
@@ -278,14 +279,14 @@ export default class Inventory extends GenericComponent {
                                         <div className="p-grid" style={{ paddingTop: '10px'}}>
                                             <div className="p-col-6" style={{padding:'.75em'}}>
                                                 <span className="p-float-label p-fluid">
-                                                    <InputText id="purchaseRate" onChange={(e) => {this.updateProperty('purchaseRate', e.target.value)}} value={this.state.newInventory.purchaseRate}/>
+                                                    <InputText id="purchaseRate" keyfilter="pint" onChange={(e) => {this.updateProperty('purchaseRate', e.target.value)}} value={this.state.newInventory.purchaseRate}/>
                                                     <label htmlFor="purchaseRate">Purchase Rate</label>
                                                 </span>
                                             </div>
 
                                             <div className="p-col-6" style={{padding:'.75em'}}>
                                                 <span className="p-float-label p-fluid">
-                                                    <InputText id="wholesaleRate" onChange={(e) => {this.updateProperty('wholesaleRate', e.target.value)}} value={this.state.newInventory.wholesaleRate}/>
+                                                    <InputText id="wholesaleRate" keyfilter="pint" onChange={(e) => {this.updateProperty('wholesaleRate', e.target.value)}} value={this.state.newInventory.wholesaleRate}/>
                                                     <label htmlFor="wholesaleRate">Wholesale Rate</label>
                                                 </span>
                                             </div>
@@ -294,7 +295,7 @@ export default class Inventory extends GenericComponent {
                                         <div className="p-grid" style={{ paddingTop: '10px'}}>
                                             <div className="p-col-6" style={{padding:'.75em'}}>
                                                 <span className="p-float-label p-fluid">
-                                                    <InputText id="retailRate" onChange={(e) => {this.updateProperty('retailRate', e.target.value)}} value={this.state.newInventory.retailRate}/>
+                                                    <InputText id="retailRate" keyfilter="pint" onChange={(e) => {this.updateProperty('retailRate', e.target.value)}} value={this.state.newInventory.retailRate}/>
                                                     <label htmlFor="retailRate">Retail Rate</label>
                                                 </span>
                                             </div>
