@@ -9,11 +9,12 @@ import Navigation from "./layout/Navigation";
 
 export default class Worker extends GenericComponent {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {};
         this.save = this.save.bind(this);
         this.delete = this.delete.bind(this);
+        this.close = this.close.bind(this);
         this.onWorkerSelect = this.onWorkerSelect.bind(this);
         this.addNew = this.addNew.bind(this);
     }
@@ -23,7 +24,6 @@ export default class Worker extends GenericComponent {
         this.axios.get('/workers')
             .then( response => {
                 // handle success
-                console.log(response);
                 if(response.status === 200){
                     this.setState({workers: response.data});
                 }
@@ -31,29 +31,61 @@ export default class Worker extends GenericComponent {
             .catch(function (error) {
                 // handle error
                 console.log(error);
-            })
-            .finally(function () {
-                // always executed
             });
     }
 
     save() {
-        let workers = [...this.state.workers];
-        if(this.newworker)
-            workers.push(this.state.worker);
-        else
-            workers[this.findSelectedworkerIndex()] = this.state.worker;
-
-        this.setState({workers:workers, selectedworker:null, worker: null, displayDialog:false});
+        if(this.newWorker){
+            this.axios.post('/workers', this.state.worker)
+            .then( response => {
+                // handle success
+                if(response.status === 201){
+                    this.setState({workers: response.data, selectedWorker:null, worker: null, displayDialog:false});
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+        }
+        else{
+            this.axios.put('/workers',this.state.worker)
+            .then( response => {
+                // handle success
+                console.log(response);
+                if(response.status === 202){
+                    this.setState({workers: response.data, selectedWorker:null, worker: null, displayDialog:false});
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+        }
     }
 
     delete() {
-        let index = this.findSelectedworkerIndex();
-        this.setState({
-            workers: this.state.workers.filter((val,i) => i !== index),
-            selectedWorker: null,
-            worker: null,
-            displayDialog: false});
+        this.axios.delete('/workers', { data: { ...this.state.selectedWorker}})
+        .then( response => {
+            // handle success
+            console.log(response);
+            if(response.status === 204){
+                let index = this.findSelectedworkerIndex();
+                this.setState({
+                    workers: this.state.workers.filter((val,i) => i !== index),
+                    selectedWorker: null,
+                    worker: null,
+                    displayDialog: false});
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        });
+    }
+
+    close() {
+        this.setState({selectedWorker:null, worker: null, displayDialog:false});
     }
 
     findSelectedworkerIndex() {
@@ -67,7 +99,7 @@ export default class Worker extends GenericComponent {
     }
 
     onWorkerSelect(e){
-        this.newworker = false;
+        this.newWorker = false;
         this.setState({
             displayDialog:true,
             worker: Object.assign({}, e.data)
@@ -75,9 +107,9 @@ export default class Worker extends GenericComponent {
     }
 
     addNew() {
-        this.newworker = true;
+        this.newWorker = true;
         this.setState({
-            worker: {firstname: '', lastname: '', mobileNumber: '', status: ''},
+            worker: {firstName: '', lastName: '', mobileNumber: '', address: '', status: ''},
             displayDialog: true
         });
     }
@@ -96,8 +128,9 @@ export default class Worker extends GenericComponent {
         </div>;
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
-            <Button label="Delete" icon="pi pi-times" onClick={this.delete}/>
-            <Button label="Save" icon="pi pi-check" onClick={this.save}/>
+            <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.save}/>
+            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.delete}/>
+            <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.close}/>
         </div>;
 
         return (
@@ -109,11 +142,13 @@ export default class Worker extends GenericComponent {
                                    selectionMode="single" selection={this.state.selectedWorker} onSelectionChange={e => this.setState({selectedWorker: e.value})}
                                    onRowSelect={this.onWorkerSelect}
                                    globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
-                            <Column field="firstname" header="First Name" sortable={true} />
-                            <Column field="lastname" header="Last Name" sortable={true} />
+                            <Column field="firstName" header="First Name" sortable={true} />
+                            <Column field="lastName" header="Last Name" sortable={true} />
                             <Column field="mobileNumber" header="Mobile Number" sortable={true} />
                             <Column field="address" header="Address" sortable={true} style={{textAlign: 'center'}} />
                             <Column field="status" header="Status" sortable={true} style={{textAlign: 'center'}} />
+                            <Column field="status" header="Remaining Amount" sortable={true} style={{textAlign: 'center'}}/>
+                            <Column field="status" header="Total Amount" sortable={true} style={{textAlign: 'center'}}/>
                         </DataTable>
 
                         <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="worker Details" modal={true} footer={dialogFooter} onHide={() => this.setState({displayDialog: false})}>
@@ -121,19 +156,19 @@ export default class Worker extends GenericComponent {
                                 this.state.worker &&
 
                                 <div className="p-grid p-fluid">
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="firstname">First Name</label></div>
+                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="firstName">First Name</label></div>
                                     <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="firstname" onChange={(e) => {this.updateProperty('firstname', e.target.value)}} value={this.state.worker.firstname}/>
+                                        <InputText id="firstName" onChange={(e) => {this.updateProperty('firstName', e.target.value)}} value={this.state.worker.firstName}/>
                                     </div>
 
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="lastname">Year</label></div>
+                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="lastName">Last Name</label></div>
                                     <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="lastname" onChange={(e) => {this.updateProperty('lastname', e.target.value)}} value={this.state.worker.lastname}/>
+                                        <InputText id="lastName" onChange={(e) => {this.updateProperty('lastName', e.target.value)}} value={this.state.worker.lastName}/>
                                     </div>
 
                                     <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="mobileNumber">Mobile Number</label></div>
                                     <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="mobileNumber" onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.worker.mobileNumber}/>
+                                        <InputText id="mobileNumber" keyfilter="int" onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.worker.mobileNumber}/>
                                     </div>
 
                                     <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="status">Status</label></div>

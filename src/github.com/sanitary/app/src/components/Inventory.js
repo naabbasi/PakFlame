@@ -25,7 +25,6 @@ export default class Inventory extends GenericComponent {
 
         /*Company*/
         this.saveCompany = this.saveCompany.bind(this);
-        this.updateCompany = this.updateCompany.bind(this);
         this.addNewCompany = this.addNewCompany.bind(this);
         this.onItemStatusChange = this.onItemStatusChange.bind(this);
     }
@@ -175,9 +174,6 @@ export default class Inventory extends GenericComponent {
     saveCompany() {
     }
 
-    updateCompany() {
-    }
-
     render() {
         const itemStatusOptions = [
             {label: 'Available', status: 'Available'},
@@ -199,17 +195,15 @@ export default class Inventory extends GenericComponent {
         </div>
 
         let dialogItemFooter = <div className="ui-dialog-buttonpane p-clearfix">
-            <Button label="Save" icon="pi pi-check" className="p-button-rounded" onClick={this.save}/>
-            <Button label="Update" icon="pi pi-times" className="p-button-rounded" onClick={this.delete}/>
+            <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.save}/>
             <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.delete}/>
-            <Button label="Close" icon="pi pi-times" className="p-button-rounded" onClick={this.closeItemDialog.bind(this)}/>
+            <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeItemDialog.bind(this)}/>
         </div>;
 
         let dialogCompanyFooter = <div className="ui-dialog-buttonpane p-clearfix">
-            <Button label="Save" icon="pi pi-save" className="p-button-rounded" onClick={this.saveCompany}/>
-            <Button label="Update" icon="pi pi-cloud-upload" className="p-button-rounded" onClick={this.updateCompany}/>
-            <Button label="Delete" icon="pi pi-cloud-upload" className="p-button-rounded p-button-danger" onClick={this.updateCompany}/>
-            <Button label="Close" icon="pi pi-times" className="p-button-rounded" onClick={this.closeCompanyDialog.bind(this)}/>
+            <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveCompany}/>
+            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.updateCompany}/>
+            <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeCompanyDialog.bind(this)}/>
         </div>;
 
         return (

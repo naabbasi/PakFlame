@@ -7,13 +7,13 @@ import (
 	"github.com/sanitary/config"
 )
 
-type db struct {
-	Dialect string
-	URL     string
-	Debug   bool
+type DBSettings struct {
+	dialect string
+	url     string
+	debug   bool
 }
 
-func NewDB(config *config.Config) *db {
+func GetDBSettings(config *config.Config) *DBSettings {
 	var dialect string
 	var url string
 
@@ -25,18 +25,18 @@ func NewDB(config *config.Config) *db {
 		url = fmt.Sprintf("mysql://%s:%s@%s:%s/%s?sslmode=disable", config.Username, config.Password, config.Host, config.Port, config.DatabaseName)
 	}
 
-	return &db{Dialect: dialect, URL: url, Debug: config.Debug}
+	return &DBSettings{dialect: dialect, url: url, debug: config.Debug}
 }
 
-func (db *db) GetDBConnection() *gorm.DB {
+func (db *DBSettings) GetDBConnection() *gorm.DB {
 
-	connection, err := gorm.Open(db.Dialect, db.URL)
+	connection, err := gorm.Open(db.dialect, db.url)
 
 	if err != nil {
 		log.Errorf("Error occurred: ", err.Error())
 	}
 
-	if db.Debug {
+	if db.debug {
 		connection = connection.Debug()
 	}
 

@@ -5,6 +5,7 @@ import {Card} from "primereact/card";
 import {InputText} from "primereact/inputtext";
 import {Password} from "primereact/password";
 import {GenericComponent} from "./GenericComponent";
+import {Message} from "primereact/message";
 
 export default class Login extends GenericComponent {
     constructor(prop) {
@@ -53,15 +54,17 @@ export default class Login extends GenericComponent {
                             <div className="p-col-12">
                                 <div className="p-col p-fluid" style={{padding:'.75em'}}>
                                     <span className="p-float-label p-fluid">
-                                        <InputText id="username" required maxLength={250}/>
+                                        <InputText id="username" required={true} maxLength={250}/>
                                         <label htmlFor="username">Username: </label>
                                     </span>
+                                    {/*<Message id="invalidUsername" severity={"error"} text="Please enter username"/>*/}
                                 </div>
                                 <div className="p-col p-fluid" style={{padding:'.75em'}}>
                                     <span className="p-float-label p-fluid">
-                                        <Password id="password" required maxLength={250} feedback={false}/>
+                                        <Password id="password" required={true} maxLength={250} feedback={false}/>
                                         <label htmlFor="password">Password: </label>
                                     </span>
+                                    {/*<Message id="invalidPassword" severity={"error"} text="Please enter password"/>*/}
                                 </div>
                             </div>
                         </Card>

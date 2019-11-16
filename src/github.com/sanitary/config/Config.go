@@ -9,6 +9,7 @@ type Config struct {
 	Host         string
 	DatabaseName string
 	Debug        bool
+	DemoData     bool
 }
 
 func NewConfig() *Config {
@@ -21,5 +22,6 @@ func NewConfig() *Config {
 		Password:     "",
 		Host:         "localhost",
 		DatabaseName: "sanitary",
+		DemoData:     false,
 	}
 }

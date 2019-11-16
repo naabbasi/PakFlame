@@ -26,13 +26,13 @@ func main() {
 	defer db.Close()*/
 
 	newConfig := config.NewConfig()
-	newDB := backend.NewDB(newConfig)
+	newDB := backend.GetDBSettings(newConfig)
 	db := newDB.GetDBConnection()
 	defer db.Close()
 
 	schema.CreatePostgreSQLSchema(db)
 
-	db.Create(&models.User{Username: "\uFDF2", Password: "x"})
+	db.Create(&models.User{Username: "nabbasi", Password: "x"})
 
 	customer := &models.Customer{}
 	customer.FirstName = "Customer"

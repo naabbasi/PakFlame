@@ -33,7 +33,6 @@ func (company *companies) GetCompanies() {
 		companies := []*models.Company{
 			{
 				Model: models.Model{
-					ID:        1,
 					CreatedAt: time.Time{},
 					UpdatedAt: time.Time{},
 				},
@@ -43,7 +42,6 @@ func (company *companies) GetCompanies() {
 			},
 			{
 				Model: models.Model{
-					ID:        2,
 					CreatedAt: time.Time{},
 					UpdatedAt: time.Time{},
 				},
@@ -53,7 +51,6 @@ func (company *companies) GetCompanies() {
 			},
 			{
 				Model: models.Model{
-					ID:        3,
 					CreatedAt: time.Time{},
 					UpdatedAt: time.Time{},
 				},

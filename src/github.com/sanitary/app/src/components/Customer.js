@@ -14,6 +14,7 @@ export default class Customer extends GenericComponent {
         this.state = {};
         this.save = this.save.bind(this);
         this.delete = this.delete.bind(this);
+        this.close = this.close.bind(this);
         this.onCustomerSelect = this.onCustomerSelect.bind(this);
         this.addNew = this.addNew.bind(this);
     }
@@ -23,9 +24,10 @@ export default class Customer extends GenericComponent {
         this.axios.get('/customers')
         .then( response => {
             // handle success
-            console.log(response);
             if(response.status === 200){
                 this.setState({customers: response.data});
+                console.log(response.data);
+                console.log(this.state.customers)
             }
         })
         .catch(function (error) {
@@ -38,7 +40,6 @@ export default class Customer extends GenericComponent {
     }
 
     save() {
-        let customers = [...this.state.customers];
         if(this.newCustomer){
             this.axios.post('/customers', this.state.customer)
             .then( response => {
@@ -51,28 +52,21 @@ export default class Customer extends GenericComponent {
             .catch(function (error) {
                 // handle error
                 console.log(error);
-            })
-            .finally(function () {
-                // always executed
             });
         }
         else{
             this.axios.put('/customers',this.state.customer)
-                .then( response => {
-                    // handle success
-                    console.log(response);
-                    if(response.status === 200){
-                        this.setState({customers: response.data, selectedCustomer:null, customer: null, displayDialog:false});
-                    }
-                })
-                .catch(function (error) {
-                    // handle error
-                    console.log(error);
-                })
-                .finally(function () {
-                    // always executed
-                });
-            //this.setState({customers: customers, selectedCustomer:null, customer: null, displayDialog:false});
+            .then( response => {
+                // handle success
+                console.log(response);
+                if(response.status === 200){
+                    this.setState({customers: response.data, selectedCustomer:null, customer: null, displayDialog:false});
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
         }
     }
 
@@ -81,7 +75,7 @@ export default class Customer extends GenericComponent {
         .then( response => {
             // handle success
             console.log(response);
-            if(response.status === 200){
+            if(response.status === 204){
                 this.setState({customers: response.data, selectedCustomer:null, customer: null, displayDialog:false});
                 let index = this.findSelectedcustomerIndex();
                 this.setState({
@@ -94,10 +88,11 @@ export default class Customer extends GenericComponent {
         .catch(function (error) {
             // handle error
             console.log(error);
-        })
-        .finally(function () {
-            // always executed
         });
+    }
+
+    close() {
+        this.setState({selectedCustomer:null, customer: null, displayDialog:false});
     }
 
     findSelectedcustomerIndex() {
@@ -121,7 +116,7 @@ export default class Customer extends GenericComponent {
     addNew() {
         this.newCustomer = true;
         this.setState({
-            customer: {firstname: '', lastname: '', mobileNumber: '', status: ''},
+            customer: {firstName: '', lastName: '', mobileNumber: '', status: ''},
             displayDialog: true
         });
     }
@@ -140,8 +135,9 @@ export default class Customer extends GenericComponent {
         </div>;
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
-            <Button label="Delete" icon="pi pi-times" onClick={this.delete}/>
-            <Button label="Save" icon="pi pi-check" onClick={this.save}/>
+            <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.save}/>
+            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.delete}/>
+            <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.close}/>
         </div>;
 
         return (
@@ -153,10 +149,12 @@ export default class Customer extends GenericComponent {
                                    selectionMode="single" selection={this.state.selectedCustomer} onSelectionChange={e => this.setState({selectedCustomer: e.value})}
                                    onRowSelect={this.onCustomerSelect}
                                    globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
-                            <Column field="firstname" header="First Name" sortable={true} />
-                            <Column field="lastname" header="Last Name" sortable={true} />
-                            <Column field="mobileNumber" header="Mobile Number" sortable={true} />
-                            <Column field="status" header="Status" sortable={true} />
+                            <Column field="firstName" header="First Name" sortable={true} style={{textAlign: 'left'}}/>
+                            <Column field="lastName" header="Last Name" sortable={true} style={{textAlign: 'left'}}/>
+                            <Column field="mobileNumber" header="Mobile Number" sortable={true} style={{textAlign: 'center'}}/>
+                            <Column field="status" header="Status" sortable={true} style={{textAlign: 'center'}}/>
+                            <Column field="status" header="Remaining Amount" sortable={true} style={{textAlign: 'center'}}/>
+                            <Column field="status" header="Total Amount" sortable={true} style={{textAlign: 'center'}}/>
                         </DataTable>
 
                         <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Customer Details" modal={true} footer={dialogFooter} onHide={() => this.setState({displayDialog: false})}>
@@ -164,25 +162,36 @@ export default class Customer extends GenericComponent {
                                 this.state.customer &&
 
                                 <div className="p-grid p-fluid">
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="firstname">First Name</label></div>
-                                    <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="firstname" onChange={(e) => {this.updateProperty('firstname', e.target.value)}} value={this.state.customer.firstname}/>
+                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="firstName">First Name</label></div>
+                                    <div className="p-col-8" style={{padding:'.5em'}}> {this.state.customer['nnid']}
+                                        <InputText id="firstName" onChange={(e) => {this.updateProperty('firstName', e.target.value)}} value={this.state.customer.firstName}/>
                                     </div>
 
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="lastname">Last Name</label></div>
+                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="lastName">Last Name</label></div>
                                     <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="lastname" onChange={(e) => {this.updateProperty('lastname', e.target.value)}} value={this.state.customer.lastname}/>
+                                        <InputText id="lastName" onChange={(e) => {this.updateProperty('lastName', e.target.value)}} value={this.state.customer.lastName}/>
                                     </div>
 
                                     <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="mobileNumber">Mobile Number</label></div>
                                     <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="mobileNumber" onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.customer.mobileNumber}/>
+                                        <InputText id="mobileNumber" keyfilter="int" onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.customer.mobileNumber}/>
                                     </div>
 
                                     <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="status">Status</label></div>
                                     <div className="p-col-8" style={{padding:'.5em'}}>
                                         <InputText id="status" onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.customer.status}/>
                                     </div>
+
+                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="status">Remaining Amount</label></div>
+                                    <div className="p-col-8" style={{padding:'.5em'}}>
+                                        <InputText id="status" keyfilter="int" onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.customer.status}/>
+                                    </div>
+
+                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="status">Total Amount</label></div>
+                                    <div className="p-col-8" style={{padding:'.5em'}}>
+                                        <InputText id="status" keyfilter="int" onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.customer.status}/>
+                                    </div>
+
                                 </div>
                             }
                         </Dialog>

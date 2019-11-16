@@ -6,9 +6,9 @@ import (
 )
 
 type Model struct {
-	ID        int64     `gorm:"PRIMARY_KEY;AUTO_INCREMENT" json:"id" xml:"id" form:"id" query:"id"`
+	ID        string    `gorm:"PRIMARY_KEY; type:uuid default gen_random_uuid();" json:"id" xml:"id" form:"id" query:"id"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"createdAt" xml:"createdAt" form:"createdAt" query:"createdAt"`
-	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
+	UpdatedAt time.Time `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
 }
 
 type ModelSoftDelete struct {
@@ -31,8 +31,8 @@ type User struct {
 
 type Person struct {
 	Model
-	FirstName    string `json:"firstname" xml:"firstname" form:"firstname" query:"firstname"`
-	LastName     string `json:"lastname" xml:"lastname" form:"lastname" query:"lastname"`
+	FirstName    string `json:"firstName" xml:"firstName" form:"firstName" query:"firstName"`
+	LastName     string `json:"lastName" xml:"lastName" form:"lastName" query:"lastName"`
 	MobileNumber string `json:"mobileNumber" xml:"mobileNumber" form:"mobileNumber" query:"mobileNumber"`
 }
 
@@ -63,7 +63,7 @@ type Inventory struct {
 	WholesaleRate float64 `json:"wholesaleRate" xml:"wholesaleRate" form:"wholesaleRate" query:"wholesaleRate"`
 	RetailRate    float64 `json:"retailRate" xml:"retailRate" form:"retailRate" query:"retailRate"`
 	ItemStatus    string  `json:"itemStatus" xml:"itemStatus" form:"itemStatus" query:"itemStatus"`
-	CompanyId     int64   `gorm:"ForeignKey:companyId", json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
+	CompanyId     string  `gorm:"ForeignKey:companyId", json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
 }
 
 func (inventory Inventory) ToString() string {
