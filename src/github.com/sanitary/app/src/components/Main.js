@@ -31,6 +31,21 @@ export default class Login extends GenericComponent {
         if(this.byId('username').value !== '' && this.byId('password').value){
             window.localStorage.setItem("isLoggedIn", "{username: 'Waris Ali'}");
             window.location.hash="customers";
+
+            this.axios.post('/users/login', {username: this.byId('username').value, password: this.byId('password').value})
+            .then( response => {
+                // handle success
+                console.log(response);
+                if(response.status === 200){
+                    console.log(response.data);
+                    window.localStorage.setItem("isLoggedIn", "{username: 'Waris Ali'}");
+                    window.location.hash="customers";
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
         } else {
             return false;
         }

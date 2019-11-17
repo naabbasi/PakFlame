@@ -15,7 +15,7 @@ const (
 )
 
 func init() {
-	log.Print("Inventory initialized")
+	log.Print("Inventory REST API initialized")
 }
 
 type inventories struct {

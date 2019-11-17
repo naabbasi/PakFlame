@@ -15,7 +15,7 @@ const (
 )
 
 func init() {
-	log.Print("Company initialized")
+	log.Print("Company  REST API initialized")
 }
 
 type companies struct {

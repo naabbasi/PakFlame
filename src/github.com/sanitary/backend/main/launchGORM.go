@@ -33,6 +33,7 @@ func main() {
 	schema.CreatePostgreSQLSchema(db)
 
 	db.Create(&models.User{Username: "nabbasi", Password: "x"})
+	db.Create(&models.User{Username: "waris", Password: "786"})
 
 	customer := &models.Customer{}
 	customer.FirstName = "Customer"

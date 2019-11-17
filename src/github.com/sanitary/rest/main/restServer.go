@@ -45,6 +45,13 @@ func main() {
 			schema.CreatePostgreSQLSchema(db.GetDBConnection())
 		}
 
+		users := api.NewUser(e)
+		users.GetUsers()
+		users.AddUser()
+		users.UpdateUser()
+		users.DeleteUser()
+		users.Login()
+
 		customers := api.NewCustomer(e)
 		customers.GetCustomers()
 		customers.AddCustomer()

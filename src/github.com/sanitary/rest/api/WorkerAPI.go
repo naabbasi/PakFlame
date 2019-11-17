@@ -15,6 +15,10 @@ const (
 
 var allWorkers []*models.Worker
 
+func init() {
+	log.Print("Worker  REST API initialized")
+}
+
 type workers struct {
 	echo       *echo.Echo
 	config     *config.Config
@@ -30,7 +34,7 @@ func NewWorker(e *echo.Echo) workers {
 func (worker *workers) Get() {
 	worker.echo.GET(WorkerEndPoint, func(c echo.Context) error {
 		if worker.config.DemoData == true {
-			worker1 := []*models.Worker{
+			workers := []*models.Worker{
 				{
 					Status:  "working",
 					Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
@@ -61,7 +65,7 @@ func (worker *workers) Get() {
 			}
 
 			if len(allWorkers) == 0 {
-				allWorkers = append(allWorkers, worker1...)
+				allWorkers = append(allWorkers, workers...)
 			}
 
 			return c.JSON(http.StatusOK, &allWorkers)
