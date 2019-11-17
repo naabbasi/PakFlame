@@ -1,10 +1,11 @@
 package api
 
 import (
-	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
+	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
+	"github.com/sanitary/config"
 	"net/http"
 	"time"
 )
@@ -18,104 +19,130 @@ func init() {
 }
 
 type inventories struct {
-	db   *gorm.DB
-	echo *echo.Echo
+	echo       *echo.Echo
+	config     *config.Config
+	dbSettings *backend.DBSettings
 }
 
 var allInventories []*models.Inventory
 
 func NewInventory(e *echo.Echo) *inventories {
-	return &inventories{echo: e}
+	newConfig := config.NewConfig()
+	dbSettings := backend.GetDBSettings(newConfig)
+	return &inventories{config: newConfig, echo: e, dbSettings: dbSettings}
 }
 
 func (inventory *inventories) GetItems() {
 	inventory.echo.GET(InventoryEndPoint, func(c echo.Context) error {
-		currentTime := time.Now()
-		log.Print(currentTime.Format("October 20, 2019"))
-		var inventory = []*models.Inventory{
-			{
-				Model: models.Model{
-					CreatedAt: time.Now(),
-					UpdatedAt: time.Now(),
+		if inventory.config.DemoData == true {
+			var inventory = []*models.Inventory{
+				{
+					Model: models.Model{
+						CreatedAt: time.Now(),
+						UpdatedAt: time.Now(),
+					},
+					ItemName:      "Sample Item 1",
+					Quantities:    100,
+					PurchaseRate:  500,
+					WholesaleRate: 600,
+					RetailRate:    700,
+					ItemStatus:    "available",
+					CompanyId:     "",
 				},
-				ItemName:      "Sample Item 1",
-				Quantities:    100,
-				PurchaseRate:  500,
-				WholesaleRate: 600,
-				RetailRate:    700,
-				ItemStatus:    "available",
-				CompanyId:     "",
-			},
-			{
-				Model: models.Model{
-					CreatedAt: time.Now(),
-					UpdatedAt: time.Now(),
+				{
+					Model: models.Model{
+						CreatedAt: time.Now(),
+						UpdatedAt: time.Now(),
+					},
+					ItemName:      "Sample Item 2",
+					Quantities:    200,
+					PurchaseRate:  5200,
+					WholesaleRate: 5300,
+					RetailRate:    5400,
+					CompanyId:     "",
 				},
-				ItemName:      "Sample Item 2",
-				Quantities:    200,
-				PurchaseRate:  5200,
-				WholesaleRate: 5300,
-				RetailRate:    5400,
-				CompanyId:     "",
-			},
-			{
-				Model: models.Model{
-					CreatedAt: time.Now(),
-					UpdatedAt: time.Now(),
+				{
+					Model: models.Model{
+						CreatedAt: time.Now(),
+						UpdatedAt: time.Now(),
+					},
+					ItemName:      "Sample Item 3",
+					Quantities:    300,
+					PurchaseRate:  401,
+					WholesaleRate: 402,
+					RetailRate:    403,
+					CompanyId:     "",
 				},
-				ItemName:      "Sample Item 3",
-				Quantities:    300,
-				PurchaseRate:  401,
-				WholesaleRate: 402,
-				RetailRate:    403,
-				CompanyId:     "",
-			},
-		}
+			}
 
-		if len(allInventories) == 0 {
-			allInventories = append(allInventories, inventory...)
-		}
+			if len(allInventories) == 0 {
+				allInventories = append(allInventories, inventory...)
+			}
 
-		return c.JSON(http.StatusOK, allInventories)
+			return c.JSON(http.StatusOK, allInventories)
+		} else {
+			connection := inventory.dbSettings.GetDBConnection()
+			connection.Find(&allInventories)
+			return c.JSON(http.StatusOK, &allInventories)
+		}
 	})
 }
 
 func (inventory *inventories) AddItem() {
 	inventory.echo.POST(InventoryEndPoint, func(c echo.Context) error {
-		item := new(models.Inventory)
-		if err := c.Bind(item); err != nil {
+		newItem := new(models.Inventory)
+		if err := c.Bind(newItem); err != nil {
 			return err
 		}
-		log.Printf("Item saved with %s", item)
+		log.Printf("Item saved with %s", newItem)
 
-		allInventories = append(allInventories, item)
+		connection := inventory.dbSettings.GetDBConnection()
+		save := connection.Save(newItem)
 
-		return c.JSON(http.StatusCreated, allInventories)
+		if save.RowsAffected == 1 {
+			allInventories = append(allInventories, newItem)
+			return c.JSON(http.StatusCreated, allInventories)
+		} else {
+			return c.JSON(http.StatusInternalServerError, "Unable to save new item in inventory")
+		}
 	})
 }
 
 func (inventory *inventories) UpdateItem() {
 	inventory.echo.PUT(InventoryEndPoint, func(c echo.Context) error {
-		item := new(models.Inventory)
-		if err := c.Bind(item); err != nil {
+		updateItem := new(models.Inventory)
+		if err := c.Bind(updateItem); err != nil {
 			return err
 		}
-		log.Printf("Item saved with %s", item)
+		log.Printf("Item saved with %s", updateItem)
 
-		allInventories = append(allInventories, item)
+		connection := inventory.dbSettings.GetDBConnection()
+		update := connection.Model(models.Inventory{}).Where("id = ?", updateItem.ID).Update(updateItem)
 
-		return c.JSON(http.StatusCreated, allInventories)
+		if update.RowsAffected == 1 {
+			allInventories = append(allInventories, updateItem)
+			return c.JSON(http.StatusAccepted, allInventories)
+		} else {
+			return c.JSON(http.StatusInternalServerError, "Unable to update inventory")
+		}
 	})
 }
 
 func (inventory *inventories) DeleteItem() {
 	inventory.echo.DELETE(InventoryEndPoint, func(c echo.Context) error {
-		item := new(models.Inventory)
-		if err := c.Bind(item); err != nil {
+		deleteItem := new(models.Inventory)
+		if err := c.Bind(deleteItem); err != nil {
 			return err
 		}
-		log.Printf("Item deleted with %s", item.ItemName)
+		log.Printf("Item deleted with %s", deleteItem.ItemName)
 
-		return c.JSON(http.StatusNoContent, item)
+		connection := inventory.dbSettings.GetDBConnection()
+		update := connection.Model(models.Inventory{}).Delete(deleteItem)
+
+		if update.RowsAffected == 1 {
+			return c.JSON(http.StatusNoContent, allInventories)
+		} else {
+			return c.JSON(http.StatusInternalServerError, "Unable to delete item from inventory")
+		}
 	})
 }

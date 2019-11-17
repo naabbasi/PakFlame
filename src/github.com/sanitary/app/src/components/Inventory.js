@@ -18,74 +18,85 @@ export default class Inventory extends GenericComponent {
             companySuggestions: null,
             companies: null
         };
-        this.save = this.save.bind(this);
-        this.delete = this.delete.bind(this);
+
+        this.saveInventory = this.saveInventory.bind(this);
+        this.deleteInventory = this.deleteInventory.bind(this);
         this.onInventorySelect = this.onInventorySelect.bind(this);
         this.addNew = this.addNew.bind(this);
 
         /*Company*/
         this.saveCompany = this.saveCompany.bind(this);
+        this.deleteCompany = this.deleteCompany.bind(this);
         this.addNewCompany = this.addNewCompany.bind(this);
         this.onItemStatusChange = this.onItemStatusChange.bind(this);
     }
 
     async componentDidMount() {
-        // Make a request for a users
+        this.getInventories();
+    }
+
+    getInventories() {
+        // Make a request for a inventories
         this.axios.get('/inventories')
             .then( response => {
                 // handle success
                 console.log(response);
                 if(response.status === 200){
+                    console.log("*******************************")
                     this.setState({inventories: response.data});
                 }
             })
             .catch(function (error) {
                 // handle error
                 console.log(error);
-            })
-            .finally(function () {
-                // always executed
             });
-
-        this.setState({companies : [{id: 1, companyName: 'Audi'}, {id: 2, companyName: 'BMW'}, {id: 3, companyName: 'Toyota'}, {id: 4, companyName: 'Suzuki'}]});
     }
 
-    save() {
-        let inventories = [...this.state.inventories];
-        if(this.newCustomer){
+    saveInventory() {
+        if(this.newItem){
             this.axios.post('/inventories', this.state.newInventory)
-                .then( response => {
-                    // handle success
-                    console.log(response);
-                    if(response.status === 201){
-                        inventories.push(response.data);
-                        this.setState({inventories: inventories, newInventory: null, displayItemDialog:false});
-                    }
-                })
-                .catch(function (error) {
-                    // handle error
-                    console.log(error);
-                })
-                .finally(function () {
-                    // always executed
-                });
+            .then( response => {
+                // handle success
+                console.log(response);
+                if(response.status === 201){
+                    this.setState({inventories: null, newInventory: null, displayItemDialog:false});
+                    this.getInventories();
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+        } else {
+            this.axios.put('/inventories',this.state.newInventory)
+            .then( response => {
+                // handle success
+                console.log(response);
+                if(response.status === 202){
+                    this.setState({inventories: null, selectedInventory: null, newInventory: null, displayItemDialog:false});
+                    this.getInventories();
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
         }
-        else
-            inventories[this.findSelectedcustomerIndex()] = this.state.newInventory;
-
-
     }
 
-    delete() {
-        let index = this.findSelectedcustomerIndex();
-        this.setState({
-            inventories: this.state.inventories.filter((val,i) => i !== index),
-            newInventory: null,
-            displayItemDialog: false});
-    }
-
-    findSelectedcustomerIndex() {
-        return this.state.inventories.indexOf(this.state.selectedCustomer);
+    deleteInventory() {
+        this.axios.delete('/inventories', { data: { ...this.state.selectedInventory}})
+        .then( response => {
+            // handle success
+            if(response.status === 204){
+                this.setState({inventories: null, selectedInventory: null, newInventory: null, displayItemDialog:false});
+                this.getInventories();
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        });
     }
 
     updateProperty(property, value) {
@@ -101,7 +112,7 @@ export default class Inventory extends GenericComponent {
     }
 
     onInventorySelect(e){
-        this.newCustomer = false;
+        this.newItem = false;
         this.setState({
             displayItemDialog:true,
             newInventory: Object.assign({}, e.data)
@@ -109,7 +120,7 @@ export default class Inventory extends GenericComponent {
     }
 
     addNew() {
-        this.newCustomer = true;
+        this.newItem = true;
         this.setState({
             newInventory: {itemName: '', quantities: 0, quantityAlert: 0, purchaseRate: 0, wholesaleRate: 0, retailRate: 0, itemStatus: ''},
             displayItemDialog: true
@@ -118,7 +129,7 @@ export default class Inventory extends GenericComponent {
 
     addNewCompany() {
         this.setState({
-            addCompany: {id: -1, companyName: '', mobileNumber: ''},
+            addCompany: {id: '', companyName: '', mobileNumber: ''},
             displayCompanyDialog: true
         });
     }
@@ -167,11 +178,42 @@ export default class Inventory extends GenericComponent {
                 });
             }
 
-            this.setState({ companySuggestions: results });
+            if(results.length === 0 && event.query.length !== 0){
+                this.updateCompanyProperty('companyName', event.query);
+            } else {
+                this.setState({ companySuggestions: results });
+            }
+
         }, 250);
     }
 
     saveCompany() {
+        this.axios.post('/companies', this.state.addCompany)
+        .then( response => {
+            // handle success
+            console.log(response);
+            if(response.status === 201){
+                this.setState({companies : response.data, displayCompanyDialog: false});
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        });
+    }
+
+    deleteCompany() {
+        this.axios.delete('/companies', { data: { ...this.state.company}})
+        .then( response => {
+            // handle success
+            if(response.status === 204){
+                this.setState({displayCompanyDialog: false});
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        });
     }
 
     render() {
@@ -195,14 +237,14 @@ export default class Inventory extends GenericComponent {
         </div>
 
         let dialogItemFooter = <div className="ui-dialog-buttonpane p-clearfix">
-            <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.save}/>
-            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.delete}/>
+            <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInventory}/>
+            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteInventory}/>
             <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeItemDialog.bind(this)}/>
         </div>;
 
         let dialogCompanyFooter = <div className="ui-dialog-buttonpane p-clearfix">
             <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveCompany}/>
-            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.updateCompany}/>
+            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteCompany}/>
             <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeCompanyDialog.bind(this)}/>
         </div>;
 

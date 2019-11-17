@@ -20,18 +20,22 @@ export default class Worker extends GenericComponent {
     }
 
     async componentDidMount() {
-        // Make a request for a users
+        this.getWorkers();
+    }
+
+    getWorkers() {
+        // Make a request for a workers
         this.axios.get('/workers')
-            .then( response => {
-                // handle success
-                if(response.status === 200){
-                    this.setState({workers: response.data});
-                }
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            });
+        .then( response => {
+            // handle success
+            if(response.status === 200){
+                this.setState({workers: response.data});
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        });
     }
 
     save() {
@@ -40,7 +44,8 @@ export default class Worker extends GenericComponent {
             .then( response => {
                 // handle success
                 if(response.status === 201){
-                    this.setState({workers: response.data, selectedWorker:null, worker: null, displayDialog:false});
+                    this.setState({workers: null, selectedWorker:null, worker: null, displayDialog:false});
+                    this.getWorkers();
                 }
             })
             .catch(function (error) {
@@ -54,7 +59,8 @@ export default class Worker extends GenericComponent {
                 // handle success
                 console.log(response);
                 if(response.status === 202){
-                    this.setState({workers: response.data, selectedWorker:null, worker: null, displayDialog:false});
+                    this.setState({workers: null, selectedWorker:null, worker: null, displayDialog:false});
+                    this.getWorkers();
                 }
             })
             .catch(function (error) {
@@ -70,12 +76,8 @@ export default class Worker extends GenericComponent {
             // handle success
             console.log(response);
             if(response.status === 204){
-                let index = this.findSelectedworkerIndex();
-                this.setState({
-                    workers: this.state.workers.filter((val,i) => i !== index),
-                    selectedWorker: null,
-                    worker: null,
-                    displayDialog: false});
+                this.setState({workers: null, selectedWorker:null, worker: null, displayDialog:false});
+                this.getWorkers();
             }
         })
         .catch(function (error) {
@@ -86,10 +88,6 @@ export default class Worker extends GenericComponent {
 
     close() {
         this.setState({selectedWorker:null, worker: null, displayDialog:false});
-    }
-
-    findSelectedworkerIndex() {
-        return this.state.workers.indexOf(this.state.selectedWorker);
     }
 
     updateProperty(property, value) {

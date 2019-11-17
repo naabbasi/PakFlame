@@ -122,7 +122,7 @@ func (worker *workers) DeleteWorker() {
 		log.Printf("Worker deleted with %s", deleteWorker.FirstName)
 
 		connection := worker.dbSettings.GetDBConnection()
-		update := connection.Model(models.Worker{}).Where("id = ?", deleteWorker.ID).Delete(deleteWorker)
+		update := connection.Model(models.Worker{}).Delete(deleteWorker)
 
 		if update.RowsAffected == 1 {
 			return c.JSON(http.StatusNoContent, allWorkers)

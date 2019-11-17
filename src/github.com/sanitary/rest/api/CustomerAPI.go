@@ -112,7 +112,7 @@ func (customer *customers) DeleteCustomer() {
 		log.Printf("Worker deleted with %s", deleteCustomer.FirstName)
 
 		connection := customer.dbSettings.GetDBConnection()
-		update := connection.Model(models.Customer{}).Where("id = ?", deleteCustomer.ID).Delete(deleteCustomer)
+		update := connection.Model(models.Customer{}).Delete(deleteCustomer)
 
 		if update.RowsAffected == 1 {
 			return c.JSON(http.StatusNoContent, allCustomer)

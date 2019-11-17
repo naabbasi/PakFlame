@@ -20,22 +20,21 @@ export default class Customer extends GenericComponent {
     }
 
     async componentDidMount() {
-        // Make a request for a users
+        this.getCustomers();
+    }
+
+    getCustomers() {
+        // Make a request for a customers
         this.axios.get('/customers')
         .then( response => {
             // handle success
             if(response.status === 200){
                 this.setState({customers: response.data});
-                console.log(response.data);
-                console.log(this.state.customers)
             }
         })
         .catch(function (error) {
             // handle error
             console.log(error);
-        })
-        .finally(function () {
-            // always executed
         });
     }
 
@@ -46,7 +45,8 @@ export default class Customer extends GenericComponent {
                 // handle success
                 console.log(response);
                 if(response.status === 201){
-                    this.setState({customers: response.data, selectedCustomer:null, customer: null, displayDialog:false});
+                    this.setState({customers: null, selectedCustomer:null, customer: null, displayDialog:false});
+                    this.getCustomers();
                 }
             })
             .catch(function (error) {
@@ -59,8 +59,9 @@ export default class Customer extends GenericComponent {
             .then( response => {
                 // handle success
                 console.log(response);
-                if(response.status === 200){
-                    this.setState({customers: response.data, selectedCustomer:null, customer: null, displayDialog:false});
+                if(response.status === 202){
+                    this.setState({customers: null, selectedCustomer:null, customer: null, displayDialog:false});
+                    this.getCustomers();
                 }
             })
             .catch(function (error) {
@@ -76,13 +77,8 @@ export default class Customer extends GenericComponent {
             // handle success
             console.log(response);
             if(response.status === 204){
-                this.setState({customers: response.data, selectedCustomer:null, customer: null, displayDialog:false});
-                let index = this.findSelectedcustomerIndex();
-                this.setState({
-                    customers: this.state.customers.filter((val,i) => i !== index),
-                    selectedCustomer: null,
-                    customer: null,
-                    displayDialog: false});
+                this.setState({customers: null, selectedCustomer:null, customer: null, displayDialog:false});
+                this.getCustomers();
             }
         })
         .catch(function (error) {
@@ -93,10 +89,6 @@ export default class Customer extends GenericComponent {
 
     close() {
         this.setState({selectedCustomer:null, customer: null, displayDialog:false});
-    }
-
-    findSelectedcustomerIndex() {
-        return this.state.customers.indexOf(this.state.selectedCustomer);
     }
 
     updateProperty(property, value) {
