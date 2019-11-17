@@ -38,8 +38,6 @@ export default class Login extends GenericComponent {
                 console.log(response);
                 if(response.status === 200){
                     console.log(response.data);
-                    window.localStorage.setItem("isLoggedIn", "{username: 'Waris Ali'}");
-                    window.location.hash="customers";
                 }
             })
             .catch(function (error) {
