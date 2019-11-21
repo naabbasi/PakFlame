@@ -39,16 +39,17 @@ type Person struct {
 type Customer struct {
 	Person
 	Status string `json:"status" xml:"status" form:"status" query:"status"`
+	Payment
 }
 
 type Worker struct {
 	Person
 	Address string `json:"address" xml:"address" form:"address" query:"address"`
 	Status  string `json:"status" xml:"status" form:"status" query:"status"`
+	Payment
 }
 
 type Payment struct {
-	Model
 	Amount    float64 `json:"amount" xml:"amount" form:"amount" query:"amount"`
 	Remaining float64 `json:"remaining" xml:"remaining" form:"remaining" query:"remaining"`
 	Total     float64 `json:"total" xml:"total" form:"total" query:"total"`

@@ -176,12 +176,16 @@ export default class Customer extends GenericComponent {
 
                                     <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="status">Remaining Amount</label></div>
                                     <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="status" keyfilter="int" onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.customer.status}/>
+                                        <InputText id="status" keyfilter="int" onChange={(e) => {this.updateProperty('status', e.target.value)}}
+                                                   onBlur={(e) => {this.updateProperty('status', this.Float(e.target.value))}}
+                                                   value={this.state.customer.status}/>
                                     </div>
 
                                     <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="status">Total Amount</label></div>
                                     <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="status" keyfilter="int" onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.customer.status}/>
+                                        <InputText id="status" keyfilter="int" onChange={(e) => {this.updateProperty('status', e.target.value)}}
+                                                   onBlur={(e) => {this.updateProperty('status', this.Float(e.target.value))}}
+                                                   value={this.state.customer.status}/>
                                     </div>
 
                                 </div>

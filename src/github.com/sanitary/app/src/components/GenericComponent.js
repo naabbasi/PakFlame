@@ -43,4 +43,20 @@ export class GenericComponent extends Component {
     }
 
     byId = (id) => document.getElementById(id);
+
+    Int = (value) => {
+        if (value === ""){
+            return 0;
+        } else {
+            return parseInt(value);
+        }
+    };
+
+    Float = (value) => {
+        if (value === ""){
+            return 0.0;
+        } else {
+            return parseFloat(value);
+        }
+    };
 }
