@@ -14,7 +14,7 @@ const (
 )
 
 func init() {
-	log.Print("Customer  REST API initialized")
+	log.Print("Worker  REST API initialized")
 }
 
 type customers struct {
@@ -22,8 +22,6 @@ type customers struct {
 	config     *config.Config
 	dbSettings *backend.DBSettings
 }
-
-var allCustomer []*models.Customer
 
 func NewCustomer(e *echo.Echo) *customers {
 	newConfig := config.NewConfig()
@@ -33,32 +31,10 @@ func NewCustomer(e *echo.Echo) *customers {
 
 func (customer *customers) GetCustomers() {
 	customer.echo.GET(CustomerEndPoint, func(c echo.Context) error {
-		if customer.config.DemoData == true {
-			customers := []*models.Customer{
-				{
-					Status: "active",
-					Person: models.Person{FirstName: "Noman Ali", LastName: "Abbasi", MobileNumber: "03012525461"},
-				},
-				{
-					Status: "active",
-					Person: models.Person{FirstName: "Farhan Ali", LastName: "REST", MobileNumber: "03012525461"},
-				},
-				{
-					Status: "active",
-					Person: models.Person{FirstName: "Arsalan Ali", LastName: "REST", MobileNumber: "03012525461"},
-				},
-			}
-
-			if len(allCustomer) == 0 {
-				allCustomer = append(allCustomer, customers...)
-			}
-
-			return c.JSON(http.StatusOK, allCustomer)
-		} else {
-			connection := customer.dbSettings.GetDBConnection()
-			connection.Find(&allCustomer)
-			return c.JSON(http.StatusOK, &allCustomer)
-		}
+		var allCustomer = new(models.User)
+		connection := customer.dbSettings.GetDBConnection()
+		connection.Find(&allCustomer)
+		return c.JSON(http.StatusOK, &allCustomer)
 	})
 }
 
@@ -74,8 +50,7 @@ func (customer *customers) AddCustomer() {
 		save := connection.Save(newCustomer)
 
 		if save.RowsAffected == 1 {
-			allCustomer = append(allCustomer, newCustomer)
-			return c.JSON(http.StatusCreated, allCustomer)
+			return c.JSON(http.StatusCreated, "Customer has been added")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to save new customer")
 		}
@@ -95,8 +70,7 @@ func (customer *customers) UpdateCustomer() {
 		update := connection.Model(models.Customer{}).Where("id = ?", updateCustomer.ID).Update(updateCustomer)
 
 		if update.RowsAffected == 1 {
-			allCustomer = append(allCustomer, updateCustomer)
-			return c.JSON(http.StatusAccepted, allCustomer)
+			return c.JSON(http.StatusAccepted, "Customer has been added")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to update customer")
 		}
@@ -115,9 +89,9 @@ func (customer *customers) DeleteCustomer() {
 		update := connection.Model(models.Customer{}).Delete(deleteCustomer)
 
 		if update.RowsAffected == 1 {
-			return c.JSON(http.StatusNoContent, allCustomer)
+			return c.JSON(http.StatusNoContent, "Customer has been deleted")
 		} else {
-			return c.JSON(http.StatusInternalServerError, "Unable to update worker")
+			return c.JSON(http.StatusInternalServerError, "Unable to delete customer")
 		}
 	})
 }

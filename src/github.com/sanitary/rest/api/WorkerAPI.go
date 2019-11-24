@@ -13,8 +13,6 @@ const (
 	WorkerEndPoint = "/api/workers"
 )
 
-var allWorkers []*models.Worker
-
 func init() {
 	log.Print("Worker  REST API initialized")
 }
@@ -33,47 +31,10 @@ func NewWorker(e *echo.Echo) workers {
 
 func (worker *workers) Get() {
 	worker.echo.GET(WorkerEndPoint, func(c echo.Context) error {
-		if worker.config.DemoData == true {
-			workers := []*models.Worker{
-				{
-					Status:  "working",
-					Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
-					Person: models.Person{
-						FirstName:    "Noman Ali",
-						LastName:     "Abbasi",
-						MobileNumber: "03012525461",
-					},
-				},
-				{
-					Status:  "working",
-					Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
-					Person: models.Person{
-						FirstName:    "Arsalan Ali",
-						LastName:     "Abbasi",
-						MobileNumber: "03012525461",
-					},
-				},
-				{
-					Status:  "working",
-					Address: "H. NO 284, unit no 2 block d, Latifabad, Hyderabad",
-					Person: models.Person{
-						FirstName:    "Farhan Ali",
-						LastName:     "Abbasi",
-						MobileNumber: "03012525461",
-					},
-				},
-			}
-
-			if len(allWorkers) == 0 {
-				allWorkers = append(allWorkers, workers...)
-			}
-
-			return c.JSON(http.StatusOK, &allWorkers)
-		} else {
-			connection := worker.dbSettings.GetDBConnection()
-			connection.Find(&allWorkers)
-			return c.JSON(http.StatusOK, &allWorkers)
-		}
+		var allWorkers = new(models.Worker)
+		connection := worker.dbSettings.GetDBConnection()
+		connection.Find(&allWorkers)
+		return c.JSON(http.StatusOK, &allWorkers)
 	})
 }
 
@@ -89,8 +50,7 @@ func (worker *workers) AddWorker() {
 		save := connection.Save(newWorker)
 
 		if save.RowsAffected == 1 {
-			allWorkers = append(allWorkers, newWorker)
-			return c.JSON(http.StatusCreated, allWorkers)
+			return c.JSON(http.StatusCreated, "Worker has been updated")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to save new worker")
 		}
@@ -109,8 +69,7 @@ func (worker *workers) UpdateWorker() {
 		update := connection.Model(models.Worker{}).Where("id = ?", updateWorker.ID).Update(updateWorker)
 
 		if update.RowsAffected == 1 {
-			allWorkers = append(allWorkers, updateWorker)
-			return c.JSON(http.StatusAccepted, allWorkers)
+			return c.JSON(http.StatusAccepted, "Worker has been updated")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to update worker")
 		}
@@ -129,7 +88,7 @@ func (worker *workers) DeleteWorker() {
 		update := connection.Model(models.Worker{}).Delete(deleteWorker)
 
 		if update.RowsAffected == 1 {
-			return c.JSON(http.StatusNoContent, allWorkers)
+			return c.JSON(http.StatusNoContent, "Work has been deleted")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to update worker")
 		}

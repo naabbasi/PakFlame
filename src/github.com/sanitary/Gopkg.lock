@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:0a965d5b13be11c39d3cf35ba43de922765928bdca7e0596aec036d67ef4b5cd"
+  name = "github.com/alexbrainman/printer"
+  packages = ["."]
+  pruneopts = ""
+  revision = "345afe414dee601bf59b3ed4fb3e0282a51a5d43"
+
+[[projects]]
   digest = "1:6098222470fe0172157ce9bbef5d2200df4edde17ee649c5d6e48330e4afa4c6"
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
@@ -27,6 +35,14 @@
   pruneopts = ""
   revision = "f5c5f50e6090ae76a29240b61ae2a90dd810112e"
   version = "v1.0.0"
+
+[[projects]]
+  digest = "1:e2a730e8a29eefe92be584a2b429d0d733997558884d27ce209ef5e418f75fa0"
+  name = "github.com/jung-kurt/gofpdf"
+  packages = ["."]
+  pruneopts = ""
+  revision = "49e44c73f28fbc4ea0b011c7d4078d0a1523e44f"
+  version = "v12.13.5"
 
 [[projects]]
   digest = "1:4beb546223497fdc767dd15f2f48e271598817cecda2beaf2ad7bf43282d5bf7"
@@ -153,8 +169,10 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/alexbrainman/printer",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/postgres",
+    "github.com/jung-kurt/gofpdf",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",
     "github.com/labstack/gommon/log",

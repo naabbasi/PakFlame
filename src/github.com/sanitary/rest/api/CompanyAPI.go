@@ -7,7 +7,6 @@ import (
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
 	"net/http"
-	"time"
 )
 
 const (
@@ -24,8 +23,6 @@ type companies struct {
 	dbSettings *backend.DBSettings
 }
 
-var allCompanies []*models.Company
-
 func NewCompany(e *echo.Echo) *companies {
 	newConfig := config.NewConfig()
 	dbSettings := backend.GetDBSettings(newConfig)
@@ -34,47 +31,10 @@ func NewCompany(e *echo.Echo) *companies {
 
 func (company *companies) GetCompanies() {
 	company.echo.GET(CompanyEndPoint, func(c echo.Context) error {
-		if company.config.DemoData == true {
-			companies := []*models.Company{
-				{
-					Model: models.Model{
-						CreatedAt: time.Time{},
-						UpdatedAt: time.Time{},
-					},
-					CompanyName:  "Comapany 1",
-					MobileNumber: "1234556472",
-					Inventory:    nil,
-				},
-				{
-					Model: models.Model{
-						CreatedAt: time.Time{},
-						UpdatedAt: time.Time{},
-					},
-					CompanyName:  "Comapany 2",
-					MobileNumber: "123455679",
-					Inventory:    nil,
-				},
-				{
-					Model: models.Model{
-						CreatedAt: time.Time{},
-						UpdatedAt: time.Time{},
-					},
-					CompanyName:  "Comapany 3",
-					MobileNumber: "12345567",
-					Inventory:    nil,
-				},
-			}
-
-			if len(allCompanies) == 0 {
-				allCompanies = append(allCompanies, companies...)
-			}
-
-			return c.JSON(http.StatusOK, allCompanies)
-		} else {
-			connection := company.dbSettings.GetDBConnection()
-			connection.Find(&allCompanies)
-			return c.JSON(http.StatusOK, allCompanies)
-		}
+		var allCompanies = new(models.Company)
+		connection := company.dbSettings.GetDBConnection()
+		connection.Find(&allCompanies)
+		return c.JSON(http.StatusOK, allCompanies)
 	})
 }
 
@@ -90,8 +50,7 @@ func (company *companies) AddCompany() {
 		save := connection.Save(newCompany)
 
 		if save.RowsAffected == 1 {
-			allCompanies = append(allCompanies, newCompany)
-			return c.JSON(http.StatusCreated, allCompanies)
+			return c.JSON(http.StatusCreated, "Company has been added")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to save new company")
 		}
@@ -110,8 +69,7 @@ func (company *companies) UpdateCompany() {
 		update := connection.Model(models.Company{}).Where("id = ?", updateCompany.ID).Update(updateCompany)
 
 		if update.RowsAffected == 1 {
-			allCompanies = append(allCompanies, updateCompany)
-			return c.JSON(http.StatusAccepted, allCompanies)
+			return c.JSON(http.StatusAccepted, "Company has been updated")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to update company")
 		}
@@ -130,7 +88,7 @@ func (company *companies) DeleteCompany() {
 		update := connection.Model(models.Company{}).Delete(deleteCompany)
 
 		if update.RowsAffected == 1 {
-			return c.JSON(http.StatusNoContent, allCompanies)
+			return c.JSON(http.StatusNoContent, "Company has been deleted")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to update worker")
 		}

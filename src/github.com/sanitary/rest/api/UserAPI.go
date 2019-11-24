@@ -7,7 +7,6 @@ import (
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
 	"net/http"
-	"time"
 )
 
 const (
@@ -24,8 +23,6 @@ type users struct {
 	dbSettings *backend.DBSettings
 }
 
-var allUsers []*models.User
-
 func NewUser(e *echo.Echo) *users {
 	newConfig := config.NewConfig()
 	dbSettings := backend.GetDBSettings(newConfig)
@@ -34,44 +31,10 @@ func NewUser(e *echo.Echo) *users {
 
 func (user *users) GetUsers() {
 	user.echo.GET(UserEndPoint, func(c echo.Context) error {
-		if user.config.DemoData == true {
-			users := []*models.User{
-				{
-					Model: models.Model{
-						CreatedAt: time.Time{},
-						UpdatedAt: time.Time{},
-					},
-					Username: "nabbasi",
-					Password: "x",
-				},
-				{
-					Model: models.Model{
-						CreatedAt: time.Time{},
-						UpdatedAt: time.Time{},
-					},
-					Username: "fabbasi",
-					Password: "x",
-				},
-				{
-					Model: models.Model{
-						CreatedAt: time.Time{},
-						UpdatedAt: time.Time{},
-					},
-					Username: "aabbasi",
-					Password: "x",
-				},
-			}
-
-			if len(allUsers) == 0 {
-				allUsers = append(allUsers, users...)
-			}
-
-			return c.JSON(http.StatusOK, allUsers)
-		} else {
-			connection := user.dbSettings.GetDBConnection()
-			connection.Find(&allUsers)
-			return c.JSON(http.StatusOK, allUsers)
-		}
+		connection := user.dbSettings.GetDBConnection()
+		allUsers := new(models.User)
+		connection.Find(&allUsers)
+		return c.JSON(http.StatusOK, allUsers)
 	})
 }
 
@@ -81,16 +44,15 @@ func (user *users) AddUser() {
 		if err := c.Bind(newUser); err != nil {
 			return err
 		}
-		log.Printf("User saved with %s", newUser)
+		log.Printf("User saved with %s", &newUser)
 
 		connection := user.dbSettings.GetDBConnection()
-		save := connection.Save(newUser)
+		save := connection.Save(&newUser)
 
 		if save.RowsAffected == 1 {
-			allUsers = append(allUsers, newUser)
-			return c.JSON(http.StatusCreated, allUsers)
+			return c.JSON(http.StatusCreated, "User has been added")
 		} else {
-			return c.JSON(http.StatusInternalServerError, "Unable to save new user")
+			return c.JSON(http.StatusNotModified, "User already exists")
 		}
 	})
 }
@@ -107,8 +69,7 @@ func (user *users) UpdateUser() {
 		update := connection.Model(models.User{}).Where("id = ?", updateUser.ID).Update(updateUser)
 
 		if update.RowsAffected == 1 {
-			allUsers = append(allUsers, updateUser)
-			return c.JSON(http.StatusAccepted, allUsers)
+			return c.JSON(http.StatusCreated, "User has been updated")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to update user")
 		}
@@ -127,9 +88,9 @@ func (user *users) DeleteUser() {
 		update := connection.Model(models.User{}).Delete(deleteUser)
 
 		if update.RowsAffected == 1 {
-			return c.JSON(http.StatusNoContent, allCompanies)
+			return c.JSON(http.StatusNoContent, "User has been deleted")
 		} else {
-			return c.JSON(http.StatusInternalServerError, "Unable to update user")
+			return c.JSON(http.StatusInternalServerError, "Unable to delete user")
 		}
 	})
 }
@@ -140,16 +101,16 @@ func (user *users) Login() {
 		if err := c.Bind(getUser); err != nil {
 			return err
 		}
-		log.Printf("User login with %s", getUser)
+		log.Printf("User login with %s", &getUser)
 
 		connection := user.dbSettings.GetDBConnection()
-		var loggedInUser *models.User
-		connection.First(&loggedInUser, "username = ? and password = ?", getUser.Username, getUser.Password)
+		var loggedInUser models.User
+		connection.First(&loggedInUser, "username = ? and password = ?", &getUser.Username, &getUser.Password)
 
 		if loggedInUser.ID != "" {
 			return c.JSON(http.StatusOK, "Logged In successfully ...")
 		} else {
-			return c.JSON(http.StatusForbidden, "Login failed !!!")
+			return c.JSON(http.StatusUnauthorized, "Login failed")
 		}
 	})
 }
