@@ -101,6 +101,7 @@ func (user *users) Login() {
 		if err := c.Bind(getUser); err != nil {
 			return err
 		}
+
 		log.Printf("User login with %s", &getUser)
 
 		connection := user.dbSettings.GetDBConnection()

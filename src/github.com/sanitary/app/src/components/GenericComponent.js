@@ -17,7 +17,7 @@ export class GenericComponent extends Component {
             // Do something before request is sent
             console.log("Request interceptor");
 
-            if(window.localStorage.getItem("isLoggedIn") === null) {
+            if(window.localStorage.getItem("isLoggedIn") === null && window.location.hash !== "#/signup") {
                 window.location.hash = '/';
             } if(window.localStorage.getItem("isLoggedIn") !== null && window.location.hash === "/") {
                 window.location.hash = '/customers';

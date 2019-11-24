@@ -5,7 +5,8 @@ import './App.css';
 import {Lightbox} from "primereact/lightbox";
 import {Card} from "primereact/card";
 
-const Login = lazy(() => import ("./components/Main"));
+const Login = lazy(() => import ("./components/user/Login"));
+const SignUp = lazy(() => import ("./components/user/SignUp"));
 const Customer = lazy(() => import ("./components/Customer"));
 const Worker = lazy(() => import ("./components/Worker"));
 const Inventory = lazy(() => import ("./components/Inventory"));
@@ -44,6 +45,7 @@ function App() {
             <HashRouter>
                 <Switch>
                     <Route exact path="/" component={WaitingComponent(Login)}></Route>
+                    <Route exact path="/signup" component={WaitingComponent(SignUp)}></Route>
                     <Route exact path="/dashboard" component={WaitingComponent(Login)}></Route>
                     <Route exact path="/customers" component={WaitingComponent(Customer)}></Route>
                     <Route exact path="/workers" component={WaitingComponent(Worker)}></Route>
