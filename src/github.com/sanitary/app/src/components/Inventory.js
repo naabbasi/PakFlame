@@ -52,6 +52,7 @@ export default class Inventory extends GenericComponent {
     }
 
     saveInventory() {
+        this.state.newInventory['companyId'] = this.state.company['id'];
         if(this.newItem){
             this.axios.post('/inventories', this.state.newInventory)
             .then( response => {
@@ -114,9 +115,11 @@ export default class Inventory extends GenericComponent {
 
     onInventorySelect(e){
         this.newItem = false;
+        console.log(e.data)
         this.setState({
             displayItemDialog:true,
-            newInventory: Object.assign({}, e.data)
+            newInventory: Object.assign({}, e.data),
+            company: {id: e.data['companyId'], companyName: 'Noman'}
         });
     }
 

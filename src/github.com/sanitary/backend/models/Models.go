@@ -40,7 +40,9 @@ type Person struct {
 
 type Customer struct {
 	Person
-	Status string `json:"status" xml:"status" form:"status" query:"status"`
+	ShopName string `json:"shopName" xml:"shopName" form:"shopName" query:"shopName"`
+	Status   string `json:"status" xml:"status" form:"status" query:"status"`
+	Address  string `json:"address" xml:"address" form:"address" query:"address"`
 	Payment
 }
 

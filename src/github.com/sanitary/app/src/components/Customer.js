@@ -110,7 +110,7 @@ export default class Customer extends GenericComponent {
     addNew() {
         this.newCustomer = true;
         this.setState({
-            customer: {firstName: '', lastName: '', mobileNumber: '', status: '', amount: 0, remaining: 0, total: 0},
+            customer: {firstName: '', lastName: '', mobileNumber: '', shopName: '', address: '', status: '', amount: 0, remaining: 0, total: 0},
             displayDialog: true
         });
     }
@@ -147,6 +147,8 @@ export default class Customer extends GenericComponent {
                             <Column field="lastName" header="Last Name" sortable={true} style={{textAlign: 'left'}}/>
                             <Column field="mobileNumber" header="Mobile Number" sortable={true} style={{textAlign: 'center'}}/>
                             <Column field="status" header="Status" sortable={true} style={{textAlign: 'center'}}/>
+                            <Column field="shopName" header="Shop Name" sortable={true} style={{textAlign: 'center'}}/>
+                            <Column field="address" header="Address" sortable={true} style={{textAlign: 'center'}}/>
                             <Column field="amount" header="Amount" sortable={true} style={{textAlign: 'center'}}/>
                             <Column field="remaining" header="Remaining Amount" sortable={true} style={{textAlign: 'center'}}/>
                             <Column field="total" header="Total Amount" sortable={true} style={{textAlign: 'center'}}/>
@@ -175,6 +177,20 @@ export default class Customer extends GenericComponent {
                                             <span className="p-float-label p-fluid">
                                                 <InputText ref="mobileNumber" onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.customer.mobileNumber}/>
                                                 <label htmlFor="mobileNumber">Mobile Number</label>
+                                            </span>
+                                        </div>
+
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="shopName" onChange={(e) => {this.updateProperty('shopName', e.target.value)}} value={this.state.customer.shopName}/>
+                                                <label htmlFor="shopName">Shop Name</label>
+                                            </span>
+                                        </div>
+
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="address" onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.customer.address}/>
+                                                <label htmlFor="address">Address</label>
                                             </span>
                                         </div>
 
