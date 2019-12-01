@@ -31,7 +31,7 @@ func NewCustomer(e *echo.Echo) *customers {
 
 func (customer *customers) GetCustomers() {
 	customer.echo.GET(CustomerEndPoint, func(c echo.Context) error {
-		var allCustomer []models.Customer
+		var allCustomer = new([]models.Customer)
 		connection := customer.dbSettings.GetDBConnection()
 		connection.Find(&allCustomer)
 		return c.JSON(http.StatusOK, &allCustomer)

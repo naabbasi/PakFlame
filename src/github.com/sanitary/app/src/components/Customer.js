@@ -110,7 +110,7 @@ export default class Customer extends GenericComponent {
     addNew() {
         this.newCustomer = true;
         this.setState({
-            customer: {firstName: '', lastName: '', mobileNumber: '', status: ''},
+            customer: {firstName: '', lastName: '', mobileNumber: '', status: '', amount: 0, remaining: 0, total: 0},
             displayDialog: true
         });
     }
@@ -147,49 +147,71 @@ export default class Customer extends GenericComponent {
                             <Column field="lastName" header="Last Name" sortable={true} style={{textAlign: 'left'}}/>
                             <Column field="mobileNumber" header="Mobile Number" sortable={true} style={{textAlign: 'center'}}/>
                             <Column field="status" header="Status" sortable={true} style={{textAlign: 'center'}}/>
-                            <Column field="status" header="Remaining Amount" sortable={true} style={{textAlign: 'center'}}/>
-                            <Column field="status" header="Total Amount" sortable={true} style={{textAlign: 'center'}}/>
+                            <Column field="amount" header="Amount" sortable={true} style={{textAlign: 'center'}}/>
+                            <Column field="remaining" header="Remaining Amount" sortable={true} style={{textAlign: 'center'}}/>
+                            <Column field="total" header="Total Amount" sortable={true} style={{textAlign: 'center'}}/>
                         </DataTable>
 
                         <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Customer Details" modal={true} footer={dialogFooter} onHide={() => this.setState({displayDialog: false})}>
                             {
                                 this.state.customer &&
+                                <div className="p-grid">
+                                    <div className="p-col-12">
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="firstName" onChange={(e) => {this.updateProperty('firstName', e.target.value)}} value={this.state.customer.firstName}/>
+                                                <label htmlFor="firstName">First Name</label>
+                                            </span>
+                                        </div>
 
-                                <div className="p-grid p-fluid">
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="firstName">First Name</label></div>
-                                    <div className="p-col-8" style={{padding:'.5em'}}> {this.state.customer['nnid']}
-                                        <InputText id="firstName" onChange={(e) => {this.updateProperty('firstName', e.target.value)}} value={this.state.customer.firstName}/>
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="lastName" onChange={(e) => {this.updateProperty('lastName', e.target.value)}} value={this.state.customer.lastName}/>
+                                                <label htmlFor="lastName">Last Name</label>
+                                            </span>
+                                        </div>
+
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="mobileNumber" onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.customer.mobileNumber}/>
+                                                <label htmlFor="mobileNumber">Mobile Number</label>
+                                            </span>
+                                        </div>
+
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="status" onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.customer.status}/>
+                                                <label htmlFor="status">Status</label>
+                                            </span>
+                                        </div>
+
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText id="amount" keyfilter="num" onChange={(e) => {this.updateProperty('amount', e.target.value)}}
+                                                           onBlur={(e) => {this.updateProperty('amount', this.Float(e.target.value))}}
+                                                           value={this.state.customer.amount}/>
+                                                <label htmlFor="amount">Amount</label>
+                                            </span>
+                                        </div>
+
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText id="remaining" keyfilter="num" onChange={(e) => {this.updateProperty('remaining', e.target.value)}}
+                                                           onBlur={(e) => {this.updateProperty('remaining', this.Float(e.target.value))}}
+                                                           value={this.state.customer.remaining}/>
+                                                <label htmlFor="remaining">Remaining Amount</label>
+                                            </span>
+                                        </div>
+
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText id="total" keyfilter="num" onChange={(e) => {this.updateProperty('total', e.target.value)}}
+                                                           onBlur={(e) => {this.updateProperty('total', this.Float(e.target.value))}}
+                                                           value={this.state.customer.total}/>
+                                                <label htmlFor="total">Total Amount</label>
+                                            </span>
+                                        </div>
                                     </div>
-
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="lastName">Last Name</label></div>
-                                    <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="lastName" onChange={(e) => {this.updateProperty('lastName', e.target.value)}} value={this.state.customer.lastName}/>
-                                    </div>
-
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="mobileNumber">Mobile Number</label></div>
-                                    <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="mobileNumber" keyfilter="int" onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.customer.mobileNumber}/>
-                                    </div>
-
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="status">Status</label></div>
-                                    <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="status" onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.customer.status}/>
-                                    </div>
-
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="status">Remaining Amount</label></div>
-                                    <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="status" keyfilter="int" onChange={(e) => {this.updateProperty('status', e.target.value)}}
-                                                   onBlur={(e) => {this.updateProperty('status', this.Float(e.target.value))}}
-                                                   value={this.state.customer.status}/>
-                                    </div>
-
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="status">Total Amount</label></div>
-                                    <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="status" keyfilter="int" onChange={(e) => {this.updateProperty('status', e.target.value)}}
-                                                   onBlur={(e) => {this.updateProperty('status', this.Float(e.target.value))}}
-                                                   value={this.state.customer.status}/>
-                                    </div>
-
                                 </div>
                             }
                         </Dialog>

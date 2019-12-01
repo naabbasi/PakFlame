@@ -42,7 +42,6 @@ export default class Inventory extends GenericComponent {
                 // handle success
                 console.log(response);
                 if(response.status === 200){
-                    console.log("*******************************")
                     this.setState({inventories: response.data});
                 }
             })
@@ -152,6 +151,7 @@ export default class Inventory extends GenericComponent {
 
     /*Company related method*/
     loadCompanies() {
+        this.state.companies = [];
         this.axios.get('/companies')
             .then( response => {
                 // handle success
@@ -170,14 +170,17 @@ export default class Inventory extends GenericComponent {
 
     suggestCompanies(event) {
         setTimeout(() => {
-            let results;
+            let results = new Array();
 
             if (event.query.length === 0) {
-                results = [...this.state.companies];
+                if(this.state.companies.length !== undefined)
+                    results = [...this.state.companies];
             } else {
-                results = this.state.companies.filter((company) => {
-                    return company['companyName'].toLowerCase().startsWith(event.query.toLowerCase());
-                });
+                if(this.state.companies.length !== undefined) {
+                    results = this.state.companies.filter((company) => {
+                        return company['companyName'].toLowerCase().startsWith(event.query.toLowerCase());
+                    });
+                }
             }
 
             if(results.length === 0 && event.query.length !== 0){

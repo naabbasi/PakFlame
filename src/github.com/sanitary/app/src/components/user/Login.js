@@ -11,19 +11,21 @@ export default class Login extends GenericComponent {
         super(prop);
         this.state = {
             isLoggedIn: false,
-            error: ''
+            error: {
+                text: '',
+                severity: ''
+            }
         };
         this.login = this.login.bind(this);
     }
 
     componentDidMount() {
-        console.log(this.refs['loginStatus']);
         if(window.localStorage.getItem("isLoggedIn") !== null && window.location.hash === "#/") {
             window.location.hash = 'customers';
         } else {
             this.byId('loginComponent').style.backgroundColor = '#007ad9';
             this.byId('loginComponent').className = 'p-show';
-            this.byId('loginStatus').className = 'p-hidden';
+            this.refs['loginStatus'].className = 'p-hidden';
         }
     }
 
@@ -44,7 +46,7 @@ export default class Login extends GenericComponent {
                     let response = error.response;
                     if(response.status === 401) {
                         this.refs['loginStatus'].className = 'p-show';
-                        this.setState({error: response.data});
+                        this.setState({error: {text: response.data, severity: 'error'}});
                     }
                 });
         } else {
@@ -85,8 +87,8 @@ export default class Login extends GenericComponent {
                                         <label htmlFor="password">Password: </label>
                                     </span>
                                 </div>
-                                <div className="p-col p-fluid" style={{padding:'.75em'}}>
-                                    <Message ref="loginStatus" id="loginStatus" severity={"error"} text={this.state.error}/>
+                                <div className="p-col p-fluid" ref="loginStatus" style={{padding:'.75em'}}>
+                                    <Message severity={this.state.error['error']} text={this.state.error['text']}/>
                                 </div>
                             </div>
                         </Card>

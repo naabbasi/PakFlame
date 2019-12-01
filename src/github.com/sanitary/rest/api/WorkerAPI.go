@@ -31,7 +31,7 @@ func NewWorker(e *echo.Echo) workers {
 
 func (worker *workers) Get() {
 	worker.echo.GET(WorkerEndPoint, func(c echo.Context) error {
-		var allWorkers []models.Worker
+		var allWorkers = new([]models.Worker)
 		connection := worker.dbSettings.GetDBConnection()
 		connection.Find(&allWorkers)
 		return c.JSON(http.StatusOK, &allWorkers)

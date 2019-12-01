@@ -31,7 +31,7 @@ func NewInventory(e *echo.Echo) *inventories {
 
 func (inventory *inventories) GetItems() {
 	inventory.echo.GET(InventoryEndPoint, func(c echo.Context) error {
-		var inventories []models.Inventory
+		var inventories = new([]models.Inventory)
 		connection := inventory.dbSettings.GetDBConnection()
 		connection.Find(&inventories)
 		return c.JSON(http.StatusOK, &inventories)

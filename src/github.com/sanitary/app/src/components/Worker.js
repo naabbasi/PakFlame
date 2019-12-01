@@ -107,14 +107,14 @@ export default class Worker extends GenericComponent {
     addNew() {
         this.newWorker = true;
         this.setState({
-            worker: {firstName: '', lastName: '', mobileNumber: '', address: '', status: ''},
+            worker: {firstName: '', lastName: '', mobileNumber: '', address: '', status: '', amount: 0, remaining: 0, total: 0},
             displayDialog: true
         });
     }
 
     render() {
         let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
-            <div style={{float: 'left'}}>Worker Information</div>
+            <div style={{float: 'left'}}>Workers Information</div>
             <div style={{'textAlign':'left', float: 'right'}}>
                 <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
                 <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search Worker(s)" size="50"/>
@@ -145,38 +145,80 @@ export default class Worker extends GenericComponent {
                             <Column field="mobileNumber" header="Mobile Number" sortable={true} />
                             <Column field="address" header="Address" sortable={true} style={{textAlign: 'center'}} />
                             <Column field="status" header="Status" sortable={true} style={{textAlign: 'center'}} />
-                            <Column field="status" header="Remaining Amount" sortable={true} style={{textAlign: 'center'}}/>
-                            <Column field="status" header="Total Amount" sortable={true} style={{textAlign: 'center'}}/>
+                            <Column field="amount" header="Amount" sortable={true} style={{textAlign: 'center'}}/>
+                            <Column field="remaining" header="Remaining Amount" sortable={true} style={{textAlign: 'center'}}/>
+                            <Column field="total" header="Total Amount" sortable={true} style={{textAlign: 'center'}}/>
                         </DataTable>
 
-                        <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="worker Details" modal={true} footer={dialogFooter} onHide={() => this.setState({displayDialog: false})}>
+                        <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Worker Details"
+                                modal={true} footer={dialogFooter}
+                                onShow={()=> this.refs['firstName']}
+                                onHide={() => this.setState({displayDialog: false})}>
                             {
                                 this.state.worker &&
+                                <div className="p-grid">
+                                    <div className="p-col-12">
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="firstName" onChange={(e) => {this.updateProperty('firstName', e.target.value)}} value={this.state.worker.firstName}/>
+                                                <label htmlFor="firstName">First Name</label>
+                                            </span>
+                                        </div>
 
-                                <div className="p-grid p-fluid">
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="firstName">First Name</label></div>
-                                    <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="firstName" onChange={(e) => {this.updateProperty('firstName', e.target.value)}} value={this.state.worker.firstName}/>
-                                    </div>
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="lastName" onChange={(e) => {this.updateProperty('lastName', e.target.value)}} value={this.state.worker.lastName}/>
+                                                <label htmlFor="lastName">Last Name</label>
+                                            </span>
+                                        </div>
 
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="lastName">Last Name</label></div>
-                                    <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="lastName" onChange={(e) => {this.updateProperty('lastName', e.target.value)}} value={this.state.worker.lastName}/>
-                                    </div>
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="mobileNumber" onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.worker.mobileNumber}/>
+                                                <label htmlFor="mobileNumber">Mobile Number</label>
+                                            </span>
+                                        </div>
 
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="mobileNumber">Mobile Number</label></div>
-                                    <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="mobileNumber" keyfilter="int" onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.worker.mobileNumber}/>
-                                    </div>
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="address" onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.worker.address}/>
+                                                <label htmlFor="address">Address</label>
+                                            </span>
+                                        </div>
 
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="status">Status</label></div>
-                                    <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="status" onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.worker.status}/>
-                                    </div>
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="status" onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.worker.status}/>
+                                                <label htmlFor="status">Status</label>
+                                            </span>
+                                        </div>
 
-                                    <div className="p-col-4" style={{padding:'.75em'}}><label htmlFor="address">Address</label></div>
-                                    <div className="p-col-8" style={{padding:'.5em'}}>
-                                        <InputText id="status" onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.worker.address}/>
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText id="amount" keyfilter="num" onChange={(e) => {this.updateProperty('amount', e.target.value)}}
+                                                           onBlur={(e) => {this.updateProperty('amount', this.Float(e.target.value))}}
+                                                           value={this.state.worker.amount}/>
+                                                <label htmlFor="amount">Amount</label>
+                                            </span>
+                                        </div>
+
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText id="remaining" keyfilter="num" onChange={(e) => {this.updateProperty('remaining', e.target.value)}}
+                                                           onBlur={(e) => {this.updateProperty('remaining', this.Float(e.target.value))}}
+                                                           value={this.state.worker.remaining}/>
+                                                <label htmlFor="remaining">Remaining Amount</label>
+                                            </span>
+                                        </div>
+
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText id="total" keyfilter="num" onChange={(e) => {this.updateProperty('total', e.target.value)}}
+                                                           onBlur={(e) => {this.updateProperty('total', this.Float(e.target.value))}}
+                                                           value={this.state.worker.total}/>
+                                                <label htmlFor="total">Total Amount</label>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             }

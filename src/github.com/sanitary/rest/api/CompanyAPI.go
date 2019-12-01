@@ -31,7 +31,7 @@ func NewCompany(e *echo.Echo) *companies {
 
 func (company *companies) GetCompanies() {
 	company.echo.GET(CompanyEndPoint, func(c echo.Context) error {
-		var allCompanies = new(models.Company)
+		var allCompanies = new([]models.Company)
 		connection := company.dbSettings.GetDBConnection()
 		connection.Find(&allCompanies)
 		return c.JSON(http.StatusOK, allCompanies)

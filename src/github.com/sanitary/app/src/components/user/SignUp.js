@@ -10,14 +10,17 @@ export default class SignUp extends GenericComponent {
     constructor(prop) {
         super(prop);
         this.state = {
-            error: ''
+            error: {
+                text: '',
+                severity: ''
+            }
         };
 
         this.signUp = this.signUp.bind(this);
     }
 
     componentDidMount() {
-        this.byId('signUpStatus').className = 'p-hidden';
+        this.refs['signUpStatus'].className = 'p-hidden';
     }
 
     signUp() {
@@ -33,9 +36,8 @@ export default class SignUp extends GenericComponent {
                 .then( response => {
                     // handle success
                     if(response.status === 201){
-                        console.log(response.data);
                         this.refs['signUpStatus'].className = 'p-show';
-                        this.setState({error: response.data});
+                        this.setState({error: {text: response.data, severity: 'info'}});
                     }
                 })
                 .catch((error) =>{
@@ -43,8 +45,7 @@ export default class SignUp extends GenericComponent {
                     let response = error.response;
                     if(response.status === 400) {
                         this.refs['signUpStatus'].className = 'p-show';
-                        this.refs['signUpStatus'].severity = 'error';
-                        this.setState({error: response.data});
+                        this.setState({error: {text: response.data, severity: 'error'}});
                     }
                 });
         }
@@ -52,9 +53,14 @@ export default class SignUp extends GenericComponent {
 
     render() {
         const footer = (
-            <div className="p-col p-fluid" style={{padding:'.75em'}}>
-                <Button type="button" label="Signup" icon="pi pi-sign-in" className="p-button-rounded"
-                        onClick={this.signUp}/>
+            <div>
+                <div className="p-col p-fluid" style={{padding:'.75em'}}>
+                    <Button type="button" label="Signup" icon="pi pi-sign-in" className="p-button-rounded"
+                            onClick={this.signUp}/>
+                </div>
+                <div className="p-col p-fluid" style={{padding:'.75em'}}>
+                    <a href='#/'>Login into your account</a>
+                </div>
             </div>
         );
 
@@ -90,11 +96,8 @@ export default class SignUp extends GenericComponent {
                                         <label htmlFor="password">Password: </label>
                                     </span>
                                 </div>
-                                <div className="p-col p-fluid" style={{padding:'.75em'}}>
-                                    <Message ref="signUpStatus" id="signUpStatus" severity={"info"} text={this.state.error}/>
-                                </div>
-                                <div className="p-col p-fluid" style={{padding:'.75em'}}>
-                                    <a href='#/'>Login into your account</a>
+                                <div className="p-col p-fluid" ref="signUpStatus" style={{padding:'.75em'}}>
+                                    <Message severity={this.state.error['severity']} text={this.state.error['text']}/>
                                 </div>
                             </div>
                         </Card>
