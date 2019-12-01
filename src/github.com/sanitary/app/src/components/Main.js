@@ -1,11 +1,4 @@
 import React, {Component} from 'react';
-import {Button} from "primereact/button";
-import { useHistory } from "react-router-dom";
-import {Card} from "primereact/card";
-import {InputText} from "primereact/inputtext";
-import {Password} from "primereact/password";
-import {GenericComponent} from "./GenericComponent";
-import {Message} from "primereact/message";
 
 export class Welcome extends Component {
     render() {

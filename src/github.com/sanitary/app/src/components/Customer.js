@@ -11,7 +11,9 @@ import Navigation from "./layout/Navigation";
 export default class Customer extends GenericComponent {
     constructor() {
         super();
-        this.state = {};
+        this.state = {
+            customers: []
+        };
         this.save = this.save.bind(this);
         this.delete = this.delete.bind(this);
         this.close = this.close.bind(this);

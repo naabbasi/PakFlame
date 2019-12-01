@@ -10,7 +10,8 @@ export default class Login extends GenericComponent {
     constructor(prop) {
         super(prop);
         this.state = {
-            isLoggedIn: false
+            isLoggedIn: false,
+            error: ''
         };
         this.login = this.login.bind(this);
     }
@@ -22,7 +23,7 @@ export default class Login extends GenericComponent {
         } else {
             this.byId('loginComponent').style.backgroundColor = '#007ad9';
             this.byId('loginComponent').className = 'p-show';
-            //this.byId('loginStatus').className = 'p-hidden';
+            this.byId('loginStatus').className = 'p-hidden';
         }
     }
 
@@ -34,7 +35,7 @@ export default class Login extends GenericComponent {
                     console.log(response);
                     if(response.status === 200){
                         console.log(response.data);
-                        window.localStorage.setItem("isLoggedIn", "{username: 'Waris Ali'}");
+                        window.localStorage.setItem("isLoggedIn", JSON.stringify(response.data));
                         window.location.hash="customers";
                     }
                 })
@@ -42,9 +43,8 @@ export default class Login extends GenericComponent {
                     // handle error
                     let response = error.response;
                     if(response.status === 401) {
-                        console.log(this.refs['loginStatus'].props['text']);
-                        //this.byId('loginStatus').className = 'p-show';
-                        this.refs['loginStatus'].props['text'] = response.data;
+                        this.refs['loginStatus'].className = 'p-show';
+                        this.setState({error: response.data});
                     }
                 });
         } else {
@@ -81,7 +81,7 @@ export default class Login extends GenericComponent {
                                     </span>
                                 </div>
                                 <div className="p-col p-fluid" style={{padding:'.75em'}}>
-                                    <Message ref="loginStatus" id="loginStatus" severity={"error"} text=""/>
+                                    <Message ref="loginStatus" id="loginStatus" severity={"error"} text={this.state.error}/>
                                 </div>
                                 <div className="p-col p-fluid" style={{padding:'.75em'}}>
                                     <a href='#/signup'>Sign up for your account</a>

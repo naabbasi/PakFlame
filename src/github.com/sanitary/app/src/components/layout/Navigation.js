@@ -34,12 +34,13 @@ export default class Navigation extends GenericComponent {
             }
         ];
 
+        let userInfo = JSON.parse(window.localStorage.getItem("isLoggedIn"));
         return (
             <div>
                 <Menubar model={items}>
                     <div style={{float: 'right', lineHeight: '42px', textAlign: 'right', marginRight: '5px'}}>
                         <span className="pi pi-fw pi-user"></span>
-                        <span>Abdul Waris</span>
+                        <span>{userInfo['firstName']}</span>
                     </div>
                 </Menubar>
                 {this.props.children}

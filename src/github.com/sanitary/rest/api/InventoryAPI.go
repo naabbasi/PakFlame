@@ -7,7 +7,6 @@ import (
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
 	"net/http"
-	"time"
 )
 
 const (
@@ -24,8 +23,6 @@ type inventories struct {
 	dbSettings *backend.DBSettings
 }
 
-var allInventories []*models.Inventory
-
 func NewInventory(e *echo.Echo) *inventories {
 	newConfig := config.NewConfig()
 	dbSettings := backend.GetDBSettings(newConfig)
@@ -34,57 +31,10 @@ func NewInventory(e *echo.Echo) *inventories {
 
 func (inventory *inventories) GetItems() {
 	inventory.echo.GET(InventoryEndPoint, func(c echo.Context) error {
-		if inventory.config.DemoData == true {
-			var inventory = []*models.Inventory{
-				{
-					Model: models.Model{
-						CreatedAt: time.Now(),
-						UpdatedAt: time.Now(),
-					},
-					ItemName:      "Sample Item 1",
-					Quantities:    100,
-					PurchaseRate:  500,
-					WholesaleRate: 600,
-					RetailRate:    700,
-					ItemStatus:    "available",
-					CompanyId:     "",
-				},
-				{
-					Model: models.Model{
-						CreatedAt: time.Now(),
-						UpdatedAt: time.Now(),
-					},
-					ItemName:      "Sample Item 2",
-					Quantities:    200,
-					PurchaseRate:  5200,
-					WholesaleRate: 5300,
-					RetailRate:    5400,
-					CompanyId:     "",
-				},
-				{
-					Model: models.Model{
-						CreatedAt: time.Now(),
-						UpdatedAt: time.Now(),
-					},
-					ItemName:      "Sample Item 3",
-					Quantities:    300,
-					PurchaseRate:  401,
-					WholesaleRate: 402,
-					RetailRate:    403,
-					CompanyId:     "",
-				},
-			}
-
-			if len(allInventories) == 0 {
-				allInventories = append(allInventories, inventory...)
-			}
-
-			return c.JSON(http.StatusOK, allInventories)
-		} else {
-			connection := inventory.dbSettings.GetDBConnection()
-			connection.Find(&allInventories)
-			return c.JSON(http.StatusOK, &allInventories)
-		}
+		var inventories []models.Inventory
+		connection := inventory.dbSettings.GetDBConnection()
+		connection.Find(&inventories)
+		return c.JSON(http.StatusOK, &inventories)
 	})
 }
 
@@ -100,8 +50,7 @@ func (inventory *inventories) AddItem() {
 		save := connection.Save(newItem)
 
 		if save.RowsAffected == 1 {
-			allInventories = append(allInventories, newItem)
-			return c.JSON(http.StatusCreated, allInventories)
+			return c.JSON(http.StatusCreated, newItem)
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to save new item in inventory")
 		}
@@ -120,8 +69,7 @@ func (inventory *inventories) UpdateItem() {
 		update := connection.Model(models.Inventory{}).Where("id = ?", updateItem.ID).Update(updateItem)
 
 		if update.RowsAffected == 1 {
-			allInventories = append(allInventories, updateItem)
-			return c.JSON(http.StatusAccepted, allInventories)
+			return c.JSON(http.StatusAccepted, updateItem)
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to update inventory")
 		}
@@ -140,7 +88,7 @@ func (inventory *inventories) DeleteItem() {
 		update := connection.Model(models.Inventory{}).Delete(deleteItem)
 
 		if update.RowsAffected == 1 {
-			return c.JSON(http.StatusNoContent, allInventories)
+			return c.JSON(http.StatusNoContent, deleteItem)
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to delete item from inventory")
 		}

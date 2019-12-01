@@ -25,8 +25,10 @@ type ModelNoPK struct {
 
 type User struct {
 	Model
-	Username string
-	Password string
+	Username  string `json:"userName" xml:"userName" form:"userName" query:"userName"`
+	Password  string `json:"password" xml:"password" form:"password" query:"password"`
+	FirstName string `json:"firstName" xml:"firstName" form:"firstName" query:"firstName"`
+	LastName  string `json:"lastName" xml:"lastName" form:"lastName" query:"lastName"`
 }
 
 type Person struct {

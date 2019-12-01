@@ -29,8 +29,8 @@ class NotFound extends Component {
 
 const Logout = (()=>{
     window.localStorage.clear();
+    window.location.hash = '#/';
     return <div>
-        <a href="/">Login</a>
     </div>
 });
 

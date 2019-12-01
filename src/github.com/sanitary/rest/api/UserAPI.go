@@ -52,7 +52,7 @@ func (user *users) AddUser() {
 		if save.RowsAffected == 1 {
 			return c.JSON(http.StatusCreated, "User has been added")
 		} else {
-			return c.JSON(http.StatusNotModified, "User already exists")
+			return c.JSON(http.StatusBadRequest, "User already exists")
 		}
 	})
 }
@@ -108,7 +108,8 @@ func (user *users) Login() {
 		connection.First(&loggedInUser, "username = ? and password = ?", &getUser.Username, &getUser.Password)
 
 		if loggedInUser.ID != "" {
-			return c.JSON(http.StatusOK, "Logged In successfully ...")
+			loggedInUser.Password = ""
+			return c.JSON(http.StatusOK, loggedInUser)
 		} else {
 			return c.JSON(http.StatusUnauthorized, "Login failed")
 		}

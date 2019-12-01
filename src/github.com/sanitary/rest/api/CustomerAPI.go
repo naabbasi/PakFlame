@@ -14,7 +14,7 @@ const (
 )
 
 func init() {
-	log.Print("Worker  REST API initialized")
+	log.Print("Customer  REST API initialized")
 }
 
 type customers struct {
@@ -31,7 +31,7 @@ func NewCustomer(e *echo.Echo) *customers {
 
 func (customer *customers) GetCustomers() {
 	customer.echo.GET(CustomerEndPoint, func(c echo.Context) error {
-		var allCustomer = new(models.User)
+		var allCustomer []models.Customer
 		connection := customer.dbSettings.GetDBConnection()
 		connection.Find(&allCustomer)
 		return c.JSON(http.StatusOK, &allCustomer)

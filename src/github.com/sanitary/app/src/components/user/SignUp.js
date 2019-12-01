@@ -9,6 +9,10 @@ import {Message} from "primereact/message";
 export default class SignUp extends GenericComponent {
     constructor(prop) {
         super(prop);
+        this.state = {
+            error: ''
+        };
+
         this.signUp = this.signUp.bind(this);
     }
 
@@ -17,22 +21,30 @@ export default class SignUp extends GenericComponent {
     }
 
     signUp() {
-        if(this.byId('newUsername').value !== '' && this.byId('newPassword').value){
-            this.axios.post('/users', {username: this.byId('newUsername').value, password: this.byId('newPassword').value})
+        if(this.byId('username').value !== '' && this.byId('password').value){
+            let userInfo = {
+                username: this.byId('username').value,
+                password: this.byId('password').value,
+                firstName: this.byId('firstName').value,
+                lastName: this.byId('lastName').value
+            };
+
+            this.axios.post('/users', userInfo)
                 .then( response => {
                     // handle success
                     if(response.status === 201){
                         console.log(response.data);
-                        this.byId('signUpStatus').className = 'p-show';
-                        this.byId('signUpStatus').innerHTML = response.data;
+                        this.refs['signUpStatus'].className = 'p-show';
+                        this.setState({error: response.data});
                     }
                 })
                 .catch((error) =>{
                     // handle error
                     let response = error.response;
-                    if(response.status === 304) {
-                        this.byId('signUpStatus').className = 'p-show';
-                        this.byId('signUpStatus').innerHTML = response.data;
+                    if(response.status === 400) {
+                        this.refs['signUpStatus'].className = 'p-show';
+                        this.refs['signUpStatus'].severity = 'error';
+                        this.setState({error: response.data});
                     }
                 });
         }
@@ -56,18 +68,33 @@ export default class SignUp extends GenericComponent {
                             <div className="p-col-12">
                                 <div className="p-col p-fluid" style={{padding:'.75em'}}>
                                     <span className="p-float-label p-fluid">
-                                        <InputText id="newUsername" required={true} maxLength={250}/>
-                                        <label htmlFor="newUsername">Username: </label>
+                                        <InputText id="firstName" required={true} maxLength={250} feedback={false}/>
+                                        <label htmlFor="firstName">First Name: </label>
                                     </span>
                                 </div>
                                 <div className="p-col p-fluid" style={{padding:'.75em'}}>
                                     <span className="p-float-label p-fluid">
-                                        <Password id="newPassword" required={true} maxLength={250} feedback={false}/>
-                                        <label htmlFor="newPassword">Password: </label>
+                                        <InputText id="lastName" required={true} maxLength={250} feedback={false}/>
+                                        <label htmlFor="lastName">Last Name: </label>
                                     </span>
                                 </div>
                                 <div className="p-col p-fluid" style={{padding:'.75em'}}>
-                                    <Message ref="signUpStatus" id="signUpStatus" severity={"error"} text=""/>
+                                    <span className="p-float-label p-fluid">
+                                        <InputText id="username" required={true} maxLength={250}/>
+                                        <label htmlFor="username">Username: </label>
+                                    </span>
+                                </div>
+                                <div className="p-col p-fluid" style={{padding:'.75em'}}>
+                                    <span className="p-float-label p-fluid">
+                                        <Password id="password" required={true} maxLength={250}/>
+                                        <label htmlFor="password">Password: </label>
+                                    </span>
+                                </div>
+                                <div className="p-col p-fluid" style={{padding:'.75em'}}>
+                                    <Message ref="signUpStatus" id="signUpStatus" severity={"info"} text={this.state.error}/>
+                                </div>
+                                <div className="p-col p-fluid" style={{padding:'.75em'}}>
+                                    <a href='#/'>Login into your account</a>
                                 </div>
                             </div>
                         </Card>
