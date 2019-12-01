@@ -54,9 +54,14 @@ export default class Login extends GenericComponent {
 
     render() {
         const footer = (
-            <div className="p-col p-fluid" style={{padding:'.75em'}}>
-                <Button type="button" label="Login" icon="pi pi-sign-in" className="p-button-rounded"
-                        onClick={this.login}/>
+            <div>
+                <div className="p-col p-fluid" style={{padding:'.75em'}}>
+                    <Button type="button" label="Login" icon="pi pi-sign-in" className="p-button-rounded"
+                            onClick={this.login}/>
+                </div>
+                <div className="p-col p-fluid" style={{padding:'.75em'}}>
+                    <a href='#/signup'>Sign up for your account</a>
+                </div>
             </div>
         );
 
@@ -82,9 +87,6 @@ export default class Login extends GenericComponent {
                                 </div>
                                 <div className="p-col p-fluid" style={{padding:'.75em'}}>
                                     <Message ref="loginStatus" id="loginStatus" severity={"error"} text={this.state.error}/>
-                                </div>
-                                <div className="p-col p-fluid" style={{padding:'.75em'}}>
-                                    <a href='#/signup'>Sign up for your account</a>
                                 </div>
                             </div>
                         </Card>
