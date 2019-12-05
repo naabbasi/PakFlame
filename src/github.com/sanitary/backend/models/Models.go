@@ -2,11 +2,12 @@ package models
 
 import (
 	"fmt"
+	uuid "github.com/satori/go.uuid"
 	"time"
 )
 
 type Model struct {
-	ID        string    `gorm:"PRIMARY_KEY; type:uuid default gen_random_uuid();" json:"id" xml:"id" form:"id" query:"id"`
+	ID        uuid.UUID `gorm:"PRIMARY_KEY; type:uuid default gen_random_uuid();" json:"id" xml:"id" form:"id" query:"id"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"createdAt" xml:"createdAt" form:"createdAt" query:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
 }
@@ -61,14 +62,14 @@ type Payment struct {
 
 type Inventory struct {
 	Model
-	ItemName      string  `json:"itemName" xml:"itemName" form:"itemName" query:"itemName"`
-	Quantities    uint64  `json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
-	QuantityAlert uint64  `json:"quantityAlert" xml:"quantityAlert" form:"quantityAlert" query:"quantityAlert"`
-	PurchaseRate  float64 `json:"purchaseRate" xml:"purchaseRate" form:"purchaseRate" query:"purchaseRate"`
-	WholesaleRate float64 `json:"wholesaleRate" xml:"wholesaleRate" form:"wholesaleRate" query:"wholesaleRate"`
-	RetailRate    float64 `json:"retailRate" xml:"retailRate" form:"retailRate" query:"retailRate"`
-	ItemStatus    string  `json:"itemStatus" xml:"itemStatus" form:"itemStatus" query:"itemStatus"`
-	CompanyId     string  `gorm:"ForeignKey:companyId", json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
+	ItemName      string    `json:"itemName" xml:"itemName" form:"itemName" query:"itemName"`
+	Quantities    uint64    `json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
+	QuantityAlert uint64    `json:"quantityAlert" xml:"quantityAlert" form:"quantityAlert" query:"quantityAlert"`
+	PurchaseRate  float64   `json:"purchaseRate" xml:"purchaseRate" form:"purchaseRate" query:"purchaseRate"`
+	WholesaleRate float64   `json:"wholesaleRate" xml:"wholesaleRate" form:"wholesaleRate" query:"wholesaleRate"`
+	RetailRate    float64   `json:"retailRate" xml:"retailRate" form:"retailRate" query:"retailRate"`
+	ItemStatus    string    `json:"itemStatus" xml:"itemStatus" form:"itemStatus" query:"itemStatus"`
+	CompanyId     uuid.UUID `gorm:"ForeignKey; type: uuid;" json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
 }
 
 func (inventory Inventory) ToString() string {
@@ -80,4 +81,17 @@ type Company struct {
 	CompanyName  string      `json:"companyName" xml:"companyName" form:"companyName" query:"companyName"`
 	MobileNumber string      `json:"mobileNumber" xml:"mobileNumber" form:"mobileNumber" query:"mobileNumber"`
 	Inventory    []Inventory `json:"inventories" xml:"inventories" form:"inventories" query:"inventories"`
+}
+
+type Invoice struct {
+	Model
+	Unit             string    `json:"unit" xml:"unit" form:"unit" query:"unit"`
+	Quantities       uint64    `json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
+	Price            float64   `json:"price" xml:"price" form:"price" query:"price"`
+	Amount           float64   `json:"amount" xml:"amount" form:"amount" query:"amount"`
+	Discount         float64   `json:"discount" xml:"discount" form:"discount" query:"discount"`
+	TotalAmount      float64   `json:"totalAmount" xml:"totalAmount" form:"totalAmount" query:"totalAmount"`
+	Transport        string    `json:"transport" xml:"transport" form:"transport" query:"transport"`
+	TransportCharges float64   `json:"transportCharges" xml:"transportCharges" form:"transportCharges" query:"transportCharges"`
+	CustomerId       uuid.UUID `gorm:"type:uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
 }

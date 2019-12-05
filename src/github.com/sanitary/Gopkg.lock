@@ -10,12 +10,39 @@
   revision = "345afe414dee601bf59b3ed4fb3e0282a51a5d43"
 
 [[projects]]
+  digest = "1:b529f4bf748979caa18b599d40d13e8b6e591a74b340f315ce4f95e119c288c2"
+  name = "github.com/boombuler/barcode"
+  packages = [
+    ".",
+    "aztec",
+    "codabar",
+    "code128",
+    "code39",
+    "datamatrix",
+    "ean",
+    "qr",
+    "twooffive",
+    "utils",
+  ]
+  pruneopts = ""
+  revision = "3cfea5ab600ae37946be2b763b8ec2c1cf2d272d"
+  version = "v1.0.0"
+
+[[projects]]
   digest = "1:6098222470fe0172157ce9bbef5d2200df4edde17ee649c5d6e48330e4afa4c6"
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
   pruneopts = ""
   revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
   version = "v3.2.0"
+
+[[projects]]
+  digest = "1:ad92aa49f34cbc3546063c7eb2cabb55ee2278b72842eda80e2a20a8a06a8d73"
+  name = "github.com/google/uuid"
+  packages = ["."]
+  pruneopts = ""
+  revision = "0cd6bf5da1e1c83f8b45653022c74f71af0538a4"
+  version = "v1.1.1"
 
 [[projects]]
   digest = "1:9e6061d60fb018cec58795a2e645c6012312f8e7db1efaf7db25df5cbf3f7a2e"
@@ -37,12 +64,28 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:e2a730e8a29eefe92be584a2b429d0d733997558884d27ce209ef5e418f75fa0"
-  name = "github.com/jung-kurt/gofpdf"
-  packages = ["."]
+  digest = "1:bc599edadf3d344d79d465eb3d3c570c9225d821838f35acc973aaad0dcdc843"
+  name = "github.com/johnfercher/maroto"
+  packages = [
+    "internal",
+    "pkg/consts",
+    "pkg/pdf",
+    "pkg/props",
+  ]
   pruneopts = ""
-  revision = "49e44c73f28fbc4ea0b011c7d4078d0a1523e44f"
-  version = "v12.13.5"
+  revision = "51992ea68675bb4617919075db082b05fa6ff070"
+  version = "v0.21.1"
+
+[[projects]]
+  digest = "1:3d7457319824d4b7285d582d9533bb7b16b7a4f2effd07088960bda999f58f3a"
+  name = "github.com/jung-kurt/gofpdf"
+  packages = [
+    ".",
+    "contrib/barcode",
+  ]
+  pruneopts = ""
+  revision = "a2a0e7f8a28b2eabe1a32097f0071a0f715a8102"
+  version = "v1.16.2"
 
 [[projects]]
   digest = "1:4beb546223497fdc767dd15f2f48e271598817cecda2beaf2ad7bf43282d5bf7"
@@ -96,6 +139,22 @@
   pruneopts = ""
   revision = "88ba11cfdc67c7588b30042edf244b2875f892b6"
   version = "v0.0.10"
+
+[[projects]]
+  branch = "master"
+  digest = "1:c2a0e0f6733d6fed0f68fcef228b8a8aa5c8b0c2d32db1648ea18b14f28a3e02"
+  name = "github.com/ruudk/golang-pdf417"
+  packages = ["."]
+  pruneopts = ""
+  revision = "1af4ab5afa58c956c53ed723dee66437498b9415"
+
+[[projects]]
+  digest = "1:7f569d906bdd20d906b606415b7d794f798f91a62fcfb6a4daa6d50690fb7a3f"
+  name = "github.com/satori/go.uuid"
+  packages = ["."]
+  pruneopts = ""
+  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
+  version = "v1.2.0"
 
 [[projects]]
   digest = "1:857a9ecd5cb13379ecc8f798f6e6b6b574c98b9355657d91e068275f1120aaf7"
@@ -172,10 +231,13 @@
     "github.com/alexbrainman/printer",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/postgres",
+    "github.com/johnfercher/maroto/pkg/consts",
+    "github.com/johnfercher/maroto/pkg/pdf",
     "github.com/jung-kurt/gofpdf",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",
     "github.com/labstack/gommon/log",
+    "github.com/satori/go.uuid",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

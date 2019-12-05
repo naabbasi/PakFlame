@@ -107,7 +107,7 @@ func (user *users) Login() {
 		var loggedInUser models.User
 		connection.First(&loggedInUser, "username = ? and password = ?", &getUser.Username, &getUser.Password)
 
-		if loggedInUser.ID != "" {
+		if loggedInUser.ID.String() != "" {
 			loggedInUser.Password = ""
 			return c.JSON(http.StatusOK, loggedInUser)
 		} else {

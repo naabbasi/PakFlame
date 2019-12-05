@@ -196,6 +196,8 @@ export default class Inventory extends GenericComponent {
     }
 
     saveCompany() {
+        //Deleting id b/c sending an empty id cause invalid length error
+        delete this.state.addCompany['id'];
         this.axios.post('/companies', this.state.addCompany)
         .then( response => {
             // handle success
