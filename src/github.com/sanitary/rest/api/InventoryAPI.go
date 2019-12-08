@@ -34,6 +34,7 @@ func (inventory *inventories) GetItems() {
 		var inventories = new([]models.Inventory)
 		connection := inventory.dbSettings.GetDBConnection()
 		connection.Find(&inventories)
+		//connection.Select("experimental_strftime(created_at, '%y')").Find(&inventories)
 		return c.JSON(http.StatusOK, &inventories)
 	})
 }

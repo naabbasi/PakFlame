@@ -160,42 +160,42 @@ export default class Worker extends GenericComponent {
                                     <div className="p-col-12">
                                         <div className="p-col" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText ref="firstName" onChange={(e) => {this.updateProperty('firstName', e.target.value)}} value={this.state.worker.firstName}/>
+                                                <InputText ref="firstName" maxLength={255} onChange={(e) => {this.updateProperty('firstName', e.target.value)}} value={this.state.worker.firstName}/>
                                                 <label htmlFor="firstName">First Name</label>
                                             </span>
                                         </div>
 
                                         <div className="p-col" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText ref="lastName" onChange={(e) => {this.updateProperty('lastName', e.target.value)}} value={this.state.worker.lastName}/>
+                                                <InputText ref="lastName" maxLength={255} onChange={(e) => {this.updateProperty('lastName', e.target.value)}} value={this.state.worker.lastName}/>
                                                 <label htmlFor="lastName">Last Name</label>
                                             </span>
                                         </div>
 
                                         <div className="p-col" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText ref="mobileNumber" onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.worker.mobileNumber}/>
+                                                <InputText ref="mobileNumber" maxLength={11} onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.worker.mobileNumber}/>
                                                 <label htmlFor="mobileNumber">Mobile Number</label>
                                             </span>
                                         </div>
 
                                         <div className="p-col" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText ref="address" onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.worker.address}/>
+                                                <InputText ref="address" maxLength={500} onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.worker.address}/>
                                                 <label htmlFor="address">Address</label>
                                             </span>
                                         </div>
 
                                         <div className="p-col" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText ref="status" onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.worker.status}/>
+                                                <InputText ref="status" maxLength={255} onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.worker.status}/>
                                                 <label htmlFor="status">Status</label>
                                             </span>
                                         </div>
 
                                         <div className="p-col" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText id="amount" keyfilter="num" onChange={(e) => {this.updateProperty('amount', e.target.value)}}
+                                                <InputText id="amount" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('amount', e.target.value)}}
                                                            onBlur={(e) => {this.updateProperty('amount', this.Float(e.target.value))}}
                                                            value={this.state.worker.amount}/>
                                                 <label htmlFor="amount">Amount</label>
@@ -204,7 +204,7 @@ export default class Worker extends GenericComponent {
 
                                         <div className="p-col" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText id="remaining" keyfilter="num" onChange={(e) => {this.updateProperty('remaining', e.target.value)}}
+                                                <InputText id="remaining" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('remaining', e.target.value)}}
                                                            onBlur={(e) => {this.updateProperty('remaining', this.Float(e.target.value))}}
                                                            value={this.state.worker.remaining}/>
                                                 <label htmlFor="remaining">Remaining Amount</label>
@@ -213,7 +213,7 @@ export default class Worker extends GenericComponent {
 
                                         <div className="p-col" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText id="total" keyfilter="num" onChange={(e) => {this.updateProperty('total', e.target.value)}}
+                                                <InputText id="total" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('total', e.target.value)}}
                                                            onBlur={(e) => {this.updateProperty('total', this.Float(e.target.value))}}
                                                            value={this.state.worker.total}/>
                                                 <label htmlFor="total">Total Amount</label>

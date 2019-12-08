@@ -94,3 +94,13 @@ func (company *companies) DeleteCompany() {
 		}
 	})
 }
+
+func (company *companies) GetCompanyById() {
+	company.echo.GET(CompanyEndPoint+"/:companyId", func(c echo.Context) error {
+		companyId := c.Param("companyId")
+		var allCompanies = new(models.Company)
+		connection := company.dbSettings.GetDBConnection()
+		connection.First(&allCompanies, "id = ?", &companyId)
+		return c.JSON(http.StatusOK, allCompanies)
+	})
+}

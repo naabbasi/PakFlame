@@ -69,6 +69,7 @@ func main() {
 		companies.AddCompany()
 		companies.UpdateCompany()
 		companies.DeleteCompany()
+		companies.GetCompanyById()
 
 		inventories := api.NewInventory(e)
 		inventories.GetItems()

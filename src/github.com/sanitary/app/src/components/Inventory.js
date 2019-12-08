@@ -119,22 +119,18 @@ export default class Inventory extends GenericComponent {
         this.setState({
             displayItemDialog:true,
             newInventory: Object.assign({}, e.data),
-            company: {id: e.data['companyId'], companyName: 'Noman'}
+            itemStatus: {label: e.data['itemStatus'], status: e.data['itemStatus']}
         });
+
+        this.getCompanyById(e.data['companyId']);
     }
 
     addNew() {
         this.newItem = true;
         this.setState({
             newInventory: {itemName: '', quantities: 0, quantityAlert: 0, purchaseRate: 0, wholesaleRate: 0, retailRate: 0, itemStatus: ''},
+            itemStatus: null,
             displayItemDialog: true
-        });
-    }
-
-    addNewCompany() {
-        this.setState({
-            addCompany: {id: '', companyName: '', mobileNumber: ''},
-            displayCompanyDialog: true
         });
     }
 
@@ -153,6 +149,13 @@ export default class Inventory extends GenericComponent {
     }
 
     /*Company related method*/
+    addNewCompany() {
+        this.setState({
+            addCompany: {id: '', companyName: '', mobileNumber: ''},
+            displayCompanyDialog: true
+        });
+    }
+
     loadCompanies() {
         this.state.companies = [];
         this.axios.get('/companies')
@@ -226,6 +229,23 @@ export default class Inventory extends GenericComponent {
         });
     }
 
+    getCompanyById(companyId) {
+        this.axios.get('/companies/' + companyId)
+            .then( response => {
+                // handle success
+                console.log(response);
+                if(response.status === 200){
+                    this.setState({
+                        company: {companyId: response.data['id'], companyName: response.data['companyName']}
+                    });
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+    }
+
     render() {
         const itemStatusOptions = [
             {label: 'Available', status: 'Available'},
@@ -271,7 +291,7 @@ export default class Inventory extends GenericComponent {
                             <Column field="itemName" header="Item Name" sortable={true} />
                             <Column field="quantities" header="Quantity" sortable={true} style={{textAlign: 'right'}}/>
                             <Column field="quantityAlert" header="Quantity Alert" sortable={true} style={{textAlign: 'right'}}/>
-                            <Column field="createdAt" header="Purchase Date" sortable={true} style={{textAlign: 'center', overflowWrap: 'break-word'}}/>
+                            <Column field="createdAt" header="Purchase Date" body={this.dateFormatter}  sortable={true} style={{textAlign: 'center', overflowWrap: 'break-word'}}/>
                             <Column field="purchaseRate" header="Purchase Rate" sortable={true} style={{textAlign: 'right'}}/>
                             <Column field="wholesaleRate" header="Wholesale Rate" sortable={true} style={{textAlign: 'right'}}/>
                             <Column field="retailRate" header="Retail Rate" sortable={true} style={{textAlign: 'right'}}/>

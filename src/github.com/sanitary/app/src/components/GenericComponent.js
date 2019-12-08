@@ -59,4 +59,9 @@ export class GenericComponent extends Component {
             return parseFloat(value);
         }
     };
+
+    dateFormatter(rowData,column){
+        let date = new Date(rowData['createdAt']).toLocaleDateString();
+        return "" + date;
+    }
 }

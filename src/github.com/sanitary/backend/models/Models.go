@@ -2,7 +2,7 @@ package models
 
 import (
 	"fmt"
-	uuid "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"time"
 )
 
@@ -93,5 +93,5 @@ type Invoice struct {
 	TotalAmount      float64   `json:"totalAmount" xml:"totalAmount" form:"totalAmount" query:"totalAmount"`
 	Transport        string    `json:"transport" xml:"transport" form:"transport" query:"transport"`
 	TransportCharges float64   `json:"transportCharges" xml:"transportCharges" form:"transportCharges" query:"transportCharges"`
-	CustomerId       uuid.UUID `gorm:"type:uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
+	CustomerId       uuid.UUID `gorm:"ForeignKey; type: uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
 }

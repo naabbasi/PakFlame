@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	mpdf := pdf.NewMaroto(consts.Portrait, consts.A4)
+	mpdf := pdf.NewMaroto(consts.Portrait, consts.A5)
 	err := mpdf.OutputFileAndClose("hello.pdf")
 	if err != nil {
 		return
