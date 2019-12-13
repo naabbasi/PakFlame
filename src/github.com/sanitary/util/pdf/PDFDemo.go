@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/jung-kurt/gofpdf"
 	"math/rand"
+	"os/exec"
+	"runtime"
 )
 
 func main(){
@@ -17,6 +19,7 @@ func main(){
 	pdf := gofpdf.NewCustom(&initType)*/
 
 	pdf := gofpdf.New("P", "mm", "A5", "")
+	pdf.SetLineWidth(0.1)
 	pdf.SetHeaderFunc(func() {
 		pdf.SetFont("Arial", "B", 12)
 		pdf.CellFormat(130, 5, "Hello, world", "", 0, "C", false, 0, "")
@@ -33,25 +36,22 @@ func main(){
 
 	pdf.AddPage()
 	pdf.SetFont("Arial", "", 8)
-	pdf.CellFormat(65, 5, "Street addresses:", "1", 0, "L", false, 0, "")
-	pdf.CellFormat(65, 5, "Street addresses:", "1", 0, "L", false, 0, "")
-	pdf.Ln(-1)
-
-	pdf.CellFormat(43.33, 5, "Street addresses:", "1", 0, "L", false, 0, "")
-	pdf.CellFormat(43.33, 5, "Street addresses:", "1", 0, "L", false, 0, "")
-	pdf.CellFormat(43.33, 5, "Street addresses:", "1", 0, "L", false, 0, "")
-	pdf.Ln(-1)
-	pdf.CellFormat(130, 5, "Hello, world", "1", 0, "L", false, 0, "")
+	pdf.CellFormat(65, 5, "Street addresses:", "TLR", 0, "L", false, 0, "")
+	pdf.CellFormat(65, 5, "Street addresses:", "TLR", 1, "L", false, 0, "")
+	pdf.CellFormat(43.33, 5, "Street addresses:", "TLR", 0, "L", false, 0, "")
+	pdf.CellFormat(43.33, 5, "Street addresses:", "TLR", 0, "L", false, 0, "")
+	pdf.CellFormat(43.33, 5, "Street addresses:", "TLR", 1, "L", false, 0, "")
+	pdf.CellFormat(130, 5, "Hello, world", "TLRB", 0, "L", false, 0, "")
 	pdf.Ln(6)
 
 	pdf.SetFont("Arial", "B", 8)
 	pdf.SetFillColor(240, 240, 240)
 
-	align := []string{"C", "L", "C", "R", "R", "L", "R", "R",}
+	align := []string{"C", "L", "C", "R", "R", "R", "R", "R",}
 	colsWidth := []float64{6, 30, 9, 10, 15, 20, 20, 20, }
 	headers, contents := getTableData()
 	for i, header := range headers {
-		pdf.CellFormat(colsWidth[i], 5, header, "1", 0, "C", true, 0, "")
+		pdf.CellFormat(colsWidth[i], 5, header, "B", 0, "C", true, 0, "")
 	}
 
 	pdf.Ln(-1)
@@ -59,7 +59,7 @@ func main(){
 	pdf.SetFillColor(255, 255, 255)
 	for _, line := range contents {
 		for i, row := range line {
-			pdf.CellFormat(colsWidth[i], 5, row, "1", 0, align[i], false, 0, "")
+			pdf.CellFormat(colsWidth[i], 5, row, "B", 0, align[i], false, 0, "")
 		}
 		pdf.Ln(-1)
 	}
@@ -84,6 +84,14 @@ func main(){
 
 	if err != nil {
 		fmt.Println(err.Error())
+	}
+	
+	if runtime.GOOS == "windows" {
+		cmd := exec.Command("bin/PDFtoPrinter.exe", ""/*, "HP LaserJet P2055dn UPD PCL 6"*/)
+		out, err := cmd.Output()
+		if err == nil {
+			fmt.Printf("%s", string(out))
+		}
 	}
 }
 
