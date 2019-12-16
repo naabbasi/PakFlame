@@ -69,7 +69,7 @@ type Inventory struct {
 	WholesaleRate float64   `json:"wholesaleRate" xml:"wholesaleRate" form:"wholesaleRate" query:"wholesaleRate"`
 	RetailRate    float64   `json:"retailRate" xml:"retailRate" form:"retailRate" query:"retailRate"`
 	ItemStatus    string    `json:"itemStatus" xml:"itemStatus" form:"itemStatus" query:"itemStatus"`
-	CompanyId     uuid.UUID `gorm:"ForeignKey; type: uuid;" json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
+	CompanyId     uuid.UUID `gorm:"ForeignKey:company_id; type: uuid;" json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
 }
 
 func (inventory Inventory) ToString() string {
@@ -85,6 +85,8 @@ type Company struct {
 
 type Invoice struct {
 	Model
+	InvoiceNumber    int64     `json:"invoiceNumber" xml:"invoiceNumber" form:"invoiceNumber" query:"invoiceNumber"`
+	ItemName         string    `json:"itemName" xml:"unit" form:"unit" query:"unit"`
 	Unit             string    `json:"unit" xml:"unit" form:"unit" query:"unit"`
 	Quantities       uint64    `json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
 	Price            float64   `json:"price" xml:"price" form:"price" query:"price"`
@@ -93,5 +95,5 @@ type Invoice struct {
 	TotalAmount      float64   `json:"totalAmount" xml:"totalAmount" form:"totalAmount" query:"totalAmount"`
 	Transport        string    `json:"transport" xml:"transport" form:"transport" query:"transport"`
 	TransportCharges float64   `json:"transportCharges" xml:"transportCharges" form:"transportCharges" query:"transportCharges"`
-	CustomerId       uuid.UUID `gorm:"ForeignKey; type: uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
+	CustomerId       uuid.UUID `gorm:"ForeignKey:customer_id; type: uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
 }

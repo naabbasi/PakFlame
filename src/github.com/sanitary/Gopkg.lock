@@ -226,6 +226,7 @@
     "github.com/jinzhu/gorm/dialects/postgres",
     "github.com/johnfercher/maroto/pkg/consts",
     "github.com/johnfercher/maroto/pkg/pdf",
+    "github.com/johnfercher/maroto/pkg/props",
     "github.com/jung-kurt/gofpdf",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",

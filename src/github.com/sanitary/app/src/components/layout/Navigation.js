@@ -28,6 +28,16 @@ export default class Navigation extends GenericComponent {
                 command:()=>{ window.location.hash="inventory"; }
             },
             {
+                label:'Invoices',
+                icon:'pi pi-fw pi-folder-open',
+                command:()=>{ window.location.hash="invoices"; }
+            },
+            {
+                label:'Invoice',
+                icon:'pi pi-fw pi-folder-open',
+                command:()=>{ window.location.hash="invoice"; }
+            },
+            {
                 label:'Logout',
                 icon:'pi pi-fw pi-sign-out',
                 command:()=>{ window.location.hash="logout"; }

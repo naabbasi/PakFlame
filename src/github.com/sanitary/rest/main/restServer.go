@@ -77,6 +77,12 @@ func main() {
 		inventories.UpdateItem()
 		inventories.DeleteItem()
 
+		invoices := api.NewInvoice(e)
+		invoices.Getinvoices()
+		invoices.AddInvoice()
+		invoices.UpdateInvoice()
+		invoices.DeleteInvoice()
+
 		e.Static("/static", "app/static")
 		e.Static("/", "app")
 

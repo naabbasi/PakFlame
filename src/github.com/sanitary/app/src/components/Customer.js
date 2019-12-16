@@ -129,10 +129,12 @@ export default class Customer extends GenericComponent {
             <Button style={{float:'left'}} label="Add" icon="pi pi-plus" onClick={this.addNew}/>
         </div>;
 
-        let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
-            <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.save}/>
-            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.delete}/>
-            <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.close}/>
+        let dialogFooter = <div className="p-grid p-align-center" style={{ paddingTop: '10px'}}>
+            <div style={{textAlign: 'right', width: '100%'}}>
+                <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.save}/>
+                <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.delete}/>
+                <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.close}/>
+            </div>
         </div>;
 
         return (
@@ -160,73 +162,85 @@ export default class Customer extends GenericComponent {
                                 this.state.customer &&
                                 <div className="p-grid">
                                     <div className="p-col-12">
-                                        <div className="p-col" style={{padding:'.75em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText ref="firstName" maxLength={255} onChange={(e) => {this.updateProperty('firstName', e.target.value)}} value={this.state.customer.firstName}/>
-                                                <label htmlFor="firstName">First Name</label>
-                                            </span>
+                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                            <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText ref="firstName" maxLength={255} onChange={(e) => {this.updateProperty('firstName', e.target.value)}} value={this.state.customer.firstName}/>
+                                                    <label htmlFor="firstName">First Name</label>
+                                                </span>
+                                            </div>
+
+                                            <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText ref="lastName" maxLength={255} onChange={(e) => {this.updateProperty('lastName', e.target.value)}} value={this.state.customer.lastName}/>
+                                                    <label htmlFor="lastName">Last Name</label>
+                                                </span>
+                                            </div>
                                         </div>
 
-                                        <div className="p-col" style={{padding:'.75em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText ref="lastName" maxLength={255} onChange={(e) => {this.updateProperty('lastName', e.target.value)}} value={this.state.customer.lastName}/>
-                                                <label htmlFor="lastName">Last Name</label>
-                                            </span>
+                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                            <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText ref="mobileNumber" maxLength={11} onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.customer.mobileNumber}/>
+                                                    <label htmlFor="mobileNumber">Mobile Number</label>
+                                                </span>
+                                            </div>
+
+                                            <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText ref="shopName" maxLength={255} onChange={(e) => {this.updateProperty('shopName', e.target.value)}} value={this.state.customer.shopName}/>
+                                                    <label htmlFor="shopName">Shop Name</label>
+                                                </span>
+                                            </div>
                                         </div>
 
-                                        <div className="p-col" style={{padding:'.75em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText ref="mobileNumber" maxLength={11} onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.customer.mobileNumber}/>
-                                                <label htmlFor="mobileNumber">Mobile Number</label>
-                                            </span>
+                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                            <div className="p-col" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText ref="address" maxLength={500} onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.customer.address}/>
+                                                    <label htmlFor="address">Address</label>
+                                                </span>
+                                            </div>
                                         </div>
 
-                                        <div className="p-col" style={{padding:'.75em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText ref="shopName" maxLength={255} onChange={(e) => {this.updateProperty('shopName', e.target.value)}} value={this.state.customer.shopName}/>
-                                                <label htmlFor="shopName">Shop Name</label>
-                                            </span>
+                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                            <div className="p-col" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText ref="status" maxLength={255} onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.customer.status}/>
+                                                    <label htmlFor="status">Status</label>
+                                                </span>
+                                            </div>
                                         </div>
 
-                                        <div className="p-col" style={{padding:'.75em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText ref="address" maxLength={500} onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.customer.address}/>
-                                                <label htmlFor="address">Address</label>
-                                            </span>
+                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                            <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText id="amount" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('amount', e.target.value)}}
+                                                               onBlur={(e) => {this.updateProperty('amount', this.Float(e.target.value))}}
+                                                               value={this.state.customer.amount}/>
+                                                    <label htmlFor="amount">Amount</label>
+                                                </span>
+                                            </div>
+
+                                            <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText id="remaining" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('remaining', e.target.value)}}
+                                                               onBlur={(e) => {this.updateProperty('remaining', this.Float(e.target.value))}}
+                                                               value={this.state.customer.remaining}/>
+                                                    <label htmlFor="remaining">Remaining Amount</label>
+                                                </span>
+                                            </div>
                                         </div>
 
-                                        <div className="p-col" style={{padding:'.75em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText ref="status" maxLength={255} onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.customer.status}/>
-                                                <label htmlFor="status">Status</label>
-                                            </span>
-                                        </div>
-
-                                        <div className="p-col" style={{padding:'.75em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText id="amount" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('amount', e.target.value)}}
-                                                           onBlur={(e) => {this.updateProperty('amount', this.Float(e.target.value))}}
-                                                           value={this.state.customer.amount}/>
-                                                <label htmlFor="amount">Amount</label>
-                                            </span>
-                                        </div>
-
-                                        <div className="p-col" style={{padding:'.75em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText id="remaining" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('remaining', e.target.value)}}
-                                                           onBlur={(e) => {this.updateProperty('remaining', this.Float(e.target.value))}}
-                                                           value={this.state.customer.remaining}/>
-                                                <label htmlFor="remaining">Remaining Amount</label>
-                                            </span>
-                                        </div>
-
-                                        <div className="p-col" style={{padding:'.75em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText id="total" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('total', e.target.value)}}
-                                                           onBlur={(e) => {this.updateProperty('total', this.Float(e.target.value))}}
-                                                           value={this.state.customer.total}/>
-                                                <label htmlFor="total">Total Amount</label>
-                                            </span>
+                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                            <div className="p-col" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText id="total" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('total', e.target.value)}}
+                                                               onBlur={(e) => {this.updateProperty('total', this.Float(e.target.value))}}
+                                                               value={this.state.customer.total}/>
+                                                    <label htmlFor="total">Total Amount</label>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

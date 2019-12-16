@@ -8,6 +8,8 @@ import {Card} from "primereact/card";
 const Login = lazy(() => import ("./components/user/Login"));
 const SignUp = lazy(() => import ("./components/user/SignUp"));
 const Customer = lazy(() => import ("./components/Customer"));
+const Invoices = lazy(() => import ("./components/invoices/Invoices"));
+const Invoice = lazy(() => import ("./components/invoices/Invoice"));
 const Worker = lazy(() => import ("./components/Worker"));
 const Inventory = lazy(() => import ("./components/Inventory"));
 
@@ -50,6 +52,8 @@ function App() {
                     <Route exact path="/customers" component={WaitingComponent(Customer)}></Route>
                     <Route exact path="/workers" component={WaitingComponent(Worker)}></Route>
                     <Route path="/inventory" component={WaitingComponent(Inventory)}></Route>
+                    <Route path="/invoices" component={WaitingComponent(Invoices)}></Route>
+                    <Route path="/invoice" component={WaitingComponent(Invoice)}></Route>
                     <Route path="/logout" component={Logout}></Route>
                     <Route component={NotFound}></Route>
                 </Switch>
