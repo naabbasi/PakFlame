@@ -27,7 +27,7 @@ export default class Invoice extends GenericComponent {
     async componentDidMount() {
         this.loadCompanies();
         this.setState(
-            {invoice: {invoiceNumber: 0, itemName: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0}}
+            {invoice: {invoiceNumber: 0, itemName: '', customerName: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0}}
         );
     }
 
@@ -197,14 +197,12 @@ export default class Invoice extends GenericComponent {
                                 </div>
 
                                 <div className="p-col-6">
-                                    <div className="p-grid">
-                                        <div className="p-col p-fluid" style={{padding:'.5em'}}>
-                                            <AutoComplete id="companyName" dropdown={true}  field="companyName"
-                                                          placeholder="Please Select Company Name"
-                                                          readonly={false}
-                                                          maxLength={250}
-                                                          value={this.state.company} onChange={(e) => this.setState({company:  e.value})}
-                                                          suggestions={this.state.companySuggestions} completeMethod={this.suggestCompanies.bind(this)} />
+                                    <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                        <div className="p-col" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText id="customerName" maxLength={250} onChange={(e) => {this.updateProperty('customerName', e.target.value)}} value={this.state.invoice.customerName}/>
+                                                    <label htmlFor="customerName">Customer Name</label>
+                                                </span>
                                         </div>
                                     </div>
 
@@ -267,6 +265,25 @@ export default class Invoice extends GenericComponent {
                                 </div>
 
                                 <div className="p-col-6">
+                                    <div className="p-grid">
+                                        <div className="p-col p-fluid" style={{padding:'.5em'}}>
+                                            <DataTable value={this.state.invoices} paginator={true} rows={25}
+                                                       scrollable={true} scrollHeight="700px"
+                                                       selectionMode="single" selection={this.state.selectedInventory}
+                                                       onSelectionChange={e => this.setState({selectedInventory: e.value})}
+                                                       onRowSelect={this.onInventorySelect} globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
+
+                                                <Column field="itemName" header="Item Name" sortable={true} />
+                                                <Column field="quantities" header="Quantity" sortable={true} style={{textAlign: 'right'}}/>
+                                                <Column field="quantityAlert" header="Quantity Alert" sortable={true} style={{textAlign: 'right'}}/>
+                                                <Column field="createdAt" header="Purchase Date" body={this.dateFormatter}  sortable={true} style={{textAlign: 'center', overflowWrap: 'break-word'}}/>
+                                                <Column field="purchaseRate" header="Purchase Rate" sortable={true} style={{textAlign: 'right'}}/>
+                                                <Column field="wholesaleRate" header="Wholesale Rate" sortable={true} style={{textAlign: 'right'}}/>
+                                                <Column field="retailRate" header="Retail Rate" sortable={true} style={{textAlign: 'right'}}/>
+                                                <Column field="itemStatus" header="Status" sortable={true}/>
+                                            </DataTable>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         }

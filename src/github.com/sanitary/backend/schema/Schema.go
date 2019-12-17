@@ -24,7 +24,12 @@ func CreatePostgreSQLSchema(db *gorm.DB) {
 
 	db.Model(&models.User{}).AddUniqueIndex("idx_username", "username")
 	db.Model(&models.Worker{}).AddUniqueIndex("idx_worker_mobile_number", "mobile_number")
-	db.Model(&models.Worker{}).AddUniqueIndex("idx_customer_mobile_number", "mobile_number")
+	db.Model(&models.Customer{}).AddUniqueIndex("idx_customer_mobile_number", "mobile_number")
+
+	db.Model(&models.Inventory{}).RemoveForeignKey("company_id","companies(id)")
+	db.Model(&models.Inventory{}).RemoveForeignKey("customer_id","customers(id)")
+	db.Model(&models.Invoice{}).RemoveForeignKey("customer_id","customers(id)")
+
 	db.Model(&models.Inventory{}).AddForeignKey("company_id", "companies(id)", "RESTRICT", "RESTRICT")
 	db.Model(&models.Invoice{}).AddForeignKey("customer_id", "customers(id)", "RESTRICT", "RESTRICT")
 	//db.Model(&models.User{}).AddUniqueIndex("idx_username","username","password")

@@ -39,7 +39,7 @@ func main() {
 	pdf.Ln(-1)
 
 	pdf.CellFormat(43.33, 5, fmt.Sprintf("Customer: %s", "Waris Ali"), "1", 0, "L", false, 0, "")
-	pdf.CellFormat(43.33, 5, fmt.Sprintf("Patry: %s", "AbuZar Traders"), "1", 0, "L", false, 0, "")
+	pdf.CellFormat(43.33, 5, fmt.Sprintf("Party: %s", "AbuZar Traders"), "1", 0, "L", false, 0, "")
 	pdf.CellFormat(43.33, 5, fmt.Sprintf("Transport: %s", "Mazda"), "1", 0, "L", false, 0, "")
 	pdf.Ln(-1)
 	pdf.CellFormat(130, 5, fmt.Sprintf("Address: %s", "House no 284 unit no 2, Latifabad, Hyderabad"), "1", 0, "L", false, 0, "")
@@ -103,10 +103,21 @@ func getTableData() ([]string, [][]string) {
 	var contents [][]string
 
 	for counter := 1; counter < 28; counter++ {
+		rand.Seed(time.Now().UnixNano())
+		var quantities = randFloats(1.10, 500.98)
+		var price = randFloats(1.10, 500.98)
+		var amount = quantities * price
+		var discountOnItem float64 = 10.0
+		totalAmount := ( discountOnItem / 100.0 ) * amount
+
 		contents = append(contents, []string{fmt.Sprintf(" %d", counter), fmt.Sprintf("Row %d", counter),
-			fmt.Sprintf("PCS"), fmt.Sprintf("%d", rand.Intn(100)), fmt.Sprintf("%d", rand.Intn(100)),
-			fmt.Sprintf("%d", rand.Intn(100)), fmt.Sprintf("%d", rand.Intn(100)), fmt.Sprintf("%d", rand.Intn(100))})
+			fmt.Sprintf("PCS"), fmt.Sprintf("%.2f", quantities), fmt.Sprintf("%.2f", price),
+			fmt.Sprintf("%.2f", amount), fmt.Sprintf("%.2f %%", discountOnItem), fmt.Sprintf("%.2f", amount - totalAmount)})
 	}
 
 	return header, contents
+}
+
+func randFloats(min, max float64) float64 {
+	return min + rand.Float64() * (max - min)
 }

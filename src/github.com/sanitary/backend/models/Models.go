@@ -62,6 +62,8 @@ type Payment struct {
 
 type Inventory struct {
 	Model
+	CustomerId    uuid.UUID `gorm:"ForeignKey:customer_id; type: uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
+	CustomerName  string    `json:"customerName" xml:"customerName" form:"customerName" query:"customerName"`
 	ItemName      string    `json:"itemName" xml:"itemName" form:"itemName" query:"itemName"`
 	Quantities    uint64    `json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
 	QuantityAlert uint64    `json:"quantityAlert" xml:"quantityAlert" form:"quantityAlert" query:"quantityAlert"`

@@ -44,7 +44,7 @@ func (user *users) AddUser() {
 		if err := c.Bind(newUser); err != nil {
 			return err
 		}
-		log.Printf("User saved with %s", &newUser)
+		log.Printf("User saved with %v", &newUser)
 
 		connection := user.dbSettings.GetDBConnection()
 		save := connection.Save(&newUser)
