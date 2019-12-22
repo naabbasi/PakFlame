@@ -52,8 +52,8 @@ function App() {
                     <Route exact path="/customers" component={WaitingComponent(Customer)}></Route>
                     <Route exact path="/workers" component={WaitingComponent(Worker)}></Route>
                     <Route path="/inventory" component={WaitingComponent(Inventory)}></Route>
-                    <Route path="/invoices" component={WaitingComponent(Invoices)}></Route>
-                    <Route path="/invoice" component={WaitingComponent(Invoice)}></Route>
+                    <Route path="/invoices/all" component={WaitingComponent(Invoices)}></Route>
+                    <Route path="/invoices/invoice" component={WaitingComponent(Invoice)}></Route>
                     <Route path="/logout" component={Logout}></Route>
                     <Route component={NotFound}></Route>
                 </Switch>

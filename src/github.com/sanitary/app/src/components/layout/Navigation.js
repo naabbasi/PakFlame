@@ -30,12 +30,18 @@ export default class Navigation extends GenericComponent {
             {
                 label:'Invoices',
                 icon:'pi pi-fw pi-folder-open',
-                command:()=>{ window.location.hash="invoices"; }
-            },
-            {
-                label:'Invoice',
-                icon:'pi pi-fw pi-folder-open',
-                command:()=>{ window.location.hash="invoice"; }
+                items: [
+                    {
+                        label:'Show All Invoices',
+                        icon:'pi pi-fw pi-folder-open',
+                        command:()=>{ window.location.hash="invoices/all"; }
+                    },
+                    {
+                        label:'Invoice',
+                        icon:'pi pi-fw pi-folder-open',
+                        command:()=>{ window.location.hash="invoices/invoice"; }
+                    }
+                ]
             },
             {
                 label:'Logout',

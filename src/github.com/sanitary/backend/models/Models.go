@@ -86,16 +86,30 @@ type Company struct {
 }
 
 type Invoice struct {
+	ID               int64            `gorm:"PRIMARY_KEY; type: integer default nextval('invoice_seq');" json:"id" xml:"id" form:"id" query:"id"`
+	CreatedAt        time.Time        `json:"createdAt" xml:"createdAt" form:"createdAt" query:"createdAt"`
+	UpdatedAt        time.Time        `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
+	CustomerName     string           `json:"customerName" xml:"customerName" form:"customerName" query:"customerName"`
+	PartyName        string           `json:"partyName" xml:"partyName" form:"partyName" query:"partyName"`
+	Transport        string           `json:"transport" xml:"transport" form:"transport" query:"transport"`
+	TransportCharges float64          `json:"transportCharges" xml:"transportCharges" form:"transportCharges" query:"transportCharges"`
+	InvoiceDetails   []InvoiceDetails `json:"invoiceDetails" xml:"invoiceDetails" form:"invoiceDetails" query:"invoiceDetails"`
+	CustomerId       uuid.UUID        `json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
+}
+
+type InvoiceDetails struct {
+	InvoiceNumber int64   `json:"invoiceNumber" xml:"invoiceNumber" form:"invoiceNumber" query:"invoiceNumber"`
+	ItemName      string  `json:"itemName" xml:"unit" form:"unit" query:"unit"`
+	Unit          string  `json:"unit" xml:"unit" form:"unit" query:"unit"`
+	Quantities    uint64  `json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
+	Price         float64 `json:"price" xml:"price" form:"price" query:"price"`
+	Amount        float64 `json:"amount" xml:"amount" form:"amount" query:"amount"`
+	Discount      float64 `json:"discount" xml:"discount" form:"discount" query:"discount"`
+	TotalAmount   float64 `json:"totalAmount" xml:"totalAmount" form:"totalAmount" query:"totalAmount"`
+}
+
+type SysInfo struct {
 	Model
-	InvoiceNumber    int64     `json:"invoiceNumber" xml:"invoiceNumber" form:"invoiceNumber" query:"invoiceNumber"`
-	ItemName         string    `json:"itemName" xml:"unit" form:"unit" query:"unit"`
-	Unit             string    `json:"unit" xml:"unit" form:"unit" query:"unit"`
-	Quantities       uint64    `json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
-	Price            float64   `json:"price" xml:"price" form:"price" query:"price"`
-	Amount           float64   `json:"amount" xml:"amount" form:"amount" query:"amount"`
-	Discount         float64   `json:"discount" xml:"discount" form:"discount" query:"discount"`
-	TotalAmount      float64   `json:"totalAmount" xml:"totalAmount" form:"totalAmount" query:"totalAmount"`
-	Transport        string    `json:"transport" xml:"transport" form:"transport" query:"transport"`
-	TransportCharges float64   `json:"transportCharges" xml:"transportCharges" form:"transportCharges" query:"transportCharges"`
-	CustomerId       uuid.UUID `gorm:"ForeignKey:customer_id; type: uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
+	License   string `json:"license" xml:"license" form:"license" query:"license"`
+	Migration bool   `json:"migration" xml:"migration" form:"migration" query:"migration"`
 }

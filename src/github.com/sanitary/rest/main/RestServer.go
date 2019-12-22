@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/labstack/gommon/log"
@@ -41,8 +42,15 @@ func main() {
 
 		config := config.NewConfig()
 		if config.DemoData == false {
-			db := backend.GetDBSettings(config)
-			schema.CreatePostgreSQLSchema(db.GetDBConnection())
+			runMigration := flag.Bool("migration", false, "To run migration")
+			flag.Parse()
+			if *runMigration {
+				db := backend.GetDBSettings(config)
+				connection := db.GetDBConnection()
+				connection.Exec("CREATE SEQUENCE invoice_seq")
+				schema.CreatePostgreSQLSchema(connection)
+			}
+
 		}
 
 		users := api.NewUser(e)
@@ -78,10 +86,16 @@ func main() {
 		inventories.DeleteItem()
 
 		invoices := api.NewInvoice(e)
-		invoices.Getinvoices()
+		invoices.GetInvoices()
+		invoices.GetInvoiceById()
 		invoices.AddInvoice()
 		invoices.UpdateInvoice()
 		invoices.DeleteInvoice()
+
+		invoices.GetInvoiceDetailsById()
+		invoices.AddInvoiceDetails()
+		invoices.UpdateInvoiceDetail()
+		invoices.DeleteInvoiceDetail()
 
 		e.Static("/static", "app/static")
 		e.Static("/", "app")

@@ -61,7 +61,7 @@ export class GenericComponent extends Component {
     };
 
     dateFormatter(rowData,column){
-        let options = {day: 'numeric', year: 'numeric', month: 'numeric'}
+        let options = {day: 'numeric', year: 'numeric', month: 'numeric', hour: 'numeric', minute: 'numeric'}
         let date = new Date(rowData['createdAt']).toLocaleDateString('en-PK', options);
         return "" + date;
     }
