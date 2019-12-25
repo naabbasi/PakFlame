@@ -97,6 +97,8 @@ func main() {
 		invoices.UpdateInvoiceDetail()
 		invoices.DeleteInvoiceDetail()
 
+		invoices.PrintInvoice()
+
 		e.Static("/static", "app/static")
 		e.Static("/", "app")
 

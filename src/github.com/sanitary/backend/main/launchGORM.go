@@ -45,7 +45,7 @@ func main() {
 }
 
 func randomName() string {
-	names := []string{"Rehmat Ali", "Imtiaz Ali", "Noman Ali", "Farhan Ali", "Arsalan Ali", "Aijaz Ali", "Nabeel Ali", "Nafees Ali", "Zaheer Ali", "Nadeem Ali"}
+	names := []string{"\uFDF2", "Rehmat Ali", "Imtiaz Ali", "Noman Ali", "Farhan Ali", "Arsalan Ali", "Aijaz Ali", "Nabeel Ali", "Nafees Ali", "Zaheer Ali", "Nadeem Ali"}
 	return names[rand.Intn(10)]
 }
 

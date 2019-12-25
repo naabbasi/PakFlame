@@ -108,16 +108,16 @@ func getTableData() ([]string, [][]string) {
 		var price = randFloats(1.10, 500.98)
 		var amount = quantities * price
 		var discountOnItem float64 = 10.0
-		totalAmount := ( discountOnItem / 100.0 ) * amount
+		totalAmount := (discountOnItem / 100.0) * amount
 
 		contents = append(contents, []string{fmt.Sprintf(" %d", counter), fmt.Sprintf("Row %d", counter),
 			fmt.Sprintf("PCS"), fmt.Sprintf("%.2f", quantities), fmt.Sprintf("%.2f", price),
-			fmt.Sprintf("%.2f", amount), fmt.Sprintf("%.2f %%", discountOnItem), fmt.Sprintf("%.2f", amount - totalAmount)})
+			fmt.Sprintf("%.2f", amount), fmt.Sprintf("%.2f %%", discountOnItem), fmt.Sprintf("%.2f", amount-totalAmount)})
 	}
 
 	return header, contents
 }
 
 func randFloats(min, max float64) float64 {
-	return min + rand.Float64() * (max - min)
+	return min + rand.Float64()*(max-min)
 }

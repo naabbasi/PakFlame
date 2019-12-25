@@ -7,6 +7,7 @@ import (
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
+	"github.com/sanitary/util/pdf/generate"
 	"net/http"
 	"strconv"
 )
@@ -45,8 +46,30 @@ func (invoices *invoices) GetInvoiceById() {
 		var getInvoice = new(models.Invoice)
 		connection := invoices.dbSettings.GetDBConnection()
 		id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-		connection.Table("invoices").Where("id = ?", id).First(getInvoice)
-		return c.JSON(http.StatusOK, &getInvoice)
+		connection.Table("invoices").Where("id = ?", id).First(&getInvoice)
+
+		if getInvoice.ID != 0 {
+			return c.JSON(http.StatusOK, &getInvoice)
+		} else {
+			return c.JSON(http.StatusNotFound, "No invoice found")
+		}
+	})
+}
+
+func (invoices *invoices) PrintInvoice() {
+	invoices.echo.GET(InvoiceEndPoint+"/print/:id", func(c echo.Context) error {
+		connection := invoices.dbSettings.GetDBConnection()
+		id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+		//connection.Table("invoices").Where("id = ?", id).First(&getInvoice)
+
+		result := new([]generate.Result)
+		connection.Table("invoices").Select("invoices.*, invoice_details.*").
+			Joins("inner join invoice_details on invoices.id = invoice_details.invoice_number").
+			Where("id = ?", id).
+			Find(result)
+
+		generate.Pdf(result)
+		return c.JSON(http.StatusOK, "Invoice printed successfully")
 	})
 }
 
