@@ -2,12 +2,10 @@ import React from 'react';
 import {DataTable} from "primereact/datatable";
 import {Button} from "primereact/button";
 import {Column} from "primereact/column";
-import {Dialog} from "primereact/dialog";
 import {InputText} from "primereact/inputtext";
 
 import {GenericComponent} from "../GenericComponent";
 import Navigation from "../layout/Navigation";
-import {AutoComplete} from "primereact/autocomplete";
 import {Calendar} from "primereact/calendar";
 import {Accordion, AccordionTab} from "primereact/accordion";
 
@@ -21,7 +19,8 @@ export default class Invoice extends GenericComponent {
             invoice: null,
             invoiceDetails: [],
             items: [],
-            invoiceId: params.get('invoiceId') == null ? 0 : params.get('invoiceId')
+            invoiceId: params.get('invoiceId') == null ? 0 : params.get('invoiceId'),
+            disableButtons: true
         };
 
         this.saveInvoice = this.saveInvoice.bind(this);
@@ -29,10 +28,11 @@ export default class Invoice extends GenericComponent {
         this.close = this.close.bind(this);
         this.onInvoiceSelect = this.onInvoiceSelect.bind(this);
         this.addNew = this.addNew.bind(this);
+        this.print = this.print.bind(this);
     }
 
     async componentDidMount() {
-        if(this.state.invoiceId != 0) {
+        if(this.state.invoiceId !== 0) {
             this.newInvoice = false;
             this.getInvoiceById(this.state.invoiceId);
         } else {
@@ -45,6 +45,7 @@ export default class Invoice extends GenericComponent {
         if(data) {
             this.getInvoiceDetailsById(data['id']);
             this.setState({
+                isEdit: true,
                 invoice: {
                     invoiceNumber: data['id'], customerName: data['customerName'], createAt: new Date(data['createdAt']), partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'],
                     details: {invoiceNumber: 0, itemName: 'My Item', createAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
@@ -53,8 +54,8 @@ export default class Invoice extends GenericComponent {
         } else {
             this.setState({
                 invoice: {
-                    invoiceNumber: 0, customerName: 'Noman Ali', createAt: '', partyName: 'Abbasi.co', transport: 'mazda', transportCharges: 0,
-                    details: {invoiceNumber: 0, itemName: 'My Item', createAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
+                    invoiceNumber: 0, customerName: '', createAt: new Date(), partyName: '', transport: '', transportCharges: 0,
+                    details: {invoiceNumber: 0, itemName: '', createAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
                 },
             });
         }
@@ -97,8 +98,7 @@ export default class Invoice extends GenericComponent {
 
             let itemDetails = this.state.items;
             this.state.invoiceDetails = itemDetails;
-            let details = {...this.state.invoiceDetails};
-            this.state.invoice.invoiceDetails = new Array();
+            this.state.invoice.invoiceDetails = [];
 
             for(let row = 0; row < itemDetails.length; row++) {
                 this.state.invoice.invoiceDetails.push(itemDetails[row]);
@@ -117,8 +117,7 @@ export default class Invoice extends GenericComponent {
                 // handle error
                 console.log(error);
             });
-        }
-        else{
+        } else{
             this.axios.put('/invoices',this.state.invoice)
             .then( response => {
                 // handle success
@@ -171,7 +170,6 @@ export default class Invoice extends GenericComponent {
     onInvoiceSelect(e){
         this.newInvoice = false;
         this.setState({
-            displayDialog:true,
             invoice: Object.assign({}, e.data)
         });
     }
@@ -181,8 +179,29 @@ export default class Invoice extends GenericComponent {
         let details = {...this.state.invoice.details};
         let addItemDetails = this.state.items;
         addItemDetails.push(details)
-        this.setState({items: addItemDetails});
+        this.setState({
+            saveButton: false,
+            items: addItemDetails
+        });
         console.log(this.state.items)
+    }
+
+    print() {
+        if(this.state.invoiceId !== 0) {
+            // Make a request for a invoices
+            this.axios.get('/invoices/print/' + this.state.invoiceId)
+            .then( response => {
+                // handle success
+                if(response.status === 200){
+
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+        } else {
+        }
     }
 
     render() {
@@ -194,7 +213,7 @@ export default class Invoice extends GenericComponent {
                             this.state.invoice &&
                             <div>
                                 <Accordion multiple={false}>
-                                    <AccordionTab header={this.state.invoiceId == 0 ? "Sale Invoice" : "Sale Invoice # " + this.state.invoiceId}>
+                                    <AccordionTab header={this.state.invoiceId === 0 ? "Sale Invoice" : "Sale Invoice # " + this.state.invoiceId}>
                                         <div className="p-datatable-header">
                                             <div className="p-col-12 p-component">
                                                 <div className="p-col-12">
@@ -306,12 +325,17 @@ export default class Invoice extends GenericComponent {
                                         <div className="p-grid" style={{ paddingTop: '10px'}}>
                                             <div className="p-col" style={{padding:'.75em'}}>
                                                 <Button label="Add" icon="pi pi-plus" className="p-button-rounded" onClick={this.addNew}/>
-                                                <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInvoice}/>
-                                                <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.delete}/>
                                             </div>
                                         </div>
                                     </AccordionTab>
                                 </Accordion>
+                                <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                    <div className="p-col" style={{padding:'.75em'}}>
+                                        <Button disabled={false} label="Print" icon="pi pi-print" className="p-button-rounded" onClick={this.print}/>
+                                        <Button disabled={this.state.disableButtons} label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInvoice}/>
+                                        <Button disabled={this.state.disableButtons} label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.delete}/>
+                                    </div>
+                                </div>
                                 <div className="p-col-12">
                                     <div className="p-grid">
                                         <div className="p-col p-fluid" style={{padding:'.5em'}}>
