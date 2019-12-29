@@ -91,6 +91,7 @@ type Invoice struct {
 	UpdatedAt        time.Time        `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
 	CustomerName     string           `json:"customerName" xml:"customerName" form:"customerName" query:"customerName"`
 	PartyName        string           `json:"partyName" xml:"partyName" form:"partyName" query:"partyName"`
+	Address          string           `json:"address" xml:"address" form:"address" query:"address"`
 	Transport        string           `json:"transport" xml:"transport" form:"transport" query:"transport"`
 	TransportCharges float64          `json:"transportCharges" xml:"transportCharges" form:"transportCharges" query:"transportCharges"`
 	InvoiceDetails   []InvoiceDetails `json:"invoiceDetails" xml:"invoiceDetails" form:"invoiceDetails" query:"invoiceDetails"`

@@ -50,7 +50,7 @@ func randomName() string {
 }
 
 func createCustomers(connection *gorm.DB) {
-	for num := 0; num < 100; num++ {
+	for num := 0; num < 1000; num++ {
 		customer := &models.Customer{}
 		customer.FirstName = randomName()
 		customer.LastName = "Abbasi"
@@ -66,7 +66,7 @@ func createCustomers(connection *gorm.DB) {
 }
 
 func createWorkers(connection *gorm.DB) {
-	for num := 0; num < 100; num++ {
+	for num := 0; num < 1000; num++ {
 		worker := &models.Worker{}
 		worker.FirstName = randomName()
 		worker.LastName = "Abbasi"
@@ -88,10 +88,10 @@ func createCompanies(connection *gorm.DB) *models.Company {
 }
 
 func createInventories(company *models.Company, connection *gorm.DB) {
-	for num := 0; num < 100; num++ {
+	for num := 0; num < 50000; num++ {
 		inventory := &models.Inventory{}
 		inventory.ItemName = randomName()
-		inventory.ItemStatus = "Active"
+		inventory.ItemStatus = "Available"
 		inventory.Quantities = uint64(rand.Intn(1000))
 		inventory.QuantityAlert = uint64(rand.Intn(10))
 		inventory.WholesaleRate = float64(rand.Int63n(time.Now().Unix()))
