@@ -11,7 +11,7 @@ type Result struct {
 	models.InvoiceDetails
 }
 
-const path = "/home/nabbasi/Documents/"
+const path = "D:/"
 
 var (
 	align     = []string{"C", "L", "C", "R", "R", "R", "R", "R"}
@@ -94,8 +94,10 @@ func generateTable(result *[]Result, pdf *gofpdf.Fpdf) {
 	totalDiscount := 0.0
 	totalDiscountedAmount := 0.0
 	sumOfTotalAmount := 0.0
+	transportCharges := 0.0
 
 	for index, row := range *result {
+		transportCharges = row.TransportCharges
 		invoiceDetails := models.InvoiceDetails{
 			ItemName:    row.ItemName,
 			Unit:        row.Unit,
@@ -148,6 +150,6 @@ func generateTable(result *[]Result, pdf *gofpdf.Fpdf) {
 		pdf.CellFormat(15, 5, fmt.Sprintf("%.2f", totalPrice), "1", 0, "R", false, 0, "")
 		pdf.CellFormat(20, 5, fmt.Sprintf("%.2f", totalAmount), "1", 0, "R", false, 0, "")
 		pdf.CellFormat(20, 5, fmt.Sprintf("%.0f", totalDiscount), "1", 0, "R", false, 0, "")
-		pdf.CellFormat(20, 5, fmt.Sprintf("%.2f", sumOfTotalAmount), "1", 0, "R", false, 0, "")
+		pdf.CellFormat(20, 5, fmt.Sprintf("%.2f", sumOfTotalAmount+transportCharges), "1", 0, "R", false, 0, "")
 	})
 }

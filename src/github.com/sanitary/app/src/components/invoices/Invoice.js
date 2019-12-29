@@ -47,14 +47,15 @@ export default class Invoice extends GenericComponent {
             this.setState({
                 isEdit: true,
                 invoice: {
-                    invoiceNumber: data['id'], customerName: data['customerName'], createAt: new Date(data['createdAt']), partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'],
+                    invoiceNumber: data['id'], customerName: data['customerName'], createAt: new Date(data['createdAt']), partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'],
                     details: {invoiceNumber: 0, itemName: 'My Item', createAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
                 },
             });
         } else {
             this.setState({
+                disableButtons: false,
                 invoice: {
-                    invoiceNumber: 0, customerName: '', createAt: new Date(), partyName: '', transport: '', transportCharges: 0,
+                    invoiceNumber: 0, customerName: '', createAt: new Date(), partyName: '', transport: '', transportCharges: 0, address: '',
                     details: {invoiceNumber: 0, itemName: '', createAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
                 },
             });
@@ -218,14 +219,14 @@ export default class Invoice extends GenericComponent {
                                             <div className="p-col-12 p-component">
                                                 <div className="p-col-12">
                                                     <div className="p-grid">
-                                                        <div className="p-col" style={{padding:'.75em'}}>
+                                                        <div className="p-col" style={{padding:'.50em'}}>
                                                             <span className="p-float-label p-fluid">
                                                                 <InputText id="customerName" maxLength={250} onChange={(e) => {this.updateProperty('customerName', e.target.value)}} value={this.state.invoice.customerName}/>
                                                                 <label htmlFor="customerName">Customer Name</label>
                                                             </span>
                                                         </div>
 
-                                                        <div className="p-col" style={{padding:'.75em'}}>
+                                                        <div className="p-col" style={{padding:'.50em'}}>
                                                             <span className="p-float-label p-fluid">
                                                                 <Calendar id="createAt" hideOnDateTimeSelect={true} showTime={true} onChange={(e) => {this.updateProperty('createAt', e.target.value)}} value={this.state.invoice.createAt}/>
                                                                 <label htmlFor="createAt">Date</label>
@@ -236,26 +237,36 @@ export default class Invoice extends GenericComponent {
 
                                                 <div className="p-col-12">
                                                     <div className="p-grid">
-                                                        <div className="p-col" style={{padding:'.75em'}}>
+                                                        <div className="p-col" style={{padding:'.50em'}}>
                                                             <span className="p-float-label p-fluid">
                                                                 <InputText id="partyName" maxLength={250} onChange={(e) => {this.updateProperty('partyName', e.target.value)}} value={this.state.invoice.partyName}/>
                                                                 <label htmlFor="partyName">Party Name</label>
                                                             </span>
                                                         </div>
 
-                                                        <div className="p-col-3" style={{padding:'.75em'}}>
+                                                        <div className="p-col-3" style={{padding:'.50em'}}>
                                                             <span className="p-float-label p-fluid">
                                                                 <InputText id="transport" onChange={(e) => {this.updateProperty('transport', e.target.value)}} value={this.state.invoice.transport}/>
                                                                 <label htmlFor="transport">Transport</label>
                                                             </span>
                                                         </div>
 
-                                                        <div className="p-col-3" style={{padding:'.75em'}}>
+                                                        <div className="p-col-3" style={{padding:'.50em'}}>
                                                             <span className="p-float-label p-fluid">
                                                                 <InputText id="transportCharges"
                                                                            onChange={(e) => {this.updateProperty('transportCharges', e.target.value)}}
                                                                            onBlur={(e) => {this.updateProperty('transportCharges', this.Float(e.target.value))}} value={this.state.invoice.transportCharges}/>
                                                                 <label htmlFor="transportCharges">Transport Charges</label>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="p-col-12">
+                                                    <div className="p-grid">
+                                                        <div className="p-col" style={{padding:'.50em'}}>
+                                                            <span className="p-float-label p-fluid">
+                                                                <InputText ref="address" maxLength={500} onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.invoice.address}/>
+                                                                <label htmlFor="address">Address</label>
                                                             </span>
                                                         </div>
                                                     </div>
@@ -266,7 +277,7 @@ export default class Invoice extends GenericComponent {
                                     <AccordionTab header="Invoice Details">
                                         <div className="p-col-12 p-component">
                                             <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                                <div className="p-col" style={{padding:'.75em'}}>
+                                                <div className="p-col" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
                                                         <InputText id="itemName" maxLength={250} onChange={(e) => {this.updateProperty('itemName', e.target.value, true)}} value={this.state.invoice.details.itemName}/>
                                                         <label htmlFor="itemName">Item Name</label>
@@ -275,14 +286,14 @@ export default class Invoice extends GenericComponent {
                                             </div>
 
                                             <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                                <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <div className="p-col-6" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
                                                         <InputText id="unit" maxLength={250} onChange={(e) => {this.updateProperty('unit', e.target.value, true)}} value={this.state.invoice.details.unit}/>
                                                         <label htmlFor="unit">Unit</label>
                                                     </span>
                                                 </div>
 
-                                                <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <div className="p-col-6" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
                                                         <InputText id="quantities" keyfilter="pint" onChange={(e) => {this.updateProperty('quantities', this.Int(e.target.value), true)}} value={this.state.invoice.details.quantities}/>
                                                         <label htmlFor="quantities">Quantities</label>
@@ -291,46 +302,30 @@ export default class Invoice extends GenericComponent {
                                             </div>
 
                                             <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                                <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <div className="p-col-6" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
                                                         <InputText id="price" keyfilter="pint" onChange={(e) => {this.updateProperty('price', this.Int(e.target.value), true)}} value={this.state.invoice.details.price}/>
                                                         <label htmlFor="price">Price</label>
                                                     </span>
                                                 </div>
 
-                                                <div className="p-col-6" style={{padding:'.75em'}}>
-                                                    <span className="p-float-label p-fluid">
-                                                        <InputText id="amount" keyfilter="pint" onChange={(e) => {this.updateProperty('amount', this.Int(e.target.value), true)}} value={this.state.invoice.details.amount}/>
-                                                        <label htmlFor="amount">Amount</label>
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                                <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <div className="p-col-6" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
                                                         <InputText id="discount" keyfilter="pint" onChange={(e) => {this.updateProperty('discount', this.Int(e.target.value), true)}} value={this.state.invoice.details.discount}/>
                                                         <label htmlFor="discount">Discount</label>
                                                     </span>
                                                 </div>
-
-                                                <div className="p-col-6" style={{padding:'.75em'}}>
-                                                    <span className="p-float-label p-fluid">
-                                                        <InputText id="totalAmount" keyfilter="pint" onChange={(e) => {this.updateProperty('totalAmount', this.Int(e.target.value), true)}} value={this.state.invoice.details.totalAmount}/>
-                                                        <label htmlFor="totalAmount">Total Amount</label>
-                                                    </span>
-                                                </div>
                                             </div>
                                         </div>
                                         <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                            <div className="p-col" style={{padding:'.75em'}}>
+                                            <div className="p-col" style={{padding:'.50em'}}>
                                                 <Button label="Add" icon="pi pi-plus" className="p-button-rounded" onClick={this.addNew}/>
                                             </div>
                                         </div>
                                     </AccordionTab>
                                 </Accordion>
-                                <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                    <div className="p-col" style={{padding:'.75em'}}>
+                                <div className="p-grid">
+                                    <div className="p-col" style={{padding:'.50em'}}>
                                         <Button disabled={false} label="Print" icon="pi pi-print" className="p-button-rounded" onClick={this.print}/>
                                         <Button disabled={this.state.disableButtons} label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInvoice}/>
                                         <Button disabled={this.state.disableButtons} label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.delete}/>
