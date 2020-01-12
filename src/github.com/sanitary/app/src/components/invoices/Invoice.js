@@ -8,6 +8,7 @@ import {GenericComponent} from "../GenericComponent";
 import Navigation from "../layout/Navigation";
 import {Calendar} from "primereact/calendar";
 import {Accordion, AccordionTab} from "primereact/accordion";
+import ItemAutoComplete from "../autocomplete/ItemAutoComplete";
 
 export default class Invoice extends GenericComponent {
     constructor(props) {
@@ -23,12 +24,16 @@ export default class Invoice extends GenericComponent {
             disableButtons: true
         };
 
+        //Create refs
+        this.getItemAutoComplete = React.createRef();
+
         this.saveInvoice = this.saveInvoice.bind(this);
         this.delete = this.delete.bind(this);
         this.close = this.close.bind(this);
         this.onInvoiceSelect = this.onInvoiceSelect.bind(this);
         this.addNew = this.addNew.bind(this);
         this.print = this.print.bind(this);
+        this.getSelectedItem = this.getSelectedItem.bind(this);
     }
 
     async componentDidMount() {
@@ -178,7 +183,7 @@ export default class Invoice extends GenericComponent {
         this.newInvoice = true;
         let details = {...this.state.invoice.details};
         let addItemDetails = this.state.items;
-        addItemDetails.push(details)
+        addItemDetails.push(details);
         this.setState({
             saveButton: false,
             items: addItemDetails
@@ -204,6 +209,15 @@ export default class Invoice extends GenericComponent {
         }
     }
 
+    getSelectedItem(item) {
+        console.log(this.state.invoice.details);
+        let detils = this.state.invoice.details;
+        this.setState({
+            selectedItem: item,
+            invoice: {details: {quantities: item.quantities, price: item.retailRate}}
+        });
+    }
+
     render() {
         return (
             <div>
@@ -212,7 +226,7 @@ export default class Invoice extends GenericComponent {
                         {
                             this.state.invoice &&
                             <div>
-                                <Accordion multiple={false}>
+                                <Accordion multiple={true}>
                                     <AccordionTab header={this.state.invoiceId === 0 ? "Sale Invoice" : "Sale Invoice # " + this.state.invoiceId}>
                                         <div className="p-datatable-header">
                                             <div className="p-col-12 p-component">
@@ -268,8 +282,7 @@ export default class Invoice extends GenericComponent {
                                             <div className="p-grid" style={{ paddingTop: '10px'}}>
                                                 <div className="p-col" style={{padding:'.75em'}}>
                                                     <span className="p-float-label p-fluid">
-                                                        <InputText id="itemName" maxLength={250} onChange={(e) => {this.updateProperty('itemName', e.target.value, true)}} value={this.state.invoice.details.itemName}/>
-                                                        <label htmlFor="itemName">Item Name</label>
+                                                        <ItemAutoComplete ref={this.getItemAutoComplete} onChange={this.getSelectedItem}></ItemAutoComplete>
                                                     </span>
                                                 </div>
                                             </div>

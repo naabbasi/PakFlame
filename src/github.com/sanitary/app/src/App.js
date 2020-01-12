@@ -4,6 +4,7 @@ import './App.css';
 
 import {Lightbox} from "primereact/lightbox";
 import {Card} from "primereact/card";
+import GComp from "./components/GComp";
 
 const Login = lazy(() => import ("./components/user/Login"));
 const SignUp = lazy(() => import ("./components/user/SignUp"));
@@ -12,6 +13,7 @@ const Invoices = lazy(() => import ("./components/invoices/Invoices"));
 const Invoice = lazy(() => import ("./components/invoices/Invoice"));
 const Worker = lazy(() => import ("./components/Worker"));
 const Inventory = lazy(() => import ("./components/Inventory"));
+const ItemAutoComplete = lazy(() => import ("./components/autocomplete/ItemAutoComplete"));
 
 function usePageViews() {
     let location = useLocation();
@@ -51,6 +53,7 @@ function App() {
                     <Route exact path="/dashboard" component={WaitingComponent(Login)}></Route>
                     <Route exact path="/customers" component={WaitingComponent(Customer)}></Route>
                     <Route exact path="/workers" component={WaitingComponent(Worker)}></Route>
+                    <Route exact path="/gcomp" component={WaitingComponent(GComp)}></Route>
                     <Route path="/inventory" component={WaitingComponent(Inventory)}></Route>
                     <Route path="/invoices/all" component={WaitingComponent(Invoices)}></Route>
                     <Route path="/invoices/invoice" component={WaitingComponent(Invoice)}></Route>
