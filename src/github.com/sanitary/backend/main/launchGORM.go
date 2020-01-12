@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -30,10 +31,16 @@ func main() {
 	defer db.Close()*/
 
 	config := config.NewConfig()
+	runMigration := flag.Bool("migration", false, "To run migration")
+	flag.Parse()
+
 	db := backend.GetDBSettings(config)
 	connection := db.GetDBConnection()
-	connection.Exec("CREATE SEQUENCE invoice_seq")
-	schema.CreatePostgreSQLSchema(connection)
+
+	if *runMigration {
+		connection.Exec("CREATE SEQUENCE invoice_seq")
+		schema.CreatePostgreSQLSchema(connection)
+	}
 
 	createUsers(connection)
 	createCustomers(connection)
@@ -103,6 +110,16 @@ func createInventories(company *models.Company, connection *gorm.DB) {
 }
 
 func createUsers(connection *gorm.DB) {
-	connection.Create(&models.User{Username: "nabbasi", Password: "x"})
-	connection.Create(&models.User{Username: "waris", Password: "786"})
+	connection.Create(&models.User{
+		Username:  "nabbasi",
+		Password:  "x",
+		FirstName: "Noman Ali",
+		LastName:  "Abbasi",
+	})
+	connection.Create(&models.User{
+		Username:  "waris",
+		Password:  "786",
+		FirstName: "Abdul Waris",
+		LastName:  "Zai",
+	})
 }
