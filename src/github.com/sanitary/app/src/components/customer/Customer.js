@@ -5,20 +5,28 @@ import {Column} from "primereact/column";
 import {Dialog} from "primereact/dialog";
 import {InputText} from "primereact/inputtext";
 
-import {GenericComponent} from "./GenericComponent";
-import Navigation from "./layout/Navigation";
+import {GenericComponent} from "../GenericComponent";
+import Navigation from "../layout/Navigation";
+import PaymentComponent from "../payment/PaymentComponentModel";
 
 export default class Customer extends GenericComponent {
     constructor() {
         super();
         this.state = {
-            customers: []
+            customers: [],
+            showPaymentDialog: false,
+            askReasonDialog: false
         };
+
+        //Refs
+        this.paymentRef = React.createRef();
+
         this.save = this.save.bind(this);
         this.delete = this.delete.bind(this);
         this.close = this.close.bind(this);
         this.onCustomerSelect = this.onCustomerSelect.bind(this);
         this.addNew = this.addNew.bind(this);
+        this.addNewPayment = this.addNewPayment.bind(this);
     }
 
     async componentDidMount() {
@@ -101,10 +109,15 @@ export default class Customer extends GenericComponent {
     }
 
     onCustomerSelect(e){
+        this.setState({eventCustomerData: e.data, askReasonDialog: true});
+    }
+
+    editCustomer() {
         this.newCustomer = false;
         this.setState({
             displayDialog:true,
-            customer: Object.assign({}, e.data)
+            askReasonDialog: false,
+            customer: Object.assign({}, this.state.eventCustomerData)
         });
     }
 
@@ -114,6 +127,15 @@ export default class Customer extends GenericComponent {
             customer: {firstName: '', lastName: '', mobileNumber: '', shopName: '', address: '', status: '', amount: 0, remaining: 0, total: 0},
             displayDialog: true
         });
+    }
+
+    addNewPaymentModal() {
+        this.setState({askReasonDialog: false, displayDialog: false})
+        this.paymentRef.current.showHidePaymentDialog(true, this.paymentRef.current, this.state.eventCustomerData);
+    }
+
+    addNewPayment() {
+        window.location.hash = '#/customers/details?id=' + this.state.eventCustomerData['id'];
     }
 
     render() {
@@ -126,7 +148,8 @@ export default class Customer extends GenericComponent {
         </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button style={{float:'left'}} label="Add" icon="pi pi-plus" onClick={this.addNew}/>
+            <Button style={{float:'left'}} label="Add Customer" icon="pi pi-plus" onClick={this.addNew}/>
+            <Button style={{float:'left'}} label="Add Payment" icon="pi pi-plus" onClick={this.addNewPayment}/>
         </div>;
 
         let dialogFooter = <div className="p-grid p-align-center" style={{ paddingTop: '10px'}}>
@@ -135,6 +158,12 @@ export default class Customer extends GenericComponent {
                 <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.delete}/>
                 <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.close}/>
             </div>
+        </div>;
+
+        let askReasonFooter = <div className="p-clearfix" style={{width:'100%'}}>
+            <Button style={{float:'left'}} label="Edit Customer" icon="pi pi-plus" onClick={this.editCustomer.bind(this)}/>
+            <Button style={{float:'left'}} label="Add Payment(M)" icon="pi pi-plus" onClick={this.addNewPaymentModal.bind(this)}/>
+            <Button style={{float:'left'}} label="Add Payment" icon="pi pi-plus" onClick={this.addNewPayment}/>
         </div>;
 
         return (
@@ -246,6 +275,13 @@ export default class Customer extends GenericComponent {
                                 </div>
                             }
                         </Dialog>
+                        <Dialog visible={this.state.askReasonDialog} header="Please confirm"
+                                footer={askReasonFooter}
+                                onHide={()=>{this.setState({askReasonDialog: false})}}>
+                            <div>What do you want to do?</div>
+                        </Dialog>
+                        <PaymentComponent ref={this.paymentRef} type="customer">
+                        </PaymentComponent>
                     </div>
                 </Navigation>
             </div>

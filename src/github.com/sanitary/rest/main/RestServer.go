@@ -62,6 +62,7 @@ func main() {
 
 		customers := api.NewCustomer(e)
 		customers.GetCustomers()
+		customers.GetCustomerById()
 		customers.AddCustomer()
 		customers.UpdateCustomer()
 		customers.DeleteCustomer()

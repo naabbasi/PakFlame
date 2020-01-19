@@ -6,9 +6,9 @@ import {Dialog} from "primereact/dialog";
 import {InputText} from "primereact/inputtext";
 import {AutoComplete} from 'primereact/autocomplete';
 
-import {GenericComponent} from "./GenericComponent";
+import {GenericComponent} from "../GenericComponent";
 import {Dropdown} from "primereact/dropdown";
-import Navigation from "./layout/Navigation";
+import Navigation from "../layout/Navigation";
 import {Message} from "primereact/message";
 
 export default class Inventory extends GenericComponent {

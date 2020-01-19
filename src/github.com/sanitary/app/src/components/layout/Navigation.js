@@ -15,7 +15,18 @@ export default class Navigation extends GenericComponent {
             {
                 label: 'Customers',
                 icon:'pi pi-fw pi-user',
-                command:()=>{ window.location.hash="customers"; }
+                //command:()=>{ window.location.hash="customers"; },
+                items: [
+                    {
+                        label:'Customer',
+                        icon:'pi pi-fw pi-folder-open',
+                        command:()=>{ window.location.hash="customers"; },
+                    },{
+                        label:'Customer Details',
+                        icon:'pi pi-fw pi-folder-open',
+                        command:()=>{ window.location.hash="customers/details"; }
+                    }
+                ]
             },
             {
                 label: 'Workers',
@@ -30,7 +41,17 @@ export default class Navigation extends GenericComponent {
             {
                 label:'GComp',
                 icon:'pi pi-fw pi-folder-open',
-                command:()=>{ window.location.hash="gcomp"; }
+                items: [
+                    {
+                        label:'Auto Complete',
+                        icon:'pi pi-fw pi-folder-open',
+                        command:()=>{ window.location.hash="gcomp"; },
+                    },{
+                        label:'Call Child Func Frm Parent',
+                        icon:'pi pi-fw pi-folder-open',
+                        command:()=>{ window.location.hash="learn/callchildfunctionfrmparent"; }
+                    }
+                ]
             },
             {
                 label:'Invoices',

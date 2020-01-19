@@ -4,8 +4,8 @@ import {Button} from "primereact/button";
 import {Column} from "primereact/column";
 import {Dialog} from "primereact/dialog";
 import {InputText} from "primereact/inputtext";
-import {GenericComponent} from "./GenericComponent";
-import Navigation from "./layout/Navigation";
+import {GenericComponent} from "../GenericComponent";
+import Navigation from "../layout/Navigation";
 
 export default class Worker extends GenericComponent {
 

@@ -4,16 +4,19 @@ import './App.css';
 
 import {Lightbox} from "primereact/lightbox";
 import {Card} from "primereact/card";
-import GComp from "./components/GComp";
+import GComp from "./learn/GComp";
+import CallChildFunction from './learn/CallChildFunction';
+import CustomerDetails from "./components/customer/CustomerDetails";
 
 const Login = lazy(() => import ("./components/user/Login"));
 const SignUp = lazy(() => import ("./components/user/SignUp"));
-const Customer = lazy(() => import ("./components/Customer"));
+const Customer = lazy(() => import ("./components/customer/Customer"));
 const Invoices = lazy(() => import ("./components/invoices/Invoices"));
 const Invoice = lazy(() => import ("./components/invoices/Invoice"));
-const Worker = lazy(() => import ("./components/Worker"));
-const Inventory = lazy(() => import ("./components/Inventory"));
+const Worker = lazy(() => import ("./components/worker/Worker"));
+const Inventory = lazy(() => import ("./components/inventory/Inventory"));
 const ItemAutoComplete = lazy(() => import ("./components/autocomplete/ItemAutoComplete"));
+
 
 function usePageViews() {
     let location = useLocation();
@@ -52,11 +55,13 @@ function App() {
                     <Route exact path="/signup" component={WaitingComponent(SignUp)}></Route>
                     <Route exact path="/dashboard" component={WaitingComponent(Login)}></Route>
                     <Route exact path="/customers" component={WaitingComponent(Customer)}></Route>
+                    <Route exact path="/customers/details" component={WaitingComponent(CustomerDetails)}></Route>
                     <Route exact path="/workers" component={WaitingComponent(Worker)}></Route>
                     <Route exact path="/gcomp" component={WaitingComponent(GComp)}></Route>
                     <Route path="/inventory" component={WaitingComponent(Inventory)}></Route>
                     <Route path="/invoices/all" component={WaitingComponent(Invoices)}></Route>
                     <Route path="/invoices/invoice" component={WaitingComponent(Invoice)}></Route>
+                    <Route path="/learn/callchildfunctionfrmparent" component={WaitingComponent(CallChildFunction)}></Route>
                     <Route path="/logout" component={Logout}></Route>
                     <Route component={NotFound}></Route>
                 </Switch>

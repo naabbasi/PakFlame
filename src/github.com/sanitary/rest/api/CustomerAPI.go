@@ -39,6 +39,16 @@ func (customer *customers) GetCustomers() {
 	})
 }
 
+func (customer *customers) GetCustomerById() {
+	customer.echo.GET(CustomerEndPoint+"/:id", func(c echo.Context) error {
+		var findCustomer = new(models.Customer)
+		customerId := c.Param("id")
+		connection := customer.dbSettings.GetDBConnection()
+		connection.Table("customers").Where("id = ?", customerId).First(&findCustomer)
+		return c.JSON(http.StatusOK, &findCustomer)
+	})
+}
+
 func (customer *customers) AddCustomer() {
 	customer.echo.POST(CustomerEndPoint, func(c echo.Context) error {
 		newCustomer := new(models.Customer)

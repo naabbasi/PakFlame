@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import ItemAutoComplete from "./autocomplete/ItemAutoComplete";
+import ItemAutoComplete from "../components/autocomplete/ItemAutoComplete";
 
 export default class GComp extends Component {
     constructor(props) {
