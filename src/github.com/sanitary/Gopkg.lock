@@ -29,6 +29,17 @@
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:9c68571071e94742b3cdd6cd3e8356aa7fdd516545c5fc929ebc6e1925550727"
+  name = "github.com/brianvoe/gofakeit"
+  packages = [
+    ".",
+    "data",
+  ]
+  pruneopts = ""
+  revision = "19b40d7d6241163eba8b06ddec1041a36db06c54"
+  version = "v3.20.2"
+
+[[projects]]
   digest = "1:6098222470fe0172157ce9bbef5d2200df4edde17ee649c5d6e48330e4afa4c6"
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
@@ -221,6 +232,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/alexbrainman/printer",
+    "github.com/brianvoe/gofakeit",
     "github.com/google/uuid",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/postgres",

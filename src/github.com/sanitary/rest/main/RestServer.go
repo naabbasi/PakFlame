@@ -43,10 +43,24 @@ func main() {
 		config := config.NewConfig()
 		if config.DemoData == false {
 			runMigration := flag.Bool("migration", false, "To run migration")
+			dropSchema := flag.Bool("drop", false, "To drop schema")
+			dropMigrationSchema := flag.Bool("drop-migration", false, "To drop schema and migrate data")
 			flag.Parse()
+
 			if *runMigration {
 				db := backend.GetDBSettings(config)
 				connection := db.GetDBConnection()
+				connection.Exec("CREATE SEQUENCE invoice_seq")
+				schema.CreatePostgreSQLSchema(connection)
+			} else if *dropSchema {
+				db := backend.GetDBSettings(config)
+				connection := db.GetDBConnection()
+				schema.DropSchema(connection)
+			} else if *dropMigrationSchema {
+				db := backend.GetDBSettings(config)
+				connection := db.GetDBConnection()
+
+				schema.DropSchema(connection)
 				connection.Exec("CREATE SEQUENCE invoice_seq")
 				schema.CreatePostgreSQLSchema(connection)
 			}
