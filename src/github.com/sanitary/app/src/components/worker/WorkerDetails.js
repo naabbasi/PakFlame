@@ -5,15 +5,15 @@ import {GenericComponent} from "../GenericComponent";
 import Navigation from "../layout/Navigation";
 import PaymentComponent from "../payment/PaymentComponent";
 
-export default class CustomerDetails extends GenericComponent {
+export default class WorkerDetails extends GenericComponent {
     constructor(props) {
         super(props);
         const params = new URLSearchParams(props.location.search);
         console.log(params.get('id'));
 
         this.state = {
-            customer: {},
-            customerId: params.get('id') == null ? 0 : params.get('id'),
+            worker: {},
+            workerId: params.get('id') == null ? 0 : params.get('id'),
         };
 
         //Refs
@@ -23,17 +23,17 @@ export default class CustomerDetails extends GenericComponent {
     }
 
     async componentDidMount() {
-        this.getCustomerById();
+        this.getWorkerById();
     }
 
-    getCustomerById() {
-        // Make a request for a customers
-        this.axios.get(`/customers/${this.state.customerId}`)
+    getWorkerById() {
+        // Make a request for a workers
+        this.axios.get(`/workers/${this.state.workerId}`)
         .then( response => {
             // handle success
             if(response.status === 200){
-                this.setState({customer: response.data});
-                this.paymentRef.current.getPaymentsByEntityId(this.state.customer['id'])
+                this.setState({worker: response.data});
+                this.paymentRef.current.getPaymentsByEntityId(this.state.worker['id'])
             }
         })
         .catch(function (error) {
@@ -43,23 +43,23 @@ export default class CustomerDetails extends GenericComponent {
     }
 
     close() {
-        this.setState({selectedCustomer:null, customer: null, displayDialog:false});
+        this.setState({selectedWorker:null, worker: null, displayDialog:false});
     }
 
     updateProperty(property, value) {
-        let customer = this.state.customer;
-        customer[property] = value;
-        this.setState({customer: customer});
+        let worker = this.state.worker;
+        worker[property] = value;
+        this.setState({worker: worker});
     }
 
     onPaymentSelect(e){
-        this.setState({eventCustomerData: e.data, askReasonDialog: true});
+        this.setState({eventWorkerData: e.data, askReasonDialog: true});
     }
 
     addNew() {
-        this.newCustomer = true;
+        this.newWorker = true;
         this.setState({
-            customer: {firstName: '', lastName: '', mobileNumber: '', shopName: '', address: '', status: ''},
+            worker: {firstName: '', lastName: '', mobileNumber: '', shopName: '', address: '', status: ''},
             displayDialog: true
         });
     }
@@ -73,21 +73,21 @@ export default class CustomerDetails extends GenericComponent {
                             <div className="p-grid" style={{ paddingTop: '10px'}}>
                                 <div className="p-col-6" style={{padding:'.75em'}}>
                                     <span className="p-float-label p-fluid">
-                                        <InputText ref="firstName" readOnly={true} maxLength={255} onChange={(e) => {this.updateProperty('firstName', e.target.value)}} value={this.state.customer.firstName}/>
+                                        <InputText ref="firstName" readOnly={true} maxLength={255} onChange={(e) => {this.updateProperty('firstName', e.target.value)}} value={this.state.worker.firstName}/>
                                         <label htmlFor="firstName">First Name</label>
                                     </span>
                                 </div>
 
                                 <div className="p-col-6" style={{padding:'.75em'}}>
                                     <span className="p-float-label p-fluid">
-                                        <InputText ref="lastName" readOnly={true} maxLength={255} onChange={(e) => {this.updateProperty('lastName', e.target.value)}} value={this.state.customer.lastName}/>
+                                        <InputText ref="lastName" readOnly={true} maxLength={255} onChange={(e) => {this.updateProperty('lastName', e.target.value)}} value={this.state.worker.lastName}/>
                                         <label htmlFor="lastName">Last Name</label>
                                     </span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <PaymentComponent ref={this.paymentRef} type="customer"></PaymentComponent>
+                    <PaymentComponent ref={this.paymentRef} type="worker"></PaymentComponent>
                 </div>
             </Navigation>
         );

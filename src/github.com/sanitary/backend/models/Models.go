@@ -44,20 +44,20 @@ type Customer struct {
 	ShopName string `json:"shopName" xml:"shopName" form:"shopName" query:"shopName"`
 	Status   string `json:"status" xml:"status" form:"status" query:"status"`
 	Address  string `json:"address" xml:"address" form:"address" query:"address"`
-	Payment
 }
 
 type Worker struct {
 	Person
 	Address string `json:"address" xml:"address" form:"address" query:"address"`
 	Status  string `json:"status" xml:"status" form:"status" query:"status"`
-	Payment
 }
 
 type Payment struct {
-	Amount    float64 `json:"amount" xml:"amount" form:"amount" query:"amount"`
-	Remaining float64 `json:"remaining" xml:"remaining" form:"remaining" query:"remaining"`
-	Total     float64 `json:"total" xml:"total" form:"total" query:"total"`
+	Amount    float64   `json:"amount" xml:"amount" form:"amount" query:"amount"`
+	Remaining float64   `json:"remaining" xml:"remaining" form:"remaining" query:"remaining"`
+	Total     float64   `json:"total" xml:"total" form:"total" query:"total"`
+	CreatedAt time.Time `json:"createdAt" xml:"createdAt" form:"createdAt" query:"createdAt"`
+	EntityId  uuid.UUID `json:"entityId" xml:"entityId" form:"entityId" query:"entityId"`
 }
 
 type Inventory struct {

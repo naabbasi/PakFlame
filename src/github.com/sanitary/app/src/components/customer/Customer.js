@@ -7,26 +7,21 @@ import {InputText} from "primereact/inputtext";
 
 import {GenericComponent} from "../GenericComponent";
 import Navigation from "../layout/Navigation";
-import PaymentComponent from "../payment/PaymentComponentModel";
+import PaymentComponentModal from "../payment/PaymentComponentModel";
 
 export default class Customer extends GenericComponent {
     constructor() {
         super();
         this.state = {
             customers: [],
-            showPaymentDialog: false,
             askReasonDialog: false
         };
 
-        //Refs
-        this.paymentRef = React.createRef();
-
-        this.save = this.save.bind(this);
-        this.delete = this.delete.bind(this);
-        this.close = this.close.bind(this);
+        this.saveCustomer = this.saveCustomer.bind(this);
+        this.deleteCustomer = this.deleteCustomer.bind(this);
+        this.closeCustomerDialog = this.closeCustomerDialog.bind(this);
         this.onCustomerSelect = this.onCustomerSelect.bind(this);
-        this.addNew = this.addNew.bind(this);
-        this.addNewPayment = this.addNewPayment.bind(this);
+        this.addNewCustomer = this.addNewCustomer.bind(this);
     }
 
     async componentDidMount() {
@@ -48,7 +43,7 @@ export default class Customer extends GenericComponent {
         });
     }
 
-    save() {
+    saveCustomer() {
         if(this.newCustomer){
             delete this.state.customer['id'];
             this.axios.post('/customers', this.state.customer)
@@ -82,7 +77,7 @@ export default class Customer extends GenericComponent {
         }
     }
 
-    delete() {
+    deleteCustomer() {
         this.axios.delete('/customers', { data: { ...this.state.selectedCustomer}})
         .then( response => {
             // handle success
@@ -98,7 +93,7 @@ export default class Customer extends GenericComponent {
         });
     }
 
-    close() {
+    closeCustomerDialog() {
         this.setState({selectedCustomer:null, customer: null, displayDialog:false});
     }
 
@@ -121,21 +116,17 @@ export default class Customer extends GenericComponent {
         });
     }
 
-    addNew() {
+    addNewCustomer() {
         this.newCustomer = true;
         this.setState({
-            customer: {firstName: '', lastName: '', mobileNumber: '', shopName: '', address: '', status: '', amount: 0, remaining: 0, total: 0},
+            customer: {firstName: '', lastName: '', mobileNumber: '', shopName: '', address: '', status: ''},
             displayDialog: true
         });
     }
 
-    addNewPaymentModal() {
-        this.setState({askReasonDialog: false, displayDialog: false})
-        this.paymentRef.current.showHidePaymentDialog(true, this.paymentRef.current, this.state.eventCustomerData);
-    }
-
     addNewPayment() {
-        window.location.hash = '#/customers/details?id=' + this.state.eventCustomerData['id'];
+        console.log(this.state.eventCustomerData)
+        window.location.hash = `#/customers/details?id=${this.state.eventCustomerData['id']}`;
     }
 
     render() {
@@ -148,22 +139,20 @@ export default class Customer extends GenericComponent {
         </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button style={{float:'left'}} label="Add Customer" icon="pi pi-plus" onClick={this.addNew}/>
-            <Button style={{float:'left'}} label="Add Payment" icon="pi pi-plus" onClick={this.addNewPayment}/>
+            <Button style={{float:'left'}} label="Add Customer" icon="pi pi-plus" onClick={this.addNewCustomer}/>
         </div>;
 
         let dialogFooter = <div className="p-grid p-align-center" style={{ paddingTop: '10px'}}>
             <div style={{textAlign: 'right', width: '100%'}}>
-                <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.save}/>
-                <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.delete}/>
-                <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.close}/>
+                <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveCustomer}/>
+                <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteCustomer}/>
+                <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeCustomerDialog}/>
             </div>
         </div>;
 
         let askReasonFooter = <div className="p-clearfix" style={{width:'100%'}}>
             <Button style={{float:'left'}} label="Edit Customer" icon="pi pi-plus" onClick={this.editCustomer.bind(this)}/>
-            <Button style={{float:'left'}} label="Add Payment(M)" icon="pi pi-plus" onClick={this.addNewPaymentModal.bind(this)}/>
-            <Button style={{float:'left'}} label="Add Payment" icon="pi pi-plus" onClick={this.addNewPayment}/>
+            <Button style={{float:'left'}} label="Manage Payment" icon="pi pi-plus" onClick={this.addNewPayment.bind(this)}/>
         </div>;
 
         return (
@@ -181,9 +170,6 @@ export default class Customer extends GenericComponent {
                             <Column field="status" header="Status" sortable={true} style={{textAlign: 'center'}}/>
                             <Column field="shopName" header="Shop Name" sortable={true} style={{textAlign: 'center'}}/>
                             <Column field="address" header="Address" sortable={true} style={{textAlign: 'center'}}/>
-                            <Column field="amount" header="Amount" sortable={true} style={{textAlign: 'center'}}/>
-                            <Column field="remaining" header="Remaining Amount" sortable={true} style={{textAlign: 'center'}}/>
-                            <Column field="total" header="Total Amount" sortable={true} style={{textAlign: 'center'}}/>
                         </DataTable>
 
                         <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Customer Details" modal={true} footer={dialogFooter} onHide={() => this.setState({displayDialog: false})}>
@@ -240,37 +226,6 @@ export default class Customer extends GenericComponent {
                                                 </span>
                                             </div>
                                         </div>
-
-                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                            <div className="p-col-6" style={{padding:'.75em'}}>
-                                                <span className="p-float-label p-fluid">
-                                                    <InputText id="amount" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('amount', e.target.value)}}
-                                                               onBlur={(e) => {this.updateProperty('amount', this.Float(e.target.value))}}
-                                                               value={this.state.customer.amount}/>
-                                                    <label htmlFor="amount">Amount</label>
-                                                </span>
-                                            </div>
-
-                                            <div className="p-col-6" style={{padding:'.75em'}}>
-                                                <span className="p-float-label p-fluid">
-                                                    <InputText id="remaining" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('remaining', e.target.value)}}
-                                                               onBlur={(e) => {this.updateProperty('remaining', this.Float(e.target.value))}}
-                                                               value={this.state.customer.remaining}/>
-                                                    <label htmlFor="remaining">Remaining Amount</label>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                            <div className="p-col" style={{padding:'.75em'}}>
-                                                <span className="p-float-label p-fluid">
-                                                    <InputText id="total" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('total', e.target.value)}}
-                                                               onBlur={(e) => {this.updateProperty('total', this.Float(e.target.value))}}
-                                                               value={this.state.customer.total}/>
-                                                    <label htmlFor="total">Total Amount</label>
-                                                </span>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             }
@@ -280,8 +235,7 @@ export default class Customer extends GenericComponent {
                                 onHide={()=>{this.setState({askReasonDialog: false})}}>
                             <div>What do you want to do?</div>
                         </Dialog>
-                        <PaymentComponent ref={this.paymentRef} type="customer">
-                        </PaymentComponent>
+                        <PaymentComponentModal ref={this.paymentRef} type="customer"></PaymentComponentModal>
                     </div>
                 </Navigation>
             </div>

@@ -34,7 +34,7 @@ func (customer *customers) GetCustomers() {
 		var allCustomer = new([]models.Customer)
 		connection := customer.dbSettings.GetDBConnection()
 		connection.Select("id, first_name, last_name, mobile_number, status, shop_name," +
-			" address, amount, remaining, total").Find(&allCustomer)
+			" address").Find(&allCustomer)
 		return c.JSON(http.StatusOK, &allCustomer)
 	})
 }

@@ -7,6 +7,7 @@ import {Card} from "primereact/card";
 import GComp from "./learn/GComp";
 import CallChildFunction from './learn/CallChildFunction';
 import CustomerDetails from "./components/customer/CustomerDetails";
+import WorkerDetails from "./components/worker/WorkerDetails";
 
 const Login = lazy(() => import ("./components/user/Login"));
 const SignUp = lazy(() => import ("./components/user/SignUp"));
@@ -57,6 +58,7 @@ function App() {
                     <Route exact path="/customers" component={WaitingComponent(Customer)}></Route>
                     <Route exact path="/customers/details" component={WaitingComponent(CustomerDetails)}></Route>
                     <Route exact path="/workers" component={WaitingComponent(Worker)}></Route>
+                    <Route exact path="/workers/details" component={WaitingComponent(WorkerDetails)}></Route>
                     <Route exact path="/gcomp" component={WaitingComponent(GComp)}></Route>
                     <Route path="/inventory" component={WaitingComponent(Inventory)}></Route>
                     <Route path="/invoices/all" component={WaitingComponent(Invoices)}></Route>

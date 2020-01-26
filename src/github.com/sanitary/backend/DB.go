@@ -5,6 +5,8 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/gommon/log"
 	"github.com/sanitary/config"
+
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 type DBSettings struct {

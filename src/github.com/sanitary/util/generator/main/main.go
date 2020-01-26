@@ -24,6 +24,7 @@ func main() {
 	data := generator.New()
 	data.CreateUsers(connection)
 	data.CreateCustomers(connection)
+	data.CreateWorkers(connection)
 	company := data.CreateCompanies(connection)
 	data.CreateInventories(company, connection)
 }

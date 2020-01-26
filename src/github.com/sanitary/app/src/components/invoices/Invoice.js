@@ -52,16 +52,16 @@ export default class Invoice extends GenericComponent {
             this.setState({
                 isEdit: true,
                 invoice: {
-                    invoiceNumber: data['id'], customerName: data['customerName'], createAt: new Date(data['createdAt']), partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'],
-                    details: {invoiceNumber: 0, itemName: 'My Item', createAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
+                    invoiceNumber: data['id'], customerName: data['customerName'], createdAt: new Date(data['createdAt']), partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'],
+                    details: {invoiceNumber: 0, itemName: 'My Item', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
                 },
             });
         } else {
             this.setState({
                 disableButtons: false,
                 invoice: {
-                    invoiceNumber: 0, customerName: '', createAt: new Date(), partyName: '', transport: '', transportCharges: 0, address: '',
-                    details: {invoiceNumber: 0, itemName: '', createAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
+                    invoiceNumber: 0, customerName: '', createdAt: new Date(), partyName: '', transport: '', transportCharges: 0, address: '',
+                    details: {invoiceNumber: 0, itemName: '', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
                 },
             });
         }
@@ -242,8 +242,8 @@ export default class Invoice extends GenericComponent {
 
                                                         <div className="p-col" style={{padding:'.50em'}}>
                                                             <span className="p-float-label p-fluid">
-                                                                <Calendar id="createAt" hideOnDateTimeSelect={true} showTime={true} onChange={(e) => {this.updateProperty('createAt', e.target.value)}} value={this.state.invoice.createAt}/>
-                                                                <label htmlFor="createAt">Date</label>
+                                                                <Calendar id="createdAt" hideOnDateTimeSelect={true} showTime={true} onChange={(e) => {this.updateProperty('createdAt', e.target.value)}} value={this.state.invoice.createdAt}/>
+                                                                <label htmlFor="createdAt">Date</label>
                                                             </span>
                                                         </div>
                                                     </div>

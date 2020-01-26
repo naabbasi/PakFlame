@@ -14,8 +14,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 type User struct {
@@ -83,9 +81,16 @@ func main() {
 
 		workers := api.NewWorker(e)
 		workers.Get()
+		workers.GetWorkerById()
 		workers.AddWorker()
 		workers.UpdateWorker()
 		workers.DeleteWorker()
+
+		payment := api.NewPayment(e)
+		payment.GetPaymentsById()
+		payment.AddPayment()
+		payment.UpdatePayment()
+		payment.DeletePayment()
 
 		companies := api.NewCompany(e)
 		companies.GetCompanies()

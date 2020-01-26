@@ -11,10 +11,13 @@ export default class Worker extends GenericComponent {
 
     constructor(props) {
         super(props);
-        this.state = {};
-        this.save = this.save.bind(this);
-        this.delete = this.delete.bind(this);
-        this.close = this.close.bind(this);
+        this.state = {
+            eventWorkerData: {},
+            askReasonDialog: false
+        };
+        this.saveWorker = this.saveWorker.bind(this);
+        this.deleteWorker = this.deleteWorker.bind(this);
+        this.closeWorkerDialog = this.closeWorkerDialog.bind(this);
         this.onWorkerSelect = this.onWorkerSelect.bind(this);
         this.addNew = this.addNew.bind(this);
     }
@@ -38,7 +41,7 @@ export default class Worker extends GenericComponent {
         });
     }
 
-    save() {
+    saveWorker() {
         if(this.newWorker){
             this.axios.post('/workers', this.state.worker)
             .then( response => {
@@ -70,7 +73,7 @@ export default class Worker extends GenericComponent {
         }
     }
 
-    delete() {
+    deleteWorker() {
         this.axios.delete('/workers', { data: { ...this.state.selectedWorker}})
         .then( response => {
             // handle success
@@ -86,7 +89,7 @@ export default class Worker extends GenericComponent {
         });
     }
 
-    close() {
+    closeWorkerDialog() {
         this.setState({selectedWorker:null, worker: null, displayDialog:false});
     }
 
@@ -97,19 +100,29 @@ export default class Worker extends GenericComponent {
     }
 
     onWorkerSelect(e){
+        this.setState({eventWorkerData: e.data, askReasonDialog: true});
+    }
+
+    editWorker(){
         this.newWorker = false;
         this.setState({
             displayDialog:true,
-            worker: Object.assign({}, e.data)
+            askReasonDialog: false,
+            worker: Object.assign({}, this.state.eventWorkerData)
         });
     }
 
     addNew() {
         this.newWorker = true;
         this.setState({
-            worker: {firstName: '', lastName: '', mobileNumber: '', address: '', status: '', amount: 0, remaining: 0, total: 0},
+            worker: {firstName: '', lastName: '', mobileNumber: '', address: '', status: ''},
             displayDialog: true
         });
+    }
+
+    addNewPaymentForWorker() {
+        console.log(this.state.eventWorkerData)
+        window.location.hash = `#/workers/details?id=${this.state.eventWorkerData['id']}`;
     }
 
     render() {
@@ -126,9 +139,14 @@ export default class Worker extends GenericComponent {
         </div>;
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
-            <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.save}/>
-            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.delete}/>
-            <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.close}/>
+            <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveWorker}/>
+            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteWorker}/>
+            <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeWorkerDialog}/>
+        </div>;
+
+        let askReasonFooterWorker = <div className="p-clearfix" style={{width:'100%'}}>
+            <Button style={{float:'left'}} label="Edit Worker" icon="pi pi-plus" onClick={this.editWorker.bind(this)}/>
+            <Button style={{float:'left'}} label="Manage Payment" icon="pi pi-plus" onClick={this.addNewPaymentForWorker.bind(this)}/>
         </div>;
 
         return (
@@ -145,9 +163,6 @@ export default class Worker extends GenericComponent {
                             <Column field="mobileNumber" header="Mobile Number" sortable={true} />
                             <Column field="address" header="Address" sortable={true} style={{textAlign: 'center'}} />
                             <Column field="status" header="Status" sortable={true} style={{textAlign: 'center'}} />
-                            <Column field="amount" header="Amount" sortable={true} style={{textAlign: 'center'}}/>
-                            <Column field="remaining" header="Remaining Amount" sortable={true} style={{textAlign: 'center'}}/>
-                            <Column field="total" header="Total Amount" sortable={true} style={{textAlign: 'center'}}/>
                         </DataTable>
 
                         <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Worker Details"
@@ -192,36 +207,14 @@ export default class Worker extends GenericComponent {
                                                 <label htmlFor="status">Status</label>
                                             </span>
                                         </div>
-
-                                        <div className="p-col" style={{padding:'.75em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText id="amount" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('amount', e.target.value)}}
-                                                           onBlur={(e) => {this.updateProperty('amount', this.Float(e.target.value))}}
-                                                           value={this.state.worker.amount}/>
-                                                <label htmlFor="amount">Amount</label>
-                                            </span>
-                                        </div>
-
-                                        <div className="p-col" style={{padding:'.75em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText id="remaining" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('remaining', e.target.value)}}
-                                                           onBlur={(e) => {this.updateProperty('remaining', this.Float(e.target.value))}}
-                                                           value={this.state.worker.remaining}/>
-                                                <label htmlFor="remaining">Remaining Amount</label>
-                                            </span>
-                                        </div>
-
-                                        <div className="p-col" style={{padding:'.75em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText id="total" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('total', e.target.value)}}
-                                                           onBlur={(e) => {this.updateProperty('total', this.Float(e.target.value))}}
-                                                           value={this.state.worker.total}/>
-                                                <label htmlFor="total">Total Amount</label>
-                                            </span>
-                                        </div>
                                     </div>
                                 </div>
                             }
+                        </Dialog>
+                        <Dialog visible={this.state.askReasonDialog} header="Please confirm"
+                                footer={askReasonFooterWorker}
+                                onHide={()=>{this.setState({askReasonDialog: false})}}>
+                            <div>What do you want to do?</div>
                         </Dialog>
                     </div>
                 </Navigation>

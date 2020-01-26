@@ -1,16 +1,14 @@
 package generator
 
 import (
-	"fmt"
 	"github.com/brianvoe/gofakeit"
 	"github.com/jinzhu/gorm"
 	"github.com/sanitary/backend/models"
 	"math/rand"
-	"strconv"
 	"time"
 )
 
-type data struct {}
+type data struct{}
 
 func New() *data {
 	return &data{}
@@ -31,7 +29,7 @@ func (data *data) CreateUsers(connection *gorm.DB) {
 	})
 }
 
-func (data *data) CreateCustomers(connection *gorm.DB){
+func (data *data) CreateCustomers(connection *gorm.DB) {
 	for num := 0; num < 1000; num++ {
 		gofakeit.Seed(time.Now().UnixNano())
 		customer := &models.Customer{}
@@ -40,10 +38,6 @@ func (data *data) CreateCustomers(connection *gorm.DB){
 		customer.MobileNumber = gofakeit.Contact().Phone
 		customer.Status = "in_process"
 		customer.ShopName = gofakeit.FirstName()
-		amount, _ := strconv.ParseFloat(fmt.Sprintf("%d", rand.Int63n(time.Now().Unix())), 64)
-		customer.Amount = amount
-		customer.Remaining = amount
-		customer.Total = amount
 		connection.Create(&customer)
 	}
 }
@@ -56,9 +50,6 @@ func (data *data) CreateWorkers(connection *gorm.DB) {
 		worker.LastName = gofakeit.LastName()
 		worker.Status = "Working"
 		worker.MobileNumber = gofakeit.PhoneFormatted()
-		worker.Amount = float64(rand.Int63n(time.Now().Unix()))
-		worker.Remaining = float64(rand.Int63n(time.Now().Unix()))
-		worker.Total = float64(rand.Int63n(time.Now().Unix()))
 		connection.Create(&worker)
 	}
 }
@@ -72,7 +63,7 @@ func (data *data) CreateCompanies(connection *gorm.DB) *models.Company {
 }
 
 func (data *data) CreateInventories(company *models.Company, connection *gorm.DB) {
-	for num := 0; num < 50000; num++ {
+	for num := 0; num < 5000; num++ {
 		gofakeit.Seed(time.Now().UnixNano())
 		inventory := &models.Inventory{}
 		inventory.ItemName = gofakeit.Name()

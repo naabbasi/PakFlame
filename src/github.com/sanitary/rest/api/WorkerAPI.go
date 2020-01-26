@@ -38,6 +38,16 @@ func (worker *workers) Get() {
 	})
 }
 
+func (worker *workers) GetWorkerById() {
+	worker.echo.GET(WorkerEndPoint+"/:id", func(c echo.Context) error {
+		var findWorker = new(models.Worker)
+		workerId := c.Param("id")
+		connection := worker.dbSettings.GetDBConnection()
+		connection.Table("workers").Where("id = ?", workerId).First(&findWorker)
+		return c.JSON(http.StatusOK, &findWorker)
+	})
+}
+
 func (worker *workers) AddWorker() {
 	worker.echo.POST(WorkerEndPoint, func(c echo.Context) error {
 		newWorker := new(models.Worker)

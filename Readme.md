@@ -6,3 +6,12 @@ drop database sanitary cascade;
 create database sanitary encoding 'utf-8';
 create table test1(id int default unique_rowid(), name varchar(20), primary key(id));
 create table test2(id uuid default gen_random_uuid(), name varchar(20), primary key(id));
+
+==================================
+git config \
+  --global \
+  url."https://noman.ali.abbasy@gmail.com:@7fc26a50048df50a658ad3c6c08c0bc819e8e328@github.com".insteadOf \
+  "https://github.com"
+  
+git config --global --add url."git@github.com:".insteadOf "https://github.com/"
+git config --global --add url."git@github.com:".insteadOf "https://github.com/"
