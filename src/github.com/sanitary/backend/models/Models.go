@@ -13,15 +13,24 @@ type Model struct {
 }
 
 type ModelSoftDelete struct {
-	ID        int64      `gorm:"PRIMARY_KEY;AUTO_INCREMENT" json:"id" xml:"id" form:"id" query:"id"`
+	ID        uuid.UUID  `gorm:"PRIMARY_KEY; type:uuid default gen_random_uuid();" json:"id" xml:"id" form:"id" query:"id"`
 	CreatedAt time.Time  `json:"createdAt" xml:"createdAt" form:"createdAt" query:"createdAt"`
 	UpdatedAt time.Time  `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
-	DeletedAt *time.Time `sql:"index" json:"deletedAt" xml:"deletedAt" form:"deletedAt" query:"deletedAt"` //Will help to perform deletion as soft
+	DeletedAt *time.Time `json:"deletedAt" xml:"deletedAt" form:"deletedAt" query:"deletedAt"` //Will help to perform deletion as soft
 }
 
 type ModelNoPK struct {
 	CreatedAt time.Time `json:"createdAt" xml:"createdAt" form:"createdAt" query:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
+}
+
+type Client struct {
+	ModelSoftDelete
+	ClientName string `sql:"index" json:"clientName" xml:"clientName" form:"clientName" query:"clientName"`
+}
+
+type ClientConfiguration struct {
+	ClientId uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type User struct {
@@ -60,6 +69,12 @@ type Payment struct {
 	EntityId  uuid.UUID `json:"entityId" xml:"entityId" form:"entityId" query:"entityId"`
 }
 
+type Warehouse struct {
+	Model
+	Name     string `json:"name" xml:"name" form:"name" query:"name"`
+	Location bool   `json:"location" xml:"location" form:"location" query:"location"`
+}
+
 type Inventory struct {
 	Model
 	CustomerId    uuid.UUID `gorm:"ForeignKey:customer_id; type: uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
@@ -72,6 +87,7 @@ type Inventory struct {
 	RetailRate    float64   `json:"retailRate" xml:"retailRate" form:"retailRate" query:"retailRate"`
 	ItemStatus    string    `json:"itemStatus" xml:"itemStatus" form:"itemStatus" query:"itemStatus"`
 	CompanyId     uuid.UUID `gorm:"ForeignKey:company_id; type: uuid;" json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
+	WarehouseId   uuid.UUID `gorm:"ForeignKey:warehouse_id; type: uuid;" json:"warehouse_id" xml:"warehouse_id" form:"warehouse_id" query:"warehouse_id"`
 }
 
 func (inventory Inventory) ToString() string {

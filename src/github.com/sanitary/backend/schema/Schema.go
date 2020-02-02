@@ -32,14 +32,18 @@ func CreateMySQLSchema(db *gorm.DB) {
 func CreatePostgreSQLSchema(db *gorm.DB) {
 	// Migrate the schema
 	//db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(models.User{}) //If already exists then will throw error
-	db.AutoMigrate(&models.User{},
+	db.AutoMigrate(
+		&models.Client{},
+		&models.ClientConfiguration{},
 		&models.Customer{},
 		&models.Worker{},
 		&models.Payment{},
 		&models.Company{},
+		&models.Warehouse{},
 		&models.Inventory{},
 		&models.Invoice{},
-		&models.InvoiceDetails{})
+		&models.InvoiceDetails{},
+		&models.User{})
 
 	//db.Model(&models.Company{}).AddForeignKey("id","inventories(companyId)","RESTRICT","RESTRICT")
 
@@ -58,12 +62,17 @@ func CreatePostgreSQLSchema(db *gorm.DB) {
 
 func DropSchema(db *gorm.DB) {
 	// Drop the schema
-	db.DropTableIfExists(&models.User{},
+	db.DropTableIfExists(
+		&models.Client{},
+		&models.ClientConfiguration{},
 		&models.Customer{},
 		&models.Worker{},
 		&models.Payment{},
 		&models.Company{},
+		&models.Warehouse{},
 		&models.Inventory{},
 		&models.Invoice{},
-		&models.InvoiceDetails{})
+		&models.InvoiceDetails{},
+		&models.User{},
+	)
 }

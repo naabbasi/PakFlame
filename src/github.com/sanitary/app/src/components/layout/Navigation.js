@@ -13,32 +13,17 @@ export default class Navigation extends GenericComponent {
     render() {
         const items = [
             {
-                label: 'Customers',
-                icon:'pi pi-fw pi-user',
-                command:()=>{ window.location.hash="customers"; },
-            },
-            {
-                label: 'Workers',
-                icon:'pi pi-fw pi-user',
-                command:()=>{ window.location.hash="workers"; }
-            },
-            {
-                label:'Inventory',
-                icon:'pi pi-fw pi-folder-open',
-                command:()=>{ window.location.hash="inventory"; }
-            },
-            {
-                label:'GComp',
+                label:'Manage Inventory',
                 icon:'pi pi-fw pi-folder-open',
                 items: [
                     {
-                        label:'Auto Complete',
+                        label:'Warehouses',
                         icon:'pi pi-fw pi-folder-open',
-                        command:()=>{ window.location.hash="gcomp"; },
+                        command:()=>{ window.location.hash="warehouses"; },
                     },{
-                        label:'Call Child Func Frm Parent',
+                        label:'Inventory',
                         icon:'pi pi-fw pi-folder-open',
-                        command:()=>{ window.location.hash="learn/callchildfunctionfrmparent"; }
+                        command:()=>{ window.location.hash="inventory"; }
                     }
                 ]
             },
@@ -58,6 +43,31 @@ export default class Navigation extends GenericComponent {
                     }
                 ]
             },
+            {
+                label: 'Customers',
+                icon:'pi pi-fw pi-user',
+                command:()=>{ window.location.hash="customers"; },
+            },
+            {
+                label: 'Workers',
+                icon:'pi pi-fw pi-user',
+                command:()=>{ window.location.hash="workers"; }
+            },
+            /*{
+                label:'GComp',
+                icon:'pi pi-fw pi-folder-open',
+                items: [
+                    {
+                        label:'Auto Complete',
+                        icon:'pi pi-fw pi-folder-open',
+                        command:()=>{ window.location.hash="gcomp"; },
+                    },{
+                        label:'Call Child Func Frm Parent',
+                        icon:'pi pi-fw pi-folder-open',
+                        command:()=>{ window.location.hash="learn/callchildfunctionfrmparent"; }
+                    }
+                ]
+            },*/
             {
                 label:'Logout',
                 icon:'pi pi-fw pi-sign-out',

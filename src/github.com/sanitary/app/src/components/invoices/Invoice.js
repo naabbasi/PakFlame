@@ -9,6 +9,7 @@ import Navigation from "../layout/Navigation";
 import {Calendar} from "primereact/calendar";
 import {Accordion, AccordionTab} from "primereact/accordion";
 import ItemAutoComplete from "../autocomplete/ItemAutoComplete";
+import CustomerAutoComplete from "../autocomplete/CustomerAutoComplete";
 
 export default class Invoice extends GenericComponent {
     constructor(props) {
@@ -26,6 +27,7 @@ export default class Invoice extends GenericComponent {
 
         //Create refs
         this.getItemAutoComplete = React.createRef();
+        this.getCustomerAutoComplete = React.createRef();
 
         this.saveInvoice = this.saveInvoice.bind(this);
         this.delete = this.delete.bind(this);
@@ -34,6 +36,7 @@ export default class Invoice extends GenericComponent {
         this.addNew = this.addNew.bind(this);
         this.print = this.print.bind(this);
         this.getSelectedItem = this.getSelectedItem.bind(this);
+        this.getSelectedCustomer = this.getSelectedCustomer.bind(this);
     }
 
     async componentDidMount() {
@@ -212,10 +215,17 @@ export default class Invoice extends GenericComponent {
 
     getSelectedItem(item) {
         console.log(this.state.invoice.details);
-        let detils = this.state.invoice.details;
         this.setState({
             selectedItem: item,
             invoice: {details: {quantities: item.quantities, price: item.retailRate}}
+        });
+    }
+
+    getSelectedCustomer(customer) {
+        console.log("selected customer");
+        console.log(customer);
+        this.setState({
+            selectedCustomer: customer,
         });
     }
 
@@ -235,8 +245,7 @@ export default class Invoice extends GenericComponent {
                                                     <div className="p-grid">
                                                         <div className="p-col" style={{padding:'.50em'}}>
                                                             <span className="p-float-label p-fluid">
-                                                                <InputText id="customerName" maxLength={250} onChange={(e) => {this.updateProperty('customerName', e.target.value)}} value={this.state.invoice.customerName}/>
-                                                                <label htmlFor="customerName">Customer Name</label>
+                                                                <CustomerAutoComplete ref={this.getCustomerAutoComplete} onChange={this.getSelectedCustomer}></CustomerAutoComplete>
                                                             </span>
                                                         </div>
 

@@ -99,6 +99,12 @@ func main() {
 		companies.DeleteCompany()
 		companies.GetCompanyById()
 
+		warehouse := api.NewWarehouse(e)
+		warehouse.GetWarehouseById()
+		warehouse.AddWarehouse()
+		warehouse.UpdateWarehouse()
+		warehouse.Deletewarehouse()
+
 		inventories := api.NewInventory(e)
 		inventories.GetItems()
 		inventories.AddItem()
@@ -116,7 +122,6 @@ func main() {
 		invoices.AddInvoiceDetails()
 		invoices.UpdateInvoiceDetail()
 		invoices.DeleteInvoiceDetail()
-
 		invoices.PrintInvoice()
 
 		e.Static("/static", "app/static")
