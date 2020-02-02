@@ -14,22 +14,35 @@ func New() *data {
 	return &data{}
 }
 
-func (data *data) CreateUsers(connection *gorm.DB) {
+func (data *data) CreateClient(connection *gorm.DB) *models.Client {
+	client := &models.Client{ClientName: "Abbasi.co"}
+	connection.Create(client)
+	return client
+}
+
+func (data *data) CreateClientConfiguration(connection *gorm.DB, client *models.Client) {
+	clientConfiguration := &models.ClientConfiguration{ClientId: client.ID}
+	connection.Create(clientConfiguration)
+}
+
+func (data *data) CreateUsers(connection *gorm.DB, client *models.Client) {
 	connection.Create(&models.User{
 		Username:  "nabbasi",
 		Password:  "x",
 		FirstName: "Noman Ali",
 		LastName:  "Abbasi",
+		ClientId:  client.ID,
 	})
 	connection.Create(&models.User{
 		Username:  "waris",
 		Password:  "786",
 		FirstName: "Abdul Waris",
 		LastName:  "Zai",
+		ClientId:  client.ID,
 	})
 }
 
-func (data *data) CreateCustomers(connection *gorm.DB) {
+func (data *data) CreateCustomers(connection *gorm.DB, client *models.Client) {
 	for num := 0; num < 1000; num++ {
 		gofakeit.Seed(time.Now().UnixNano())
 		customer := &models.Customer{}
@@ -38,11 +51,12 @@ func (data *data) CreateCustomers(connection *gorm.DB) {
 		customer.MobileNumber = gofakeit.Contact().Phone
 		customer.Status = "in_process"
 		customer.ShopName = gofakeit.FirstName()
+		customer.ClientId = client.ID
 		connection.Create(&customer)
 	}
 }
 
-func (data *data) CreateWorkers(connection *gorm.DB) {
+func (data *data) CreateWorkers(connection *gorm.DB, client *models.Client) {
 	for num := 0; num < 1000; num++ {
 		gofakeit.Seed(time.Now().UnixNano())
 		worker := &models.Worker{}
@@ -50,19 +64,21 @@ func (data *data) CreateWorkers(connection *gorm.DB) {
 		worker.LastName = gofakeit.LastName()
 		worker.Status = "Working"
 		worker.MobileNumber = gofakeit.PhoneFormatted()
+		worker.ClientId = client.ID
 		connection.Create(&worker)
 	}
 }
 
-func (data *data) CreateCompanies(connection *gorm.DB) *models.Company {
+func (data *data) CreateCompanies(connection *gorm.DB, client *models.Client) *models.Company {
 	company := &models.Company{}
 	company.CompanyName = "Company 1"
 	company.MobileNumber = "03012525461"
+	company.ClientId = client.ID
 	connection.Create(company)
 	return company
 }
 
-func (data *data) CreateInventories(company *models.Company, connection *gorm.DB) {
+func (data *data) CreateInventories(company *models.Company, connection *gorm.DB, client *models.Client) {
 	for num := 0; num < 5000; num++ {
 		gofakeit.Seed(time.Now().UnixNano())
 		inventory := &models.Inventory{}
@@ -74,6 +90,7 @@ func (data *data) CreateInventories(company *models.Company, connection *gorm.DB
 		inventory.PurchaseRate = float64(rand.Int63n(time.Now().Unix()))
 		inventory.RetailRate = float64(rand.Int63n(time.Now().Unix()))
 		inventory.CompanyId = company.ID
+		inventory.ClientId = client.ID
 		connection.Create(&inventory)
 	}
 }

@@ -35,10 +35,11 @@ type ClientConfiguration struct {
 
 type User struct {
 	Model
-	Username  string `json:"userName" xml:"userName" form:"userName" query:"userName"`
-	Password  string `json:"password" xml:"password" form:"password" query:"password"`
-	FirstName string `json:"firstName" xml:"firstName" form:"firstName" query:"firstName"`
-	LastName  string `json:"lastName" xml:"lastName" form:"lastName" query:"lastName"`
+	Username  string    `json:"userName" xml:"userName" form:"userName" query:"userName"`
+	Password  string    `json:"password" xml:"password" form:"password" query:"password"`
+	FirstName string    `json:"firstName" xml:"firstName" form:"firstName" query:"firstName"`
+	LastName  string    `json:"lastName" xml:"lastName" form:"lastName" query:"lastName"`
+	ClientId  uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type Person struct {
@@ -50,15 +51,17 @@ type Person struct {
 
 type Customer struct {
 	Person
-	ShopName string `json:"shopName" xml:"shopName" form:"shopName" query:"shopName"`
-	Status   string `json:"status" xml:"status" form:"status" query:"status"`
-	Address  string `json:"address" xml:"address" form:"address" query:"address"`
+	ShopName string    `json:"shopName" xml:"shopName" form:"shopName" query:"shopName"`
+	Status   string    `json:"status" xml:"status" form:"status" query:"status"`
+	Address  string    `json:"address" xml:"address" form:"address" query:"address"`
+	ClientId uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type Worker struct {
 	Person
-	Address string `json:"address" xml:"address" form:"address" query:"address"`
-	Status  string `json:"status" xml:"status" form:"status" query:"status"`
+	Address  string    `json:"address" xml:"address" form:"address" query:"address"`
+	Status   string    `json:"status" xml:"status" form:"status" query:"status"`
+	ClientId uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type Payment struct {
@@ -71,8 +74,9 @@ type Payment struct {
 
 type Warehouse struct {
 	Model
-	Name     string `json:"name" xml:"name" form:"name" query:"name"`
-	Location bool   `json:"location" xml:"location" form:"location" query:"location"`
+	Name     string    `json:"name" xml:"name" form:"name" query:"name"`
+	Location bool      `json:"location" xml:"location" form:"location" query:"location"`
+	ClientId uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type Inventory struct {
@@ -88,6 +92,7 @@ type Inventory struct {
 	ItemStatus    string    `json:"itemStatus" xml:"itemStatus" form:"itemStatus" query:"itemStatus"`
 	CompanyId     uuid.UUID `gorm:"ForeignKey:company_id; type: uuid;" json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
 	WarehouseId   uuid.UUID `gorm:"ForeignKey:warehouse_id; type: uuid;" json:"warehouse_id" xml:"warehouse_id" form:"warehouse_id" query:"warehouse_id"`
+	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 func (inventory Inventory) ToString() string {
@@ -99,6 +104,7 @@ type Company struct {
 	CompanyName  string      `json:"companyName" xml:"companyName" form:"companyName" query:"companyName"`
 	MobileNumber string      `json:"mobileNumber" xml:"mobileNumber" form:"mobileNumber" query:"mobileNumber"`
 	Inventory    []Inventory `json:"inventories" xml:"inventories" form:"inventories" query:"inventories"`
+	ClientId     uuid.UUID   `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type Invoice struct {
@@ -112,17 +118,19 @@ type Invoice struct {
 	TransportCharges float64          `json:"transportCharges" xml:"transportCharges" form:"transportCharges" query:"transportCharges"`
 	InvoiceDetails   []InvoiceDetails `json:"invoiceDetails" xml:"invoiceDetails" form:"invoiceDetails" query:"invoiceDetails"`
 	CustomerId       uuid.UUID        `json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
+	ClientId         uuid.UUID        `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type InvoiceDetails struct {
-	InvoiceNumber int64   `json:"invoiceNumber" xml:"invoiceNumber" form:"invoiceNumber" query:"invoiceNumber"`
-	ItemName      string  `json:"itemName" xml:"unit" form:"unit" query:"unit"`
-	Unit          string  `json:"unit" xml:"unit" form:"unit" query:"unit"`
-	Quantities    uint64  `json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
-	Price         float64 `json:"price" xml:"price" form:"price" query:"price"`
-	Amount        float64 `json:"amount" xml:"amount" form:"amount" query:"amount"`
-	Discount      float64 `json:"discount" xml:"discount" form:"discount" query:"discount"`
-	TotalAmount   float64 `json:"totalAmount" xml:"totalAmount" form:"totalAmount" query:"totalAmount"`
+	InvoiceNumber int64     `json:"invoiceNumber" xml:"invoiceNumber" form:"invoiceNumber" query:"invoiceNumber"`
+	ItemName      string    `json:"itemName" xml:"unit" form:"unit" query:"unit"`
+	Unit          string    `json:"unit" xml:"unit" form:"unit" query:"unit"`
+	Quantities    uint64    `json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
+	Price         float64   `json:"price" xml:"price" form:"price" query:"price"`
+	Amount        float64   `json:"amount" xml:"amount" form:"amount" query:"amount"`
+	Discount      float64   `json:"discount" xml:"discount" form:"discount" query:"discount"`
+	TotalAmount   float64   `json:"totalAmount" xml:"totalAmount" form:"totalAmount" query:"totalAmount"`
+	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type SysInfo struct {

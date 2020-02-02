@@ -68,11 +68,11 @@ func DropSchema(db *gorm.DB) {
 		&models.Customer{},
 		&models.Worker{},
 		&models.Payment{},
-		&models.Company{},
 		&models.Warehouse{},
 		&models.Inventory{},
 		&models.Invoice{},
 		&models.InvoiceDetails{},
+		&models.Company{},
 		&models.User{},
 	)
 }

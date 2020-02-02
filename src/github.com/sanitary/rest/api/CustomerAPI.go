@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
@@ -33,14 +34,18 @@ func (customer *customers) GetCustomers() {
 	customer.echo.GET(CustomerEndPoint, func(c echo.Context) error {
 		var allCustomer = new([]models.Customer)
 		connection := customer.dbSettings.GetDBConnection()
-		connection.Select("id, first_name, last_name, mobile_number, status, shop_name," +
-			" address").Find(&allCustomer)
+		connection.Select("id, first_name, last_name, mobile_number, status, shop_name,"+
+			" address").
+			Where("client_id = ? ", c.Request().Header.Get("X-Client-Id")).
+			Find(&allCustomer)
+
 		return c.JSON(http.StatusOK, &allCustomer)
 	})
 }
 
 func (customer *customers) GetCustomerById() {
 	customer.echo.GET(CustomerEndPoint+"/:id", func(c echo.Context) error {
+		fmt.Println(c.Request().Header.Get("X-Client-Id"))
 		var findCustomer = new(models.Customer)
 		customerId := c.Param("id")
 		connection := customer.dbSettings.GetDBConnection()

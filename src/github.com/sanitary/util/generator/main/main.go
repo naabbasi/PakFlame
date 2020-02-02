@@ -22,9 +22,11 @@ func main() {
 	}
 
 	data := generator.New()
-	data.CreateUsers(connection)
-	data.CreateCustomers(connection)
-	data.CreateWorkers(connection)
-	company := data.CreateCompanies(connection)
-	data.CreateInventories(company, connection)
+	client := data.CreateClient(connection)
+	data.CreateClientConfiguration(connection, client)
+	data.CreateUsers(connection, client)
+	data.CreateCustomers(connection, client)
+	data.CreateWorkers(connection, client)
+	company := data.CreateCompanies(connection, client)
+	data.CreateInventories(company, connection, client)
 }

@@ -8,7 +8,10 @@ export class GenericComponent extends Component {
         this.axios = axios.create({
             baseURL: 'http://' + url + '/api',
             responseType: 'json',
-            //headers: {'X-Author-Header': 'engr.nomiabbasi@gmail.com'},
+            headers: {
+                //'X-Author-Header': 'engr.nomiabbasi@gmail.com',
+                'X-Client-ID': 'client-id-needs-to-be-updated'
+            },
             withCredentials: true,
         });
 
@@ -16,11 +19,16 @@ export class GenericComponent extends Component {
         this.axios.interceptors.request.use((config) => {
             // Do something before request is sent
             console.log("Request interceptor");
-
             if(window.localStorage.getItem("isLoggedIn") === null && window.location.hash !== "#/signup") {
                 window.location.hash = '/';
             } if(window.localStorage.getItem("isLoggedIn") !== null && window.location.hash === "/") {
                 window.location.hash = '/customers';
+            }
+
+            if(window.localStorage.getItem("isLoggedIn") !== null){
+                let user = window.localStorage.getItem("isLoggedIn");
+                config.headers['X-Client-ID'] = JSON.parse(user)['client_id'];
+                console.log(config.headers);
             }
 
             return config;

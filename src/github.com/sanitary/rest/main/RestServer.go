@@ -9,6 +9,7 @@ import (
 	"github.com/sanitary/backend/schema"
 	"github.com/sanitary/config"
 	"github.com/sanitary/rest/api"
+	"github.com/sanitary/util/generator"
 
 	"net/http"
 	"os"
@@ -29,8 +30,9 @@ func main() {
 		e := echo.New()
 		e.HideBanner = true
 		e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-			AllowOrigins:     []string{"http://" + strings.ToLower(hostname) + ":3000", "http://localhost:3000"},
-			AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAccessControlAllowCredentials},
+			AllowOrigins: []string{"http://" + strings.ToLower(hostname) + ":3000", "http://localhost:3000"},
+			AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept,
+				echo.HeaderAccessControlAllowCredentials, "X-Client-ID"},
 			AllowMethods:     []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.OPTIONS},
 			AllowCredentials: true,
 			ExposeHeaders:    []string{echo.HeaderContentDisposition},
@@ -42,7 +44,9 @@ func main() {
 		if config.DemoData == false {
 			runMigration := flag.Bool("migration", false, "To run migration")
 			dropSchema := flag.Bool("drop", false, "To drop schema")
-			dropMigrationSchema := flag.Bool("drop-migration", false, "To drop schema and migrate data")
+			dropMigrationSchema := flag.Bool("drop-migration", false, "To drop schema and migrate schema")
+			dropMigrationWithData := flag.Bool("drop-migration-data", false, "To drop schema and migrate schema along with data")
+			data := flag.Bool("data", false, "To generate sample data")
 			flag.Parse()
 
 			if *runMigration {
@@ -61,6 +65,34 @@ func main() {
 				schema.DropSchema(connection)
 				connection.Exec("CREATE SEQUENCE invoice_seq")
 				schema.CreatePostgreSQLSchema(connection)
+			} else if *dropMigrationWithData {
+				db := backend.GetDBSettings(config)
+				connection := db.GetDBConnection()
+
+				schema.DropSchema(connection)
+				connection.Exec("CREATE SEQUENCE invoice_seq")
+				schema.CreatePostgreSQLSchema(connection)
+
+				data := generator.New()
+				client := data.CreateClient(connection)
+				data.CreateClientConfiguration(connection, client)
+				data.CreateUsers(connection, client)
+				data.CreateCustomers(connection, client)
+				data.CreateWorkers(connection, client)
+				company := data.CreateCompanies(connection, client)
+				data.CreateInventories(company, connection, client)
+			} else if *data {
+				db := backend.GetDBSettings(config)
+				connection := db.GetDBConnection()
+
+				data := generator.New()
+				client := data.CreateClient(connection)
+				data.CreateClientConfiguration(connection, client)
+				data.CreateUsers(connection, client)
+				data.CreateCustomers(connection, client)
+				data.CreateWorkers(connection, client)
+				company := data.CreateCompanies(connection, client)
+				data.CreateInventories(company, connection, client)
 			}
 
 		}
