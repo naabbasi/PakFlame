@@ -1,5 +1,6 @@
-import {Component} from 'react';
+import React, {Component} from 'react';
 import axios from 'axios';
+import {Button} from "primereact/button";
 
 export class GenericComponent extends Component {
     constructor(props) {
@@ -72,5 +73,11 @@ export class GenericComponent extends Component {
         let options = {day: 'numeric', year: 'numeric', month: 'numeric', hour: 'numeric', minute: 'numeric'}
         let date = new Date(rowData['createdAt']).toLocaleDateString('en-PK', options);
         return "" + date;
+    }
+
+    actionColumn(rowData,column) {
+        return <div className="p-clearfix">
+            <a href="#">Delete</a>
+        </div>;
     }
 }

@@ -17,12 +17,6 @@ import (
 	"strings"
 )
 
-type User struct {
-	ID    int64  `json: "id"`
-	Name  string `json:"name" xml:"name" form:"name" query:"name"`
-	Email string `json:"email" xml:"email" form:"email" query:"email"`
-}
-
 func main() {
 	hostname, err := os.Hostname()
 	if err == nil {
@@ -74,25 +68,13 @@ func main() {
 				schema.CreatePostgreSQLSchema(connection)
 
 				data := generator.New()
-				client := data.CreateClient(connection)
-				data.CreateClientConfiguration(connection, client)
-				data.CreateUsers(connection, client)
-				data.CreateCustomers(connection, client)
-				data.CreateWorkers(connection, client)
-				company := data.CreateCompanies(connection, client)
-				data.CreateInventories(company, connection, client)
+				data.Import(connection)
 			} else if *data {
 				db := backend.GetDBSettings(config)
 				connection := db.GetDBConnection()
 
 				data := generator.New()
-				client := data.CreateClient(connection)
-				data.CreateClientConfiguration(connection, client)
-				data.CreateUsers(connection, client)
-				data.CreateCustomers(connection, client)
-				data.CreateWorkers(connection, client)
-				company := data.CreateCompanies(connection, client)
-				data.CreateInventories(company, connection, client)
+				data.Import(connection)
 			}
 
 		}
@@ -132,10 +114,11 @@ func main() {
 		companies.GetCompanyById()
 
 		warehouse := api.NewWarehouse(e)
+		warehouse.GetWarehouses()
 		warehouse.GetWarehouseById()
 		warehouse.AddWarehouse()
 		warehouse.UpdateWarehouse()
-		warehouse.Deletewarehouse()
+		warehouse.DeleteWarehouse()
 
 		inventories := api.NewInventory(e)
 		inventories.GetItems()

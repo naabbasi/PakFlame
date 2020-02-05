@@ -1,7 +1,7 @@
 package api
 
 import (
-	"fmt"
+	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
@@ -36,7 +36,7 @@ func (customer *customers) GetCustomers() {
 		connection := customer.dbSettings.GetDBConnection()
 		connection.Select("id, first_name, last_name, mobile_number, status, shop_name,"+
 			" address").
-			Where("client_id = ? ", c.Request().Header.Get("X-Client-Id")).
+			Where("client_id = ? ", c.Request().Header.Get(config.CLIENT_HEADER)).
 			Find(&allCustomer)
 
 		return c.JSON(http.StatusOK, &allCustomer)
@@ -45,11 +45,11 @@ func (customer *customers) GetCustomers() {
 
 func (customer *customers) GetCustomerById() {
 	customer.echo.GET(CustomerEndPoint+"/:id", func(c echo.Context) error {
-		fmt.Println(c.Request().Header.Get("X-Client-Id"))
 		var findCustomer = new(models.Customer)
 		customerId := c.Param("id")
 		connection := customer.dbSettings.GetDBConnection()
-		connection.Table("customers").Where("id = ?", customerId).First(&findCustomer)
+		connection.Table("customers").Where("id = ? and client_id = ?", customerId, c.Request().Header.Get(config.CLIENT_HEADER)).
+			First(&findCustomer)
 		return c.JSON(http.StatusOK, &findCustomer)
 	})
 }
@@ -61,6 +61,11 @@ func (customer *customers) AddCustomer() {
 			return err
 		}
 		log.Printf("Customer saved with %s", newCustomer)
+
+		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		if err == nil {
+			newCustomer.ClientId = clientId
+		}
 
 		connection := customer.dbSettings.GetDBConnection()
 		save := connection.Save(newCustomer)
@@ -82,6 +87,11 @@ func (customer *customers) UpdateCustomer() {
 
 		log.Printf("Customer updated with %s", updateCustomer)
 
+		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		if err == nil {
+			updateCustomer.ClientId = clientId
+		}
+
 		connection := customer.dbSettings.GetDBConnection()
 		update := connection.Model(models.Customer{}).Where("id = ?", updateCustomer.ID).Update(updateCustomer)
 
@@ -100,6 +110,11 @@ func (customer *customers) DeleteCustomer() {
 			return err
 		}
 		log.Printf("Worker deleted with %s", deleteCustomer.FirstName)
+
+		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		if err == nil {
+			deleteCustomer.ClientId = clientId
+		}
 
 		connection := customer.dbSettings.GetDBConnection()
 		update := connection.Model(models.Customer{}).Delete(deleteCustomer)

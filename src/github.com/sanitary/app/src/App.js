@@ -16,6 +16,7 @@ const Invoices = lazy(() => import ("./components/invoices/Invoices"));
 const Invoice = lazy(() => import ("./components/invoices/Invoice"));
 const Worker = lazy(() => import ("./components/worker/Worker"));
 const Inventory = lazy(() => import ("./components/inventory/Inventory"));
+const Warehouse = lazy(() => import ("./components/inventory/Warehouses"));
 const ItemAutoComplete = lazy(() => import ("./components/autocomplete/ItemAutoComplete"));
 
 
@@ -60,6 +61,7 @@ function App() {
                     <Route exact path="/workers" component={WaitingComponent(Worker)}></Route>
                     <Route exact path="/workers/details" component={WaitingComponent(WorkerDetails)}></Route>
                     <Route exact path="/gcomp" component={WaitingComponent(GComp)}></Route>
+                    <Route path="/warehouses" component={WaitingComponent(Warehouse)}></Route>
                     <Route path="/inventory" component={WaitingComponent(Inventory)}></Route>
                     <Route path="/invoices/all" component={WaitingComponent(Invoices)}></Route>
                     <Route path="/invoices/invoice" component={WaitingComponent(Invoice)}></Route>

@@ -30,7 +30,8 @@ type Client struct {
 }
 
 type ClientConfiguration struct {
-	ClientId uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+	InvoiceFormat string    `json:"invoiceFormat" xml:"invoiceFormat" form:"invoiceFormat" query:"invoiceFormat"`
+	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type User struct {
@@ -74,9 +75,11 @@ type Payment struct {
 
 type Warehouse struct {
 	Model
-	Name     string    `json:"name" xml:"name" form:"name" query:"name"`
-	Location bool      `json:"location" xml:"location" form:"location" query:"location"`
-	ClientId uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+	Name         string    `json:"name" xml:"name" form:"name" query:"name"`
+	Location     string    `json:"location" xml:"location" form:"location" query:"location"`
+	Email        string    `json:"email" xml:"email" form:"email" query:"email"`
+	MobileNumber string    `json:"mobileNumber" xml:"mobileNumber" form:"mobileNumber" query:"mobileNumber"`
+	ClientId     uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type Inventory struct {

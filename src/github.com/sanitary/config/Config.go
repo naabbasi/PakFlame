@@ -1,5 +1,9 @@
 package config
 
+const (
+	CLIENT_HEADER = "X-Client-Id"
+)
+
 type Config struct {
 	Enabled      bool
 	Database     string

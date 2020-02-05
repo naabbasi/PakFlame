@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
@@ -33,21 +34,26 @@ func (warehouse *warehouses) GetWarehouses() {
 	warehouse.echo.GET(WarehouseEndPoint, func(c echo.Context) error {
 		var allWarehouses = new([]models.Warehouse)
 		connection := warehouse.dbSettings.GetDBConnection()
-		connection.Find(&allWarehouses)
+		connection.Where("client_id = ?", c.Request().Header.Get(config.CLIENT_HEADER)).Find(&allWarehouses)
 		return c.JSON(http.StatusOK, allWarehouses)
 	})
 }
 
 func (warehouse *warehouses) AddWarehouse() {
 	warehouse.echo.POST(WarehouseEndPoint, func(c echo.Context) error {
-		newwarehouse := new(models.Warehouse)
-		if err := c.Bind(newwarehouse); err != nil {
+		newWarehouse := new(models.Warehouse)
+		if err := c.Bind(newWarehouse); err != nil {
 			return err
 		}
-		log.Printf("warehouse saved with %s", newwarehouse)
+		log.Printf("warehouse saved with %s", newWarehouse)
+
+		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		if err == nil {
+			newWarehouse.ClientId = clientId
+		}
 
 		connection := warehouse.dbSettings.GetDBConnection()
-		save := connection.Save(newwarehouse)
+		save := connection.Save(newWarehouse)
 
 		if save.RowsAffected == 1 {
 			return c.JSON(http.StatusCreated, "warehouse has been added")
@@ -59,14 +65,19 @@ func (warehouse *warehouses) AddWarehouse() {
 
 func (warehouse *warehouses) UpdateWarehouse() {
 	warehouse.echo.PUT(WarehouseEndPoint, func(c echo.Context) error {
-		updatewarehouse := new(models.Warehouse)
-		if err := c.Bind(updatewarehouse); err != nil {
+		updateWarehouse := new(models.Warehouse)
+		if err := c.Bind(updateWarehouse); err != nil {
 			return err
 		}
-		log.Printf("warehouse saved with %s", updatewarehouse)
+		log.Printf("warehouse saved with %s", updateWarehouse)
+
+		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		if err == nil {
+			updateWarehouse.ClientId = clientId
+		}
 
 		connection := warehouse.dbSettings.GetDBConnection()
-		update := connection.Model(models.Warehouse{}).Where("id = ?", updatewarehouse.ID).Update(updatewarehouse)
+		update := connection.Model(models.Warehouse{}).Where("id = ?", updateWarehouse.ID).Update(updateWarehouse)
 
 		if update.RowsAffected == 1 {
 			return c.JSON(http.StatusAccepted, "warehouse has been updated")
@@ -76,16 +87,21 @@ func (warehouse *warehouses) UpdateWarehouse() {
 	})
 }
 
-func (warehouse *warehouses) Deletewarehouse() {
+func (warehouse *warehouses) DeleteWarehouse() {
 	warehouse.echo.DELETE(WarehouseEndPoint, func(c echo.Context) error {
-		deletewarehouse := new(models.Warehouse)
-		if err := c.Bind(deletewarehouse); err != nil {
+		deleteWarehouse := new(models.Warehouse)
+		if err := c.Bind(deleteWarehouse); err != nil {
 			return err
 		}
-		log.Printf("warehouse deleted with %s", deletewarehouse)
+		log.Printf("warehouse deleted with %s", deleteWarehouse)
+
+		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		if err == nil {
+			deleteWarehouse.ClientId = clientId
+		}
 
 		connection := warehouse.dbSettings.GetDBConnection()
-		update := connection.Model(models.Warehouse{}).Delete(deletewarehouse)
+		update := connection.Model(models.Warehouse{}).Delete(deleteWarehouse)
 
 		if update.RowsAffected == 1 {
 			return c.JSON(http.StatusNoContent, "warehouse has been deleted")
@@ -100,7 +116,7 @@ func (warehouse *warehouses) GetWarehouseById() {
 		warehouseId := c.Param("warehouseId")
 		var allWarehouses = new(models.Warehouse)
 		connection := warehouse.dbSettings.GetDBConnection()
-		connection.First(&allWarehouses, "id = ?", &warehouseId)
+		connection.First(&allWarehouses, "id = ? and client_id =?", &warehouseId, c.Request().Header.Get(config.CLIENT_HEADER))
 		return c.JSON(http.StatusOK, allWarehouses)
 	})
 }
