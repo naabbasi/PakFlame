@@ -37,6 +37,7 @@ func (customer *customers) GetCustomers() {
 		connection.Select("id, first_name, last_name, mobile_number, status, shop_name,"+
 			" address").
 			Where("client_id = ? ", c.Request().Header.Get(config.CLIENT_HEADER)).
+			Order("first_name ASC").
 			Find(&allCustomer)
 
 		return c.JSON(http.StatusOK, &allCustomer)

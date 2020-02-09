@@ -77,7 +77,7 @@ export class GenericComponent extends Component {
 
     actionColumn(rowData,column) {
         return <div className="p-clearfix">
-            <a href="#">Delete</a>
+            <a href="javascript: void(0);" onClick={this.delete}>Delete</a>
         </div>;
     }
 }

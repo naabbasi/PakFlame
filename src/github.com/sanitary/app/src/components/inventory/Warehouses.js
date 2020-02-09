@@ -74,6 +74,16 @@ export default class Warehouses extends GenericComponent {
         }
     }
 
+    actionColumn(rowData,column) {
+        return <div className="p-clearfix">
+            <a onClick={(e)=> this.delete}>Delete</a>
+        </div>;
+    }
+
+    delete() {
+        console.log("deleting.....")
+    }
+
     deleteWarehouse() {
         this.axios.delete('/warehouses', { data: { ...this.state.selectedWarehouse}})
             .then( response => {
@@ -147,7 +157,7 @@ export default class Warehouses extends GenericComponent {
             <Navigation>
                 <div className="content-section implementation">
                     <DataTable value={this.state.warehouses} paginator={true} rows={25}  header={header} footer={footer}
-                               scrollable={true} scrollHeight="700px"
+                               scrollable={true} scrollHeight="700px" responsive={true}
                                selectionMode="single" selection={this.state.selectedWarehouse} onSelectionChange={e => this.setState({selectedWWarehouse: e.value})}
                                onRowSelect={this.onWarehouseSelect}
                                globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
@@ -155,7 +165,7 @@ export default class Warehouses extends GenericComponent {
                         <Column field="location" header="Location" sortable={true} />
                         <Column field="email" header="Email" sortable={true} />
                         <Column field="mobileNumber" header="Mobile Number" sortable={true} />
-                        <Column field="mobileNumber" header="Action" body={this.actionColumn} sortable={true} />
+                        <Column field="mobileNumber" header="Action" body={this.actionColumn.bind(this)} sortable={true} />
                     </DataTable>
                     <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Warehouse Details"
                             modal={true} footer={dialogFooter}

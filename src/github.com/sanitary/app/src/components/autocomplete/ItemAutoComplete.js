@@ -62,6 +62,10 @@ export default class ItemAutoComplete extends GenericComponent {
         }
     }
 
+    selectItem(item) {
+        this.setState({item: item});
+    }
+
     render() {
         return <div>
             <AutoComplete dropdown={true}  field="itemName"

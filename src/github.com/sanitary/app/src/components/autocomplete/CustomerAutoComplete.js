@@ -60,6 +60,10 @@ export default class CustomerAutoComplete extends GenericComponent {
         }
     }
 
+    selectCustomer(customer) {
+        this.setState({customer: customer});
+    }
+
     render() {
         return <div>
             <AutoComplete dropdown={true}  field="firstName"

@@ -183,6 +183,15 @@ func (invoices *invoices) UpdateInvoiceDetail() {
 		update := connection.Model(models.Invoice{}).Where("id = ?", updateInvoice.ID).Update(updateInvoice)
 
 		if update.RowsAffected == 1 {
+			/*for _, newItem := range updateInvoice.InvoiceDetails {
+				connection := invoices.dbSettings.GetDBConnection()
+				newItem.InvoiceNumber = updateInvoice.ID
+				saveItem := connection.Save(newItem)
+				if saveItem.RowsAffected == 1 {
+					fmt.Printf("Item: %v", newItem)
+				}
+			}*/
+
 			return c.JSON(http.StatusAccepted, "Invoice has been added")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to update Invoice")

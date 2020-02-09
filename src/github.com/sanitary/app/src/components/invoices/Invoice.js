@@ -30,13 +30,13 @@ export default class Invoice extends GenericComponent {
         this.getCustomerAutoComplete = React.createRef();
 
         this.saveInvoice = this.saveInvoice.bind(this);
-        this.delete = this.delete.bind(this);
-        this.close = this.close.bind(this);
+        this.deleteInvoice = this.deleteInvoice.bind(this);
         this.onInvoiceSelect = this.onInvoiceSelect.bind(this);
         this.addNew = this.addNew.bind(this);
         this.print = this.print.bind(this);
         this.getSelectedItem = this.getSelectedItem.bind(this);
         this.getSelectedCustomer = this.getSelectedCustomer.bind(this);
+        this.onItemSelect = this.onItemSelect.bind(this);
     }
 
     async componentDidMount() {
@@ -54,17 +54,20 @@ export default class Invoice extends GenericComponent {
             this.getInvoiceDetailsById(data['id']);
             this.setState({
                 isEdit: true,
+                disableButtons: false,
                 invoice: {
-                    invoiceNumber: data['id'], customerName: data['customerName'], createdAt: new Date(data['createdAt']), partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'],
-                    details: {invoiceNumber: 0, itemName: 'My Item', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
+                    id: data['id'], customerId: data['customerId'], customerName: data['customerName'], createdAt: new Date(data['createdAt']), partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'],
+                    details: {id: 0, itemName: 'My Item', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
                 },
             });
+
+            this.getCustomerAutoComplete.current.selectCustomer({id: data['customerId'], firstName: data['customerName']})
         } else {
             this.setState({
                 disableButtons: false,
                 invoice: {
-                    invoiceNumber: 0, customerName: '', createdAt: new Date(), partyName: '', transport: '', transportCharges: 0, address: '',
-                    details: {invoiceNumber: 0, itemName: '', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
+                    id: 0, customerId: '', customerName: '', createdAt: new Date(), partyName: '', transport: '', transportCharges: 0, address: '',
+                    details: {id: 0, itemName: '', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
                 },
             });
         }
@@ -119,7 +122,8 @@ export default class Invoice extends GenericComponent {
                 // handle success
                 console.log(response);
                 if(response.status === 201){
-                    this.setState({item: []});
+                    this.setState({item: {}});
+                    this.newInvoice = false;
                 }
             })
             .catch(function (error) {
@@ -127,7 +131,17 @@ export default class Invoice extends GenericComponent {
                 console.log(error);
             });
         } else{
-            this.axios.put('/invoices',this.state.invoice)
+            console.log(this.state.invoice);
+
+            let itemDetails = this.state.items;
+            this.state.invoiceDetails = itemDetails;
+            this.state.invoice.invoiceDetails = [];
+
+            for(let row = 0; row < itemDetails.length; row++) {
+                this.state.invoice.invoiceDetails.push(itemDetails[row]);
+            }
+
+            this.axios.put('/invoices/details',this.state.invoice)
             .then( response => {
                 // handle success
                 console.log(response);
@@ -143,7 +157,7 @@ export default class Invoice extends GenericComponent {
         }
     }
 
-    delete() {
+    deleteInvoice() {
         this.axios.delete('/', { data: { ...this.state.selectedInvoice}})
         .then( response => {
             // handle success
@@ -159,10 +173,6 @@ export default class Invoice extends GenericComponent {
         });
     }
 
-    close() {
-        this.setState({selectedInvoice:null, invoice: null, displayDialog:false});
-    }
-
     updateProperty(property, value, child) {
         if (child === undefined) {
             let invoice = this.state.invoice;
@@ -174,6 +184,19 @@ export default class Invoice extends GenericComponent {
             this.setState({invoice});
         }
 
+    }
+
+    calculateAmount() {
+        let invoice = {...this.state.invoice};
+        let quantities = invoice.details['quantities'];
+        let price = invoice.details['price'];
+        let amountBeforeDiscount = this.Float(quantities * price);
+        let discount = invoice.details['discount'];
+        let discountAmount = (discount / 100) * amountBeforeDiscount;
+        console.log("Discounted amount: " + discountAmount)
+        invoice.details['amount'] = amountBeforeDiscount;
+        invoice.details['totalAmount'] = amountBeforeDiscount - discountAmount;
+        this.setState({invoice});
     }
 
     onInvoiceSelect(e){
@@ -192,7 +215,23 @@ export default class Invoice extends GenericComponent {
             saveButton: false,
             items: addItemDetails
         });
+        this.setState({})
         console.log(this.state.items)
+    }
+
+    onItemSelect(e){
+        console.log(e)
+        this.getItemAutoComplete.current.selectItem({itemName: e.data['itemName']});
+        let invoice = {...this.state.invoice};
+        invoice.details['itemName'] = e.data['itemName'];
+        invoice.details['quantities'] = e.data['quantities'];
+        invoice.details['price'] = e.data['price'];
+        invoice.details['discount'] = e.data['discount'];
+        this.newInvoice = false;
+
+        setTimeout(()=>{
+            this.setState({invoice});
+        });
     }
 
     print() {
@@ -214,18 +253,28 @@ export default class Invoice extends GenericComponent {
     }
 
     getSelectedItem(item) {
-        console.log(this.state.invoice.details);
-        this.setState({
-            selectedItem: item,
-            invoice: {details: {quantities: item.quantities, price: item.retailRate}}
+        let invoice = {...this.state.invoice};
+        invoice.details['itemName'] = item.itemName;
+        invoice.details['quantities'] = item.quantities;
+        invoice.details['price'] = item.retailRate;
+
+        setTimeout(()=>{
+            this.setState({invoice});
         });
+        this.setState({selectedItem: item});
     }
 
     getSelectedCustomer(customer) {
         console.log("selected customer");
         console.log(customer);
+        let invoice = {...this.state.invoice}
+        invoice['customerId'] = customer.id;
+        invoice['customerName'] = customer.firstName;
+        invoice['partyName'] = customer.shopName;
+
         this.setState({
             selectedCustomer: customer,
+            invoice: invoice
         });
     }
 
@@ -297,60 +346,63 @@ export default class Invoice extends GenericComponent {
                                             </div>
                                         </div>
                                     </AccordionTab>
-                                    <AccordionTab header="Invoice Details">
-                                        <div className="p-col-12 p-component">
-                                            <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                                <div className="p-col" style={{padding:'.50em'}}>
-                                                    <span className="p-float-label p-fluid">
-                                                        <ItemAutoComplete ref={this.getItemAutoComplete} onChange={this.getSelectedItem}></ItemAutoComplete>
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                                <div className="p-col-6" style={{padding:'.50em'}}>
-                                                    <span className="p-float-label p-fluid">
-                                                        <InputText id="unit" maxLength={250} onChange={(e) => {this.updateProperty('unit', e.target.value, true)}} value={this.state.invoice.details.unit}/>
-                                                        <label htmlFor="unit">Unit</label>
-                                                    </span>
-                                                </div>
-
-                                                <div className="p-col-6" style={{padding:'.50em'}}>
-                                                    <span className="p-float-label p-fluid">
-                                                        <InputText id="quantities" keyfilter="pint" onChange={(e) => {this.updateProperty('quantities', this.Int(e.target.value), true)}} value={this.state.invoice.details.quantities}/>
-                                                        <label htmlFor="quantities">Quantities</label>
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                                <div className="p-col-6" style={{padding:'.50em'}}>
-                                                    <span className="p-float-label p-fluid">
-                                                        <InputText id="price" keyfilter="pint" onChange={(e) => {this.updateProperty('price', this.Int(e.target.value), true)}} value={this.state.invoice.details.price}/>
-                                                        <label htmlFor="price">Price</label>
-                                                    </span>
-                                                </div>
-
-                                                <div className="p-col-6" style={{padding:'.50em'}}>
-                                                    <span className="p-float-label p-fluid">
-                                                        <InputText id="discount" keyfilter="pint" onChange={(e) => {this.updateProperty('discount', this.Int(e.target.value), true)}} value={this.state.invoice.details.discount}/>
-                                                        <label htmlFor="discount">Discount</label>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                            <div className="p-col" style={{padding:'.50em'}}>
-                                                <Button label="Add" icon="pi pi-plus" className="p-button-rounded" onClick={this.addNew}/>
-                                            </div>
-                                        </div>
-                                    </AccordionTab>
                                 </Accordion>
+                                <div className="p-col-12 p-component">
+                                    <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                        <div className="p-col" style={{padding:'.50em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <ItemAutoComplete ref={this.getItemAutoComplete} onChange={this.getSelectedItem}></ItemAutoComplete>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                        <div className="p-col-6" style={{padding:'.50em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText id="unit" maxLength={250} onChange={(e) => {this.updateProperty('unit', e.target.value, true)}} value={this.state.invoice.details.unit}/>
+                                                <label htmlFor="unit">Unit</label>
+                                            </span>
+                                        </div>
+
+                                        <div className="p-col-6" style={{padding:'.50em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText id="quantities" keyfilter="pint"
+                                                           onChange={(e) => {this.updateProperty('quantities', this.Int(e.target.value), true)}}
+                                                           onBlur={(e) => {this.calculateAmount()}}
+                                                           value={this.state.invoice.details.quantities}/>
+                                                <label htmlFor="quantities">Quantities</label>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                        <div className="p-col-6" style={{padding:'.50em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText id="price" keyfilter="pint"
+                                                           onChange={(e) => {this.updateProperty('price', this.Int(e.target.value), true)}}
+                                                           onBlur={(e) => {this.calculateAmount()}}
+                                                           value={this.state.invoice.details.price}/>
+                                                <label htmlFor="price">Price</label>
+                                            </span>
+                                        </div>
+
+                                        <div className="p-col-6" style={{padding:'.50em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText id="discount" keyfilter="pint"
+                                                           onChange={(e) => {this.updateProperty('discount', this.Int(e.target.value), true)}}
+                                                           onBlur={(e) => {this.calculateAmount()}}
+                                                           value={this.state.invoice.details.discount}/>
+                                                <label htmlFor="discount">Discount</label>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="p-grid">
                                     <div className="p-col" style={{padding:'.50em'}}>
+                                        <Button label="Add" icon="pi pi-plus" className="p-button-rounded" onClick={this.addNew}/>
                                         <Button disabled={false} label="Print" icon="pi pi-print" className="p-button-rounded" onClick={this.print}/>
                                         <Button disabled={this.state.disableButtons} label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInvoice}/>
-                                        <Button disabled={this.state.disableButtons} label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.delete}/>
+                                        <Button disabled={this.state.disableButtons} label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteInvoice}/>
                                     </div>
                                 </div>
                                 <div className="p-col-12">
@@ -360,7 +412,7 @@ export default class Invoice extends GenericComponent {
                                                        scrollable={true} scrollHeight="200px"
                                                        selectionMode="single" selection={this.state.selectedInventory}
                                                        onSelectionChange={e => this.setState({selectedInventory: e.value})}
-                                                       onRowSelect={this.onInventorySelect} emptyMessage="No record(s) found">
+                                                       onRowSelect={this.onItemSelect} emptyMessage="No record(s) found">
 
                                                 <Column field="itemName" header="Item Name" sortable={true} />
                                                 <Column field="unit" header="Unit" sortable={true} style={{textAlign: 'right'}}/>
