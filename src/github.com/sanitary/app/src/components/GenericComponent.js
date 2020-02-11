@@ -29,7 +29,7 @@ export class GenericComponent extends Component {
             if(window.localStorage.getItem("isLoggedIn") !== null){
                 let user = window.localStorage.getItem("isLoggedIn");
                 config.headers['X-Client-ID'] = JSON.parse(user)['client_id'];
-                console.log(config.headers);
+                console.trace(config.headers);
             }
 
             return config;

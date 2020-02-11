@@ -78,7 +78,7 @@ function WaitingComponent(Component) {
     return props => (
         <Suspense fallback={
             <div style={{top: '25%', color: '#fff', textAlign: 'center', position: 'absolute', width: '100%', height: '100%'}}>
-                <Card title="AbuZar Traders" subTitle="Please wait ..." className="ui-card-shadow">
+                <Card title="Inventory Management System" subTitle="Please wait ..." className="ui-card-shadow">
                 </Card>
             </div>
         }>

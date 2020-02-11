@@ -56,15 +56,15 @@
   version = "v1.1.1"
 
 [[projects]]
-  digest = "1:9e6061d60fb018cec58795a2e645c6012312f8e7db1efaf7db25df5cbf3f7a2e"
+  digest = "1:282afc5172b5e118c47d7c61b054dfec00e69d137912f9f7b636a045cd4adb80"
   name = "github.com/jinzhu/gorm"
   packages = [
     ".",
     "dialects/postgres",
   ]
   pruneopts = ""
-  revision = "81c17a7e2529c59efc4e74c5b32c1fb71fb12fa2"
-  version = "v1.9.11"
+  revision = "79a77d771dee4e4b60e9c543e8663bbc80466670"
+  version = "v1.9.12"
 
 [[projects]]
   digest = "1:a7b97371fb9af808b6a4fcc6693276ef7869bb1f282c3c87038c6c7e74ef4ae6"
@@ -75,17 +75,18 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:bc599edadf3d344d79d465eb3d3c570c9225d821838f35acc973aaad0dcdc843"
+  digest = "1:9f99ea2b6896be22b5efb75be67a4b2b059f8fac4691cdff9c77fdf05c7e8080"
   name = "github.com/johnfercher/maroto"
   packages = [
     "internal",
+    "pkg/color",
     "pkg/consts",
     "pkg/pdf",
     "pkg/props",
   ]
   pruneopts = ""
-  revision = "51992ea68675bb4617919075db082b05fa6ff070"
-  version = "v0.21.1"
+  revision = "824b3579fade9245b99128f7762aed036be3f7c5"
+  version = "v0.24.0"
 
 [[projects]]
   digest = "1:3d7457319824d4b7285d582d9533bb7b16b7a4f2effd07088960bda999f58f3a"
@@ -123,7 +124,7 @@
   version = "v0.3.0"
 
 [[projects]]
-  digest = "1:f4216047c24ab66fb757045febd7dac4edc6f4ad9f6c0063d0755d654d04f25e"
+  digest = "1:b424ab60bdff8b8899fa0b27c9b35083f2607fbbaa7b6430617c53ca4501d286"
   name = "github.com/lib/pq"
   packages = [
     ".",
@@ -132,8 +133,8 @@
     "scram",
   ]
   pruneopts = ""
-  revision = "3427c32cb71afc948325f299f040e53c1dd78979"
-  version = "v1.2.0"
+  revision = "99274577be97ac9b1d95a2d61d566dc9b7cc6a54"
+  version = "v1.3.0"
 
 [[projects]]
   digest = "1:9b58ad18b38cf0d44b1d006fce319e45f200eafa406fe7f65fe0d0194b9f7a9f"
@@ -144,12 +145,12 @@
   version = "v0.1.4"
 
 [[projects]]
-  digest = "1:5794dadc5456af270fc564d98efbfa1f3627cd6c733ca772d14409793772064f"
+  digest = "1:87fecb4f5564bd9bc810e4c83d4ac434fd17599edc7b35e27580c2cfc48cdb7c"
   name = "github.com/mattn/go-isatty"
   packages = ["."]
   pruneopts = ""
-  revision = "88ba11cfdc67c7588b30042edf244b2875f892b6"
-  version = "v0.0.10"
+  revision = "7b513a986450394f7bbf1476909911b3aa3a55ce"
+  version = "v0.0.12"
 
 [[projects]]
   branch = "master"
@@ -177,30 +178,30 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:47cd7b63835b62da6a8c3817fafde2e07aaf952ce170a6ecafedb06946be6ddb"
+  digest = "1:25f91815028080d7bf24c51388e38c55fba9d0cbb282d85447883d632def97d8"
   name = "golang.org/x/crypto"
   packages = [
     "acme",
     "acme/autocert",
   ]
   pruneopts = ""
-  revision = "8986dd9e96cf0a6f74da406c005ba3df38527c04"
+  revision = "86ce3cb696783b739e41e834e2eead3e1b4aa3fb"
 
 [[projects]]
   branch = "master"
-  digest = "1:e77333c281709270f3de8b3b2248ff5ae580691c79f5744d9080b35e46018707"
+  digest = "1:a6b4c0203496549bdd9eb7a34a9c34aa428851951f3bdea48fc3332b3633d8fe"
   name = "golang.org/x/net"
   packages = ["idna"]
   pruneopts = ""
-  revision = "0deb6923b6d97481cb43bc1043fe5b72a0143032"
+  revision = "16171245cfb220d5317888b716d69c1fb4e7992b"
 
 [[projects]]
   branch = "master"
-  digest = "1:a155b7400cb9270dda3f63651160c0349a9e16855975956c79e618e9f30c160c"
+  digest = "1:3ea80848296554a023d21260e4511243daa5bf3aa32efbc1171541d14e7b47b2"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = ""
-  revision = "f43be2a4598cf3a47be9f94f0c28197ed9eae611"
+  revision = "d101bd2416d505c0448a6ce8a282482678040a89"
 
 [[projects]]
   digest = "1:740b51a55815493a8d0f2b1e0d0ae48fe48953bf7eaf3fcc4198823bf67768c0"
