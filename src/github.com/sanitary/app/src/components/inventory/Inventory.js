@@ -296,6 +296,7 @@ export default class Inventory extends GenericComponent {
                             <Column field="wholesaleRate" header="Wholesale Rate" sortable={true} style={{textAlign: 'right'}}/>
                             <Column field="retailRate" header="Retail Rate" sortable={true} style={{textAlign: 'right'}}/>
                             <Column field="itemStatus" header="Status" sortable={true}/>
+                            <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column)} style={{width: '12%'}}/>
                         </DataTable>
 
                         <Dialog visible={this.state.displayItemDialog} style={{width: '60%'}} header="Inventory Details"

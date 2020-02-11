@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Button} from "primereact/button";
 
 export class GenericComponent extends Component {
     constructor(props) {
@@ -22,14 +21,14 @@ export class GenericComponent extends Component {
             console.log("Request interceptor");
             if(window.localStorage.getItem("isLoggedIn") === null && window.location.hash !== "#/signup") {
                 window.location.hash = '/';
-            } if(window.localStorage.getItem("isLoggedIn") !== null && window.location.hash === "/") {
+            } else if(window.localStorage.getItem("isLoggedIn") !== null && window.location.hash === "/") {
                 window.location.hash = '/customers';
             }
 
             if(window.localStorage.getItem("isLoggedIn") !== null){
                 let user = window.localStorage.getItem("isLoggedIn");
                 config.headers['X-Client-ID'] = JSON.parse(user)['client_id'];
-                console.trace(config.headers);
+                console.info(config.headers);
             }
 
             return config;
@@ -75,9 +74,18 @@ export class GenericComponent extends Component {
         return "" + date;
     }
 
-    actionColumn(rowData,column) {
-        return <div className="p-clearfix">
-            <a href="javascript: void(0);" onClick={this.delete}>Delete</a>
+    actionColumn = (rowData,column) => {
+        return <div className="p-clearfix" style={{textAlign: 'center'}}>
+            <a onClick={(e)=> this.editEntity(rowData['id'])}>Edit</a> |
+            <a onClick={(e)=> this.deleteEntity(rowData['id'])}>Delete</a>
         </div>;
+    };
+
+    editEntity(id) {
+        console.log(`editEntity ${id}`)
+    }
+
+    deleteEntity(id) {
+        console.log(`deleteEntity ${id}`)
     }
 }

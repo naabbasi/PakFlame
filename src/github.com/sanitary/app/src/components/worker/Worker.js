@@ -158,11 +158,12 @@ export default class Worker extends GenericComponent {
                                    selectionMode="single" selection={this.state.selectedWorker} onSelectionChange={e => this.setState({selectedWorker: e.value})}
                                    onRowSelect={this.onWorkerSelect}
                                    globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
-                            <Column field="firstName" header="First Name" sortable={true} />
-                            <Column field="lastName" header="Last Name" sortable={true} />
-                            <Column field="mobileNumber" header="Mobile Number" sortable={true} />
-                            <Column field="address" header="Address" sortable={true} style={{textAlign: 'center'}} />
-                            <Column field="status" header="Status" sortable={true} style={{textAlign: 'center'}} />
+                            <Column field="firstName" header="First Name" sortable={true} style={{textAlign: 'left', width: '15%'}}/>
+                            <Column field="lastName" header="Last Name" sortable={true} style={{textAlign: 'left', width: '15%'}}/>
+                            <Column field="mobileNumber" header="Mobile #" sortable={true} style={{textAlign: 'center', width: '14%'}}/>
+                            <Column field="address" header="Address" sortable={true} style={{textAlign: 'center', width: '25%'}}/>
+                            <Column field="status" header="Status" sortable={true} style={{textAlign: 'center', width: '11%'}}/>
+                            <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column)} style={{width: '12%'}}/>
                         </DataTable>
 
                         <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Worker Details"

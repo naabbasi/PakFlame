@@ -185,11 +185,12 @@ export default class Invoices extends GenericComponent {
                                    selectionMode="single" selection={this.state.selectedInvoice} onSelectionChange={e => this.setState({selectedInvoice: e.value})}
                                    onRowSelect={this.onInvoiceSelect}
                                    globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
-                            <Column field="id" header="S. #" sortable={true} style={{textAlign: 'left'}}/>
-                            <Column field="customerName" header="Customer Name" sortable={true} style={{textAlign: 'left'}}/>
-                            <Column field="partyName" header="Party Name" sortable={true} style={{textAlign: 'left'}}/>
-                            <Column field="transport" header="Transport" sortable={true} style={{textAlign: 'center'}}/>
-                            <Column field="transportCharges" header="Transport Charges" sortable={true} style={{textAlign: 'center'}}/>
+                            <Column field="id" header="S. #" sortable={true} style={{textAlign: 'left', width: '8%'}}/>
+                            <Column field="customerName" header="Customer Name" sortable={true} style={{textAlign: 'left', width: '20%'}}/>
+                            <Column field="partyName" header="Party Name" sortable={true} style={{textAlign: 'left', width: '20%'}}/>
+                            <Column field="transport" header="Transport" sortable={true} style={{textAlign: 'center', width: '12%'}}/>
+                            <Column field="transportCharges" header="Charges" sortable={true} style={{textAlign: 'center', width: '10%'}}/>
+                            <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column)} style={{width: '12%'}}/>
                         </DataTable>
                     </div>
                 </Navigation>

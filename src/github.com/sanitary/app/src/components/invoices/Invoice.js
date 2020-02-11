@@ -414,13 +414,14 @@ export default class Invoice extends GenericComponent {
                                                        onSelectionChange={e => this.setState({selectedInventory: e.value})}
                                                        onRowSelect={this.onItemSelect} emptyMessage="No record(s) found">
 
-                                                <Column field="itemName" header="Item Name" sortable={true} />
-                                                <Column field="unit" header="Unit" sortable={true} style={{textAlign: 'right'}}/>
-                                                <Column field="quantities" header="Quantities" sortable={true} style={{textAlign: 'right'}}/>
-                                                <Column field="price" header="Price" sortable={true} style={{textAlign: 'right'}}/>
-                                                <Column field="amount" header="Amount" sortable={true} style={{textAlign: 'right'}}/>
-                                                <Column field="discount" header="Discount" sortable={true} style={{textAlign: 'right'}}/>
-                                                <Column field="totalAmount" header="Total Amount" sortable={true}/>
+                                                <Column field="itemName" header="Item Name" sortable={true} style={{textAlign: 'left', width: '25%'}}/>
+                                                {/*<Column field="unit" header="Unit" sortable={true} style={{textAlign: 'right'}}/>*/}
+                                                <Column field="quantities" header="Qty" sortable={true} style={{textAlign: 'right', width: '12%'}}/>
+                                                <Column field="price" header="Price" sortable={true} style={{textAlign: 'right', width: '12%'}}/>
+                                                <Column field="amount" header="Amount" sortable={true} style={{textAlign: 'right', width: '12%'}}/>
+                                                <Column field="discount" header="Discount" sortable={true} style={{textAlign: 'right', width: '12%'}}/>
+                                                <Column field="totalAmount" header="Total Amount" sortable={true} style={{textAlign: 'right', width: '12%'}}/>
+                                                <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column)} style={{width: '12%'}}/>
                                             </DataTable>
                                         </div>
                                     </div>

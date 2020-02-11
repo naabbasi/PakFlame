@@ -74,16 +74,6 @@ export default class Warehouses extends GenericComponent {
         }
     }
 
-    actionColumn(rowData,column) {
-        return <div className="p-clearfix">
-            <a onClick={(e)=> this.delete}>Delete</a>
-        </div>;
-    }
-
-    delete() {
-        console.log("deleting.....")
-    }
-
     deleteWarehouse() {
         this.axios.delete('/warehouses', { data: { ...this.state.selectedWarehouse}})
             .then( response => {
@@ -161,11 +151,11 @@ export default class Warehouses extends GenericComponent {
                                selectionMode="single" selection={this.state.selectedWarehouse} onSelectionChange={e => this.setState({selectedWWarehouse: e.value})}
                                onRowSelect={this.onWarehouseSelect}
                                globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
-                        <Column field="name" header="Warehouse Name" sortable={true} />
-                        <Column field="location" header="Location" sortable={true} />
-                        <Column field="email" header="Email" sortable={true} />
-                        <Column field="mobileNumber" header="Mobile Number" sortable={true} />
-                        <Column field="mobileNumber" header="Action" body={this.actionColumn.bind(this)} sortable={true} />
+                        <Column field="name" header="Warehouse Name" sortable={true} style={{width: '15%'}}/>
+                        <Column field="location" header="Location" sortable={true} style={{width: '35%'}}/>
+                        <Column field="email" header="Email" sortable={true} style={{width: '25.33%'}}/>
+                        <Column field="mobileNumber" header="Mobile #" sortable={true} style={{width: '12%'}}/>
+                        <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column)} style={{width: '12%'}}/>
                     </DataTable>
                     <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Warehouse Details"
                             modal={true} footer={dialogFooter}
