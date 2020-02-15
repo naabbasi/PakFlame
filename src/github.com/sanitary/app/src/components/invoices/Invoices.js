@@ -2,12 +2,10 @@ import React from 'react';
 import {DataTable} from "primereact/datatable";
 import {Button} from "primereact/button";
 import {Column} from "primereact/column";
-import {Dialog} from "primereact/dialog";
 import {InputText} from "primereact/inputtext";
 
 import {GenericComponent} from "../GenericComponent";
 import Navigation from "../layout/Navigation";
-import {AutoComplete} from "primereact/autocomplete";
 
 export default class Invoices extends GenericComponent {
     constructor(props) {
@@ -141,7 +139,7 @@ export default class Invoices extends GenericComponent {
 
     suggestCompanies(event) {
         setTimeout(() => {
-            let results = new Array();
+            let results = [];
 
             if (event.query.length === 0) {
                 if(this.state.companies.length !== undefined)

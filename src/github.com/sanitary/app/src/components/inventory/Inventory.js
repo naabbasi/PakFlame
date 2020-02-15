@@ -9,7 +9,6 @@ import {AutoComplete} from 'primereact/autocomplete';
 import {GenericComponent} from "../GenericComponent";
 import {Dropdown} from "primereact/dropdown";
 import Navigation from "../layout/Navigation";
-import {Message} from "primereact/message";
 
 export default class Inventory extends GenericComponent {
     constructor() {
@@ -176,7 +175,7 @@ export default class Inventory extends GenericComponent {
 
     suggestCompanies(event) {
         setTimeout(() => {
-            let results = new Array();
+            let results = [];
 
             if (event.query.length === 0) {
                 if(this.state.companies.length !== undefined)

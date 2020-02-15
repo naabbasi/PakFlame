@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {AutoComplete} from "primereact/autocomplete";
 import {GenericComponent} from "../GenericComponent";
 
@@ -30,7 +30,7 @@ export default class CustomerAutoComplete extends GenericComponent {
 
     suggestCustomers(event) {
         setTimeout(() => {
-            let results = new Array();
+            let results = [];
 
             if (event.query.length === 0) {
                     results = [...this.state.customers];

@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+import React from 'react';
 import Navigation from "../layout/Navigation";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
@@ -155,7 +155,7 @@ export default class Warehouses extends GenericComponent {
                         <Column field="location" header="Location" sortable={true} style={{width: '35%'}}/>
                         <Column field="email" header="Email" sortable={true} style={{width: '25.33%'}}/>
                         <Column field="mobileNumber" header="Mobile #" sortable={true} style={{width: '12%'}}/>
-                        <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column)} style={{width: '12%'}}/>
+                        <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'warehouses', this.state)} style={{width: '12%'}}/>
                     </DataTable>
                     <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Warehouse Details"
                             modal={true} footer={dialogFooter}

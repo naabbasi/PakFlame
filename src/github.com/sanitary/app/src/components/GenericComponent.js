@@ -68,24 +68,26 @@ export class GenericComponent extends Component {
         }
     };
 
-    dateFormatter(rowData,column){
+    dateFormatter(rowData,column, componentState){
         let options = {day: 'numeric', year: 'numeric', month: 'numeric', hour: 'numeric', minute: 'numeric'}
         let date = new Date(rowData['createdAt']).toLocaleDateString('en-PK', options);
         return "" + date;
     }
 
-    actionColumn = (rowData,column) => {
+    actionColumn = (rowData,column, entityName, componentState) => {
         return <div className="p-clearfix" style={{textAlign: 'center'}}>
-            <a onClick={(e)=> this.editEntity(rowData['id'])}>Edit</a> |
-            <a onClick={(e)=> this.deleteEntity(rowData['id'])}>Delete</a>
+            <a onClick={(e)=> this.editEntity(rowData['id'], entityName, componentState)}>Edit</a> |
+            <a onClick={(e)=> this.deleteEntity(rowData['id'], entityName, componentState)}>Delete</a>
         </div>;
     };
 
-    editEntity(id) {
-        console.log(`editEntity ${id}`)
+    editEntity(id, entityName, componentState) {
+        console.log(`editEntity ${id}, ${entityName}`);
+        console.log(componentState);
     }
 
-    deleteEntity(id) {
-        console.log(`deleteEntity ${id}`)
+    deleteEntity(id, entityName, componentState) {
+        console.log(`deleteEntity ${id}, ${entityName}, ${componentState}`);
+        console.log(componentState)
     }
 }

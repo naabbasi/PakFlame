@@ -19,6 +19,7 @@ const Child = forwardRef((props, ref) =>{
 
     useImperativeHandle(ref, () => ({
        getAlert() {
+           setValue('Test')
            alert("Hello, I m called by parent")
        }
     }));

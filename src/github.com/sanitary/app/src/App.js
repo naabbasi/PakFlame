@@ -1,8 +1,7 @@
 import React, {Component, lazy, Suspense} from 'react';
-import { HashRouter as HashRouter, BrowserRouter as Router, Route, Switch, useLocation } from "react-router-dom";
+import { HashRouter, Route, Switch } from "react-router-dom";
 import './App.css';
 
-import {Lightbox} from "primereact/lightbox";
 import {Card} from "primereact/card";
 import GComp from "./learn/GComp";
 import CallChildFunction from './learn/CallChildFunction';
@@ -17,15 +16,6 @@ const Invoice = lazy(() => import ("./components/invoices/Invoice"));
 const Worker = lazy(() => import ("./components/worker/Worker"));
 const Inventory = lazy(() => import ("./components/inventory/Inventory"));
 const Warehouse = lazy(() => import ("./components/inventory/Warehouses"));
-const ItemAutoComplete = lazy(() => import ("./components/autocomplete/ItemAutoComplete"));
-
-
-function usePageViews() {
-    let location = useLocation();
-    React.useEffect(() => {
-        console.log(location.pathname);
-    }, [location]);
-}
 
 class NotFound extends Component {
     render() {

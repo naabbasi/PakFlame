@@ -1,15 +1,8 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Menubar} from "primereact/menubar";
 import {GenericComponent} from "../GenericComponent";
 
 export default class Navigation extends GenericComponent {
-    constructor() {
-        super();
-    }
-
-    componentDidMount() {
-    }
-
     render() {
         const items = [
             {
