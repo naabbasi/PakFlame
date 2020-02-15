@@ -44,17 +44,19 @@ func (data *data) createUsers(connection *gorm.DB, client *models.Client) {
 
 func (data *data) createWarehouses(connection *gorm.DB, client *models.Client) {
 	connection.Create(&models.Warehouse{
-		Name:         "My Warehouse",
-		Location:     "Karachi South",
-		Email:        "nabbasi@abbasi.co",
-		MobileNumber: "03012525146",
+		Name:         gofakeit.Company(),
+		Location:     gofakeit.Address().Address,
+		Email:        gofakeit.Contact().Email,
+		MobileNumber: gofakeit.PhoneFormatted(),
+		Status:       "Active",
 		ClientId:     client.ID,
 	})
 	connection.Create(&models.Warehouse{
-		Name:         "My Warehouse",
-		Location:     "Karachi North",
-		Email:        "nabbasi@abbasi.co",
-		MobileNumber: "03012525146",
+		Name:         gofakeit.Company(),
+		Location:     gofakeit.Address().Address,
+		Email:        gofakeit.Contact().Email,
+		MobileNumber: gofakeit.PhoneFormatted(),
+		Status:       "Closed",
 		ClientId:     client.ID,
 	})
 }
@@ -65,7 +67,8 @@ func (data *data) createCustomers(connection *gorm.DB, client *models.Client) {
 		customer := &models.Customer{}
 		customer.FirstName = gofakeit.FirstName()
 		customer.LastName = gofakeit.LastName()
-		customer.MobileNumber = gofakeit.Contact().Phone
+		customer.MobileNumber = gofakeit.PhoneFormatted()
+		customer.Address = gofakeit.Address().Address
 		customer.Status = "in_process"
 		customer.ShopName = gofakeit.FirstName()
 		customer.ClientId = client.ID
@@ -81,6 +84,7 @@ func (data *data) createWorkers(connection *gorm.DB, client *models.Client) {
 		worker.LastName = gofakeit.LastName()
 		worker.Status = "Working"
 		worker.MobileNumber = gofakeit.PhoneFormatted()
+		worker.Address = gofakeit.Address().Address
 		worker.ClientId = client.ID
 		connection.Create(&worker)
 	}

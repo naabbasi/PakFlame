@@ -79,6 +79,7 @@ type Warehouse struct {
 	Location     string    `json:"location" xml:"location" form:"location" query:"location"`
 	Email        string    `json:"email" xml:"email" form:"email" query:"email"`
 	MobileNumber string    `json:"mobileNumber" xml:"mobileNumber" form:"mobileNumber" query:"mobileNumber"`
+	Status       string    `json:"status" xml:"status" form:"status" query:"status"`
 	ClientId     uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
