@@ -40,6 +40,7 @@ type User struct {
 	Password  string    `json:"password" xml:"password" form:"password" query:"password"`
 	FirstName string    `json:"firstName" xml:"firstName" form:"firstName" query:"firstName"`
 	LastName  string    `json:"lastName" xml:"lastName" form:"lastName" query:"lastName"`
+	Token     string    `json:"token" xml:"token" form:"token" query:"token"`
 	ClientId  uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 

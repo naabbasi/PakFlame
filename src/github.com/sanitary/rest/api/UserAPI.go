@@ -1,12 +1,14 @@
 package api
 
 import (
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
 	"net/http"
+	"time"
 )
 
 const (
@@ -109,6 +111,21 @@ func (user *users) Login() {
 
 		if loggedInUser.Username != "" {
 			loggedInUser.Password = ""
+
+			token := jwt.New(jwt.SigningMethodHS256)
+			claims := token.Claims.(jwt.MapClaims)
+			claims["name"] = loggedInUser.Username
+			claims["admin"] = false
+			claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+
+			encodedToken, err := token.SignedString([]byte("NOMANALIABBASI"))
+			log.Print(encodedToken)
+			if err != nil {
+				return err
+			}
+
+			loggedInUser.Token = encodedToken
+
 			return c.JSON(http.StatusOK, loggedInUser)
 		} else {
 			return c.JSON(http.StatusUnauthorized, "Login failed")

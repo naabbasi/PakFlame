@@ -28,6 +28,7 @@ export class GenericComponent extends Component {
             if(window.localStorage.getItem("isLoggedIn") !== null){
                 let user = window.localStorage.getItem("isLoggedIn");
                 config.headers['X-Client-ID'] = JSON.parse(user)['client_id'];
+                config.headers['Authorization'] = `Bearer ${JSON.parse(user)['token']}`;
                 console.info(config.headers);
             }
 

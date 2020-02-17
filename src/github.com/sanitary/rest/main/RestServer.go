@@ -26,13 +26,14 @@ func main() {
 		e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 			AllowOrigins: []string{"http://" + strings.ToLower(hostname) + ":3000", "http://localhost:3000"},
 			AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept,
-				echo.HeaderAccessControlAllowCredentials, "X-Client-ID"},
+				echo.HeaderAccessControlAllowCredentials, "X-Client-ID", echo.HeaderAuthorization},
 			AllowMethods:     []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.OPTIONS},
 			AllowCredentials: true,
 			ExposeHeaders:    []string{echo.HeaderContentDisposition},
 		}))
 
-		//e.Use(middleware.BasicAuth(middleware.BasicAuthConfig{}))
+		//e.Use(middleware.Logger())
+		e.Use(middleware.Recover())
 
 		config := config.NewConfig()
 		if config.DemoData == false {
@@ -89,6 +90,8 @@ func main() {
 		users.DeleteUser()
 		users.Login()
 
+		restrictedPath := e.Group("/restricted")
+		restrictedPath.Use(middleware.JWT([]byte("NOMANALIABBASI")))
 		customers := api.NewCustomer(e)
 		customers.GetCustomers()
 		customers.GetCustomerById()
