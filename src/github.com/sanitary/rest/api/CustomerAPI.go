@@ -94,7 +94,7 @@ func (customer *customers) UpdateCustomer() {
 		}
 
 		connection := customer.dbSettings.GetDBConnection()
-		update := connection.Model(models.Customer{}).Where("id = ?", updateCustomer.ID).Update(updateCustomer)
+		update := connection.Model(models.Customer{}).Where("id = ? and client_id = ?", updateCustomer.ID, updateCustomer.ClientId).Update(updateCustomer)
 
 		if update.RowsAffected == 1 {
 			return c.JSON(http.StatusAccepted, "Customer has been added")
@@ -118,7 +118,7 @@ func (customer *customers) DeleteCustomer() {
 		}
 
 		connection := customer.dbSettings.GetDBConnection()
-		update := connection.Model(models.Customer{}).Delete(deleteCustomer)
+		update := connection.Model(models.Customer{}).Where("id = ? and client_id = ?", deleteCustomer.ID, deleteCustomer.ClientId).Delete(deleteCustomer)
 
 		if update.RowsAffected == 1 {
 			return c.JSON(http.StatusNoContent, "Customer has been deleted")

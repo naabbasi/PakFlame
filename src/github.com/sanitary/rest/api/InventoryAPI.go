@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
@@ -33,9 +34,18 @@ func (inventory *inventories) GetItems() {
 	inventory.echo.GET(InventoryEndPoint, func(c echo.Context) error {
 		var inventories = new([]models.Inventory)
 		connection := inventory.dbSettings.GetDBConnection()
-		connection.Find(&inventories)
-		//connection.Select("experimental_strftime(created_at, '%y')").Find(&inventories)
+		connection.Where("client_id = ?", c.Request().Header.Get(config.CLIENT_HEADER)).Find(&inventories)
 		return c.JSON(http.StatusOK, &inventories)
+	})
+}
+
+func (inventory *inventories) GetItemByID() {
+	inventory.echo.GET(InventoryEndPoint, func(c echo.Context) error {
+		var getInventory = new(models.Inventory)
+		inventoryId := c.Param("id")
+		connection := inventory.dbSettings.GetDBConnection()
+		connection.Where("id = ? and client_id = ?", inventoryId, c.Request().Header.Get(config.CLIENT_HEADER)).First(&getInventory)
+		return c.JSON(http.StatusOK, &getInventory)
 	})
 }
 
@@ -46,6 +56,12 @@ func (inventory *inventories) AddItem() {
 			return err
 		}
 		log.Printf("Item saved with %s", newItem)
+
+		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+
+		if err == nil {
+			newItem.ClientId = clientId
+		}
 
 		connection := inventory.dbSettings.GetDBConnection()
 		save := connection.Save(newItem)
@@ -66,8 +82,14 @@ func (inventory *inventories) UpdateItem() {
 		}
 		log.Printf("Item saved with %s", updateItem)
 
+		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+
+		if err == nil {
+			updateItem.ClientId = clientId
+		}
+
 		connection := inventory.dbSettings.GetDBConnection()
-		update := connection.Model(models.Inventory{}).Where("id = ?", updateItem.ID).Update(updateItem)
+		update := connection.Model(models.Inventory{}).Where("id = ? and client_id = ?", updateItem.ID, updateItem.ClientId).Update(updateItem)
 
 		if update.RowsAffected == 1 {
 			return c.JSON(http.StatusAccepted, updateItem)
@@ -85,8 +107,13 @@ func (inventory *inventories) DeleteItem() {
 		}
 		log.Printf("Item deleted with %s", deleteItem.ItemName)
 
+		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		if err == nil {
+			deleteItem.ClientId = clientId
+		}
+
 		connection := inventory.dbSettings.GetDBConnection()
-		update := connection.Model(models.Inventory{}).Delete(deleteItem)
+		update := connection.Model(models.Inventory{}).Where("id = ?  and client_id = ?", deleteItem.ID, deleteItem.ClientId).Delete(deleteItem)
 
 		if update.RowsAffected == 1 {
 			return c.JSON(http.StatusNoContent, deleteItem)

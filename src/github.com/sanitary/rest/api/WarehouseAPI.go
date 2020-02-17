@@ -39,6 +39,16 @@ func (warehouse *warehouses) GetWarehouses() {
 	})
 }
 
+func (warehouse *warehouses) GetWarehouseById() {
+	warehouse.echo.GET(WarehouseEndPoint+"/:warehouseId", func(c echo.Context) error {
+		warehouseId := c.Param("warehouseId")
+		var allWarehouses = new(models.Warehouse)
+		connection := warehouse.dbSettings.GetDBConnection()
+		connection.First(&allWarehouses, "id = ? and client_id =?", &warehouseId, c.Request().Header.Get(config.CLIENT_HEADER))
+		return c.JSON(http.StatusOK, allWarehouses)
+	})
+}
+
 func (warehouse *warehouses) AddWarehouse() {
 	warehouse.echo.POST(WarehouseEndPoint, func(c echo.Context) error {
 		newWarehouse := new(models.Warehouse)
@@ -77,7 +87,7 @@ func (warehouse *warehouses) UpdateWarehouse() {
 		}
 
 		connection := warehouse.dbSettings.GetDBConnection()
-		update := connection.Model(models.Warehouse{}).Where("id = ?", updateWarehouse.ID).Update(updateWarehouse)
+		update := connection.Model(models.Warehouse{}).Where("id = ? and client_id = ?", updateWarehouse.ID, updateWarehouse.ClientId).Update(updateWarehouse)
 
 		if update.RowsAffected == 1 {
 			return c.JSON(http.StatusAccepted, "warehouse has been updated")
@@ -101,22 +111,12 @@ func (warehouse *warehouses) DeleteWarehouse() {
 		}
 
 		connection := warehouse.dbSettings.GetDBConnection()
-		update := connection.Model(models.Warehouse{}).Delete(deleteWarehouse)
+		update := connection.Model(models.Warehouse{}).Where("id = ? and client_id = ?", deleteWarehouse.ID, deleteWarehouse.ClientId).Delete(deleteWarehouse)
 
 		if update.RowsAffected == 1 {
 			return c.JSON(http.StatusNoContent, "warehouse has been deleted")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to update worker")
 		}
-	})
-}
-
-func (warehouse *warehouses) GetWarehouseById() {
-	warehouse.echo.GET(WarehouseEndPoint+"/:warehouseId", func(c echo.Context) error {
-		warehouseId := c.Param("warehouseId")
-		var allWarehouses = new(models.Warehouse)
-		connection := warehouse.dbSettings.GetDBConnection()
-		connection.First(&allWarehouses, "id = ? and client_id =?", &warehouseId, c.Request().Header.Get(config.CLIENT_HEADER))
-		return c.JSON(http.StatusOK, allWarehouses)
 	})
 }

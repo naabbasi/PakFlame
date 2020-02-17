@@ -46,17 +46,20 @@ func main() {
 			if *runMigration {
 				db := backend.GetDBSettings(config)
 				connection := db.GetDBConnection()
+				connection.Exec("DROP SEQUENCE invoice_seq")
 				connection.Exec("CREATE SEQUENCE invoice_seq")
 				schema.CreatePostgreSQLSchema(connection)
 			} else if *dropSchema {
 				db := backend.GetDBSettings(config)
 				connection := db.GetDBConnection()
+				connection.Exec("DROP SEQUENCE invoice_seq")
 				schema.DropSchema(connection)
 			} else if *dropMigrationSchema {
 				db := backend.GetDBSettings(config)
 				connection := db.GetDBConnection()
 
 				schema.DropSchema(connection)
+				connection.Exec("DROP SEQUENCE invoice_seq")
 				connection.Exec("CREATE SEQUENCE invoice_seq")
 				schema.CreatePostgreSQLSchema(connection)
 			} else if *dropMigrationWithData {
@@ -64,6 +67,7 @@ func main() {
 				connection := db.GetDBConnection()
 
 				schema.DropSchema(connection)
+				connection.Exec("DROP SEQUENCE invoice_seq")
 				connection.Exec("CREATE SEQUENCE invoice_seq")
 				schema.CreatePostgreSQLSchema(connection)
 
@@ -76,7 +80,6 @@ func main() {
 				data := generator.New()
 				data.Import(connection)
 			}
-
 		}
 
 		users := api.NewUser(e)
