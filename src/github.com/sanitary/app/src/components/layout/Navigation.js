@@ -38,12 +38,12 @@ export default class Navigation extends GenericComponent {
             },
             {
                 label: 'Customers',
-                icon:'pi pi-fw pi-user',
+                icon:'pi pi-fw pi-users',
                 command:()=>{ window.location.hash="customers"; },
             },
             {
                 label: 'Workers',
-                icon:'pi pi-fw pi-user',
+                icon:'pi pi-fw pi-users',
                 command:()=>{ window.location.hash="workers"; }
             },
             /*{

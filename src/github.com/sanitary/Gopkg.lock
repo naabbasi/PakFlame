@@ -234,6 +234,7 @@
   input-imports = [
     "github.com/alexbrainman/printer",
     "github.com/brianvoe/gofakeit",
+    "github.com/dgrijalva/jwt-go",
     "github.com/google/uuid",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/postgres",
