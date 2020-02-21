@@ -62,7 +62,7 @@ func (data *data) createWarehouses(connection *gorm.DB, client *models.Client) {
 }
 
 func (data *data) createCustomers(connection *gorm.DB, client *models.Client) {
-	for num := 0; num < 1000; num++ {
+	for num := 0; num < 100; num++ {
 		gofakeit.Seed(time.Now().UnixNano())
 		customer := &models.Customer{}
 		customer.FirstName = gofakeit.FirstName()
@@ -77,7 +77,7 @@ func (data *data) createCustomers(connection *gorm.DB, client *models.Client) {
 }
 
 func (data *data) createWorkers(connection *gorm.DB, client *models.Client) {
-	for num := 0; num < 1000; num++ {
+	for num := 0; num < 100; num++ {
 		gofakeit.Seed(time.Now().UnixNano())
 		worker := &models.Worker{}
 		worker.FirstName = gofakeit.FirstName()
@@ -105,11 +105,12 @@ func (data *data) createInventories(company *models.Company, connection *gorm.DB
 		inventory := &models.Inventory{}
 		inventory.ItemName = gofakeit.Name()
 		inventory.ItemStatus = "Available"
-		inventory.Quantities = uint64(rand.Intn(1000))
+		inventory.Quantities = uint64(rand.Intn(10))
+		inventory.SoldQuantities = uint64(rand.Intn(10))
 		inventory.QuantityAlert = uint64(rand.Intn(10))
-		inventory.WholesaleRate = float64(rand.Int63n(time.Now().Unix()))
-		inventory.PurchaseRate = float64(rand.Int63n(time.Now().Unix()))
-		inventory.RetailRate = float64(rand.Int63n(time.Now().Unix()))
+		inventory.WholesaleRate = float64(rand.Int63n(1000))
+		inventory.PurchaseRate = float64(rand.Int63n(1000))
+		inventory.RetailRate = float64(rand.Int63n(1000))
 		inventory.CompanyId = company.ID
 		inventory.ClientId = client.ID
 		connection.Create(&inventory)
