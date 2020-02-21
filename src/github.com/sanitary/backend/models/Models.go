@@ -89,9 +89,9 @@ type Inventory struct {
 	CustomerId          uuid.UUID `gorm:"ForeignKey:customer_id; type: uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
 	CustomerName        string    `json:"customerName" xml:"customerName" form:"customerName" query:"customerName"`
 	ItemName            string    `json:"itemName" xml:"itemName" form:"itemName" query:"itemName"`
-	Quantities          uint64    `json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
-	RemainingQuantities uint64    `json:"remainingQuantities" xml:"remainingQuantities" form:"remainingQuantities" query:"remainingQuantities"`
-	SoldQuantities      uint64    `json:"soldQuantities" xml:"soldQuantities" form:"soldQuantities" query:"soldQuantities"`
+	Quantities          uint64    `json:"DEFAULT 0; quantities" xml:"quantities" form:"quantities" query:"quantities"`
+	RemainingQuantities uint64    `gorm:"DEFAULT 0; type: INT8 AS (quantities - sold_quantities) STORED;" json:"remainingQuantities" xml:"remainingQuantities" form:"remainingQuantities" query:"remainingQuantities"`
+	SoldQuantities      uint64    `json:"DEFAULT 0; soldQuantities" xml:"soldQuantities" form:"soldQuantities" query:"soldQuantities"`
 	QuantityAlert       uint64    `json:"quantityAlert" xml:"quantityAlert" form:"quantityAlert" query:"quantityAlert"`
 	PurchaseRate        float64   `json:"purchaseRate" xml:"purchaseRate" form:"purchaseRate" query:"purchaseRate"`
 	WholesaleRate       float64   `json:"wholesaleRate" xml:"wholesaleRate" form:"wholesaleRate" query:"wholesaleRate"`
