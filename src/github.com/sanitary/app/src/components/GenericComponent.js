@@ -6,10 +6,10 @@ export class GenericComponent extends Component {
         super(props);
         let url = window.location.hostname;
         this.axios = axios.create({
-            baseURL: 'http://' + url + '/api',
+            baseURL: 'http://' + url,
             responseType: 'json',
             headers: {
-                //'X-Author-Header': 'engr.nomiabbasi@gmail.com',
+                'Authorization': 'engr.nomiabbasi@gmail.com',
                 'X-Client-ID': 'client-id-needs-to-be-updated'
             },
             withCredentials: true,
@@ -29,7 +29,12 @@ export class GenericComponent extends Component {
                 let user = window.localStorage.getItem("isLoggedIn");
                 config.headers['X-Client-ID'] = JSON.parse(user)['client_id'];
                 config.headers['Authorization'] = `Bearer ${JSON.parse(user)['token']}`;
-                console.info(config.headers);
+
+                if(JSON.parse(user)['token']){
+                    config.url = '/restricted/api' + config.url;
+                }
+            } else {
+                config.url = '/api' + config.url;
             }
 
             return config;

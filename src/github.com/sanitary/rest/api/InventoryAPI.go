@@ -19,12 +19,12 @@ func init() {
 }
 
 type inventories struct {
-	echo       *echo.Echo
+	echo       *echo.Group
 	config     *config.Config
 	dbSettings *backend.DBSettings
 }
 
-func NewInventory(e *echo.Echo) *inventories {
+func NewInventory(e *echo.Group) *inventories {
 	newConfig := config.NewConfig()
 	dbSettings := backend.GetDBSettings(newConfig)
 	return &inventories{config: newConfig, echo: e, dbSettings: dbSettings}

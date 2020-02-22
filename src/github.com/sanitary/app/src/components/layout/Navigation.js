@@ -74,7 +74,7 @@ export default class Navigation extends GenericComponent {
                 <Menubar model={items}>
                     <div style={{float: 'right', lineHeight: '42px', textAlign: 'right', marginRight: '5px'}}>
                         <span className="pi pi-fw pi-user"></span>
-                        <span>{userInfo['firstName']}</span>
+                        <span>{userInfo == null ? "" : userInfo['firstName']}</span>
                     </div>
                 </Menubar>
                 {this.props.children}

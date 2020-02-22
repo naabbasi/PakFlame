@@ -21,12 +21,12 @@ func init() {
 }
 
 type invoices struct {
-	echo       *echo.Echo
+	echo       *echo.Group
 	config     *config.Config
 	dbSettings *backend.DBSettings
 }
 
-func NewInvoice(e *echo.Echo) *invoices {
+func NewInvoice(e *echo.Group) *invoices {
 	newConfig := config.NewConfig()
 	dbSettings := backend.GetDBSettings(newConfig)
 	return &invoices{config: newConfig, echo: e, dbSettings: dbSettings}

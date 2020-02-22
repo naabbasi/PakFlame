@@ -19,12 +19,12 @@ func init() {
 }
 
 type workers struct {
-	echo       *echo.Echo
+	echo       *echo.Group
 	config     *config.Config
 	dbSettings *backend.DBSettings
 }
 
-func NewWorker(e *echo.Echo) workers {
+func NewWorker(e *echo.Group) workers {
 	newConfig := config.NewConfig()
 	dbSettings := backend.GetDBSettings(newConfig)
 	return workers{config: newConfig, echo: e, dbSettings: dbSettings}

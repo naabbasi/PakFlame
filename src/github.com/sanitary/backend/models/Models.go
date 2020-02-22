@@ -89,17 +89,17 @@ type Inventory struct {
 	CustomerId          uuid.UUID `gorm:"ForeignKey:customer_id; type: uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
 	CustomerName        string    `json:"customerName" xml:"customerName" form:"customerName" query:"customerName"`
 	ItemName            string    `json:"itemName" xml:"itemName" form:"itemName" query:"itemName"`
-	Quantities          uint64    `json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
-	SoldQuantities      uint64    `json:"soldQuantities" xml:"soldQuantities" form:"soldQuantities" query:"soldQuantities"`
-	RemainingQuantities uint64    `gorm:"type: INT8 AS (quantities - sold_quantities) STORED;" json:"remainingQuantities" xml:"remainingQuantities" form:"remainingQuantities" query:"remainingQuantities"`
+	Quantities          uint64    `gorm:"type: INT8 " json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
+	SoldQuantities      uint64    `gorm:"type: INT8 " json:"soldQuantities" xml:"soldQuantities" form:"soldQuantities" query:"soldQuantities"`
+	RemainingQuantities uint64    `gorm:"NOT NULL; type: INT8 AS (quantities - sold_quantities) STORED" json:"remainingQuantities" xml:"remainingQuantities" form:"remainingQuantities" query:"remainingQuantities"`
 	QuantityAlert       uint64    `json:"quantityAlert" xml:"quantityAlert" form:"quantityAlert" query:"quantityAlert"`
 	PurchaseRate        float64   `json:"purchaseRate" xml:"purchaseRate" form:"purchaseRate" query:"purchaseRate"`
 	WholesaleRate       float64   `json:"wholesaleRate" xml:"wholesaleRate" form:"wholesaleRate" query:"wholesaleRate"`
 	RetailRate          float64   `json:"retailRate" xml:"retailRate" form:"retailRate" query:"retailRate"`
 	ItemStatus          string    `json:"itemStatus" xml:"itemStatus" form:"itemStatus" query:"itemStatus"`
-	CompanyId           uuid.UUID `gorm:"ForeignKey:company_id; type: uuid;" json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
-	WarehouseId         uuid.UUID `gorm:"ForeignKey:warehouse_id; type: uuid;" json:"warehouse_id" xml:"warehouse_id" form:"warehouse_id" query:"warehouse_id"`
-	ClientId            uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+	CompanyId           uuid.UUID `gorm:"ForeignKey:company_id; type: uuid; NOT NULL" json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
+	WarehouseId         uuid.UUID `gorm:"ForeignKey:warehouse_id; type: uuid; NOT NULL" json:"warehouse_id" xml:"warehouse_id" form:"warehouse_id" query:"warehouse_id"`
+	ClientId            uuid.UUID `gorm:"ForeignKey:client_id; type: uuid; NOT NULL" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 func (inventory Inventory) ToString() string {

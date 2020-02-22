@@ -105,8 +105,8 @@ func (data *data) createInventories(company *models.Company, connection *gorm.DB
 		inventory := &models.Inventory{}
 		inventory.ItemName = gofakeit.Name()
 		inventory.ItemStatus = "Available"
-		inventory.Quantities = uint64(rand.Intn(10))
-		inventory.SoldQuantities = uint64(rand.Intn(10))
+		inventory.Quantities = uint64(rand.Intn(100))
+		inventory.SoldQuantities = uint64(rand.Intn(100))
 		inventory.QuantityAlert = uint64(rand.Intn(10))
 		inventory.WholesaleRate = float64(rand.Int63n(1000))
 		inventory.PurchaseRate = float64(rand.Int63n(1000))

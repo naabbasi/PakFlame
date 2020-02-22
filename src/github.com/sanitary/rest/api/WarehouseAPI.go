@@ -19,12 +19,12 @@ func init() {
 }
 
 type warehouses struct {
-	echo       *echo.Echo
+	echo       *echo.Group
 	config     *config.Config
 	dbSettings *backend.DBSettings
 }
 
-func NewWarehouse(e *echo.Echo) *warehouses {
+func NewWarehouse(e *echo.Group) *warehouses {
 	newConfig := config.NewConfig()
 	dbSettings := backend.GetDBSettings(newConfig)
 	return &warehouses{config: newConfig, echo: e, dbSettings: dbSettings}
