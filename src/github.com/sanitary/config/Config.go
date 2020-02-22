@@ -2,6 +2,7 @@ package config
 
 const (
 	CLIENT_HEADER = "X-Client-Id"
+	JWT_SECRET    = "NOMAN_ALI_ABBASI"
 )
 
 type Config struct {

@@ -118,7 +118,7 @@ func (user *users) Login() {
 			claims["admin"] = false
 			claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
-			encodedToken, err := token.SignedString([]byte("NOMANALIABBASI"))
+			encodedToken, err := token.SignedString([]byte(config.JWT_SECRET))
 			log.Print(encodedToken)
 			if err != nil {
 				return err

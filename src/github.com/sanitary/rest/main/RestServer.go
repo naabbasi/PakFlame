@@ -35,8 +35,8 @@ func main() {
 		//e.Use(middleware.Logger())
 		e.Use(middleware.Recover())
 
-		config := config.NewConfig()
-		if config.DemoData == false {
+		appConfig := config.NewConfig()
+		if appConfig.DemoData == false {
 			runMigration := flag.Bool("migration", false, "To run migration")
 			dropSchema := flag.Bool("drop", false, "To drop schema")
 			dropMigrationSchema := flag.Bool("drop-migration", false, "To drop schema and migrate schema")
@@ -45,18 +45,18 @@ func main() {
 			flag.Parse()
 
 			if *runMigration {
-				db := backend.GetDBSettings(config)
+				db := backend.GetDBSettings(appConfig)
 				connection := db.GetDBConnection()
 				connection.Exec("DROP SEQUENCE invoice_seq")
 				connection.Exec("CREATE SEQUENCE invoice_seq")
 				schema.CreatePostgreSQLSchema(connection)
 			} else if *dropSchema {
-				db := backend.GetDBSettings(config)
+				db := backend.GetDBSettings(appConfig)
 				connection := db.GetDBConnection()
 				connection.Exec("DROP SEQUENCE invoice_seq")
 				schema.DropSchema(connection)
 			} else if *dropMigrationSchema {
-				db := backend.GetDBSettings(config)
+				db := backend.GetDBSettings(appConfig)
 				connection := db.GetDBConnection()
 
 				schema.DropSchema(connection)
@@ -64,7 +64,7 @@ func main() {
 				connection.Exec("CREATE SEQUENCE invoice_seq")
 				schema.CreatePostgreSQLSchema(connection)
 			} else if *dropMigrationWithData {
-				db := backend.GetDBSettings(config)
+				db := backend.GetDBSettings(appConfig)
 				connection := db.GetDBConnection()
 
 				schema.DropSchema(connection)
@@ -75,7 +75,7 @@ func main() {
 				data := generator.New()
 				data.Import(connection)
 			} else if *data {
-				db := backend.GetDBSettings(config)
+				db := backend.GetDBSettings(appConfig)
 				connection := db.GetDBConnection()
 
 				data := generator.New()
@@ -91,7 +91,7 @@ func main() {
 		users.Login()
 
 		restrictedPath := e.Group("/restricted")
-		restrictedPath.Use(middleware.JWT([]byte("NOMANALIABBASI")))
+		restrictedPath.Use(middleware.JWT([]byte(config.JWT_SECRET)))
 
 		customers := api.NewCustomer(restrictedPath)
 		customers.GetCustomers()

@@ -42,11 +42,14 @@ export default class Login extends GenericComponent {
                     }
                 })
                 .catch(error => {
+
                     // handle error
                     let response = error.response;
-                    if(response.status === 401) {
-                        this.refs['loginStatus'].className = 'p-show';
-                        this.setState({error: {text: response.data, severity: 'error'}});
+                    if(response !== undefined){
+                        if(response.status === 401) {
+                            this.refs['loginStatus'].className = 'p-show';
+                            this.setState({error: {text: response.data, severity: 'error'}});
+                        }
                     }
                 });
         } else {
