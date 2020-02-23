@@ -148,7 +148,6 @@ export default class Invoice extends GenericComponent {
                 console.log(response);
                 if(response.status === 202){
                     this.setState({invoices: null, selectedInvoice:null, invoice: null, displayDialog:false});
-                    this.getInvoices();
                 }
             })
             .catch(function (error) {
@@ -165,7 +164,6 @@ export default class Invoice extends GenericComponent {
             console.log(response);
             if(response.status === 204){
                 this.setState({invoices: null, selectedInvoice:null, invoice: null, displayDialog:false});
-                this.getInvoices();
             }
         })
         .catch(function (error) {

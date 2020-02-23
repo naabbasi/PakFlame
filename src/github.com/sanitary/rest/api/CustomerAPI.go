@@ -7,6 +7,7 @@ import (
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
+	"github.com/sanitary/util/app_jwt"
 	"net/http"
 )
 
@@ -36,7 +37,7 @@ func (customer *customers) GetCustomers() {
 		connection := customer.dbSettings.GetDBConnection()
 		connection.Select("id, first_name, last_name, mobile_number, status, shop_name,"+
 			" address").
-			Where("client_id = ? ", c.Request().Header.Get(config.CLIENT_HEADER)).
+			Where("client_id = ? ", app_jwt.GetUserInfo(c).ClientId).
 			Order("first_name ASC").
 			Find(&allCustomer)
 
@@ -49,7 +50,7 @@ func (customer *customers) GetCustomerById() {
 		var findCustomer = new(models.Customer)
 		customerId := c.Param("id")
 		connection := customer.dbSettings.GetDBConnection()
-		connection.Table("customers").Where("id = ? and client_id = ?", customerId, c.Request().Header.Get(config.CLIENT_HEADER)).
+		connection.Table("customers").Where("id = ? and client_id = ?", customerId, app_jwt.GetUserInfo(c).ClientId).
 			First(&findCustomer)
 		return c.JSON(http.StatusOK, &findCustomer)
 	})
@@ -63,7 +64,7 @@ func (customer *customers) AddCustomer() {
 		}
 		log.Printf("Customer saved with %s", newCustomer)
 
-		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 		if err == nil {
 			newCustomer.ClientId = clientId
 		}
@@ -88,7 +89,7 @@ func (customer *customers) UpdateCustomer() {
 
 		log.Printf("Customer updated with %s", updateCustomer)
 
-		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 		if err == nil {
 			updateCustomer.ClientId = clientId
 		}
@@ -112,7 +113,7 @@ func (customer *customers) DeleteCustomer() {
 		}
 		log.Printf("Worker deleted with %s", deleteCustomer.FirstName)
 
-		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 		if err == nil {
 			deleteCustomer.ClientId = clientId
 		}

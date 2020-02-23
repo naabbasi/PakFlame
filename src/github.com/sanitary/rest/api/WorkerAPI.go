@@ -7,6 +7,7 @@ import (
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
+	"github.com/sanitary/util/app_jwt"
 	"net/http"
 )
 
@@ -35,7 +36,7 @@ func (worker *workers) Get() {
 		var allWorkers = new([]models.Worker)
 		connection := worker.dbSettings.GetDBConnection()
 		connection.
-			Where("client_id = ? ", c.Request().Header.Get(config.CLIENT_HEADER)).
+			Where("client_id = ? ", app_jwt.GetUserInfo(c).ClientId).
 			Order("first_name ASC").
 			Find(&allWorkers)
 		return c.JSON(http.StatusOK, &allWorkers)
@@ -47,7 +48,7 @@ func (worker *workers) GetWorkerById() {
 		var findWorker = new(models.Worker)
 		workerId := c.Param("id")
 		connection := worker.dbSettings.GetDBConnection()
-		connection.Table("workers").Where("id = ? and client_id = ?", workerId, c.Request().Header.Get(config.CLIENT_HEADER)).
+		connection.Table("workers").Where("id = ? and client_id = ?", workerId, app_jwt.GetUserInfo(c).ClientId).
 			First(&findWorker)
 		return c.JSON(http.StatusOK, &findWorker)
 	})
@@ -61,7 +62,7 @@ func (worker *workers) AddWorker() {
 		}
 		log.Printf("Worker saved with %s", newWorker.FirstName)
 
-		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 		if err == nil {
 			newWorker.ClientId = clientId
 		}
@@ -85,7 +86,7 @@ func (worker *workers) UpdateWorker() {
 		}
 		log.Printf("Worker saved with %s", updateWorker.FirstName)
 
-		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 		if err == nil {
 			updateWorker.ClientId = clientId
 		}
@@ -109,7 +110,7 @@ func (worker *workers) DeleteWorker() {
 		}
 		log.Printf("Worker deleted with %s", deleteWorker.FirstName)
 
-		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 		if err == nil {
 			deleteWorker.ClientId = clientId
 		}

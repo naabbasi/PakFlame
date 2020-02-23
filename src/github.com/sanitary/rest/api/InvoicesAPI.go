@@ -2,11 +2,13 @@ package api
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
+	"github.com/sanitary/util/app_jwt"
 	"github.com/sanitary/util/pdf/generate"
 	"net/http"
 	"strconv"
@@ -36,7 +38,9 @@ func (invoices *invoices) GetInvoices() {
 	invoices.echo.GET(InvoiceEndPoint, func(c echo.Context) error {
 		var getInvoices = new([]models.Invoice)
 		connection := invoices.dbSettings.GetDBConnection()
-		connection.Find(&getInvoices)
+		connection.Where("client_id = ?", app_jwt.GetUserInfo(c).ClientId).
+			Order("customer_name ASC").
+			Find(&getInvoices)
 		return c.JSON(http.StatusOK, &getInvoices)
 	})
 }
@@ -46,7 +50,9 @@ func (invoices *invoices) GetInvoiceById() {
 		var getInvoice = new(models.Invoice)
 		connection := invoices.dbSettings.GetDBConnection()
 		id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-		connection.Table("invoices").Where("id = ?", id).First(&getInvoice)
+		connection.Table("invoices").
+			Where("id = ? and client_id = ?", id, app_jwt.GetUserInfo(c).ClientId).
+			First(&getInvoice)
 
 		if getInvoice.ID != 0 {
 			return c.JSON(http.StatusOK, &getInvoice)
@@ -81,6 +87,11 @@ func (invoices *invoices) AddInvoice() {
 		}
 		log.Printf("Invoice saved with %s", newInvoice)
 
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		if err == nil {
+			newInvoice.ClientId = clientId
+		}
+
 		connection := invoices.dbSettings.GetDBConnection()
 		save := connection.Save(newInvoice)
 
@@ -101,6 +112,11 @@ func (invoices *invoices) UpdateInvoice() {
 
 		log.Printf("Invoice updated with %s", updateInvoice)
 
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		if err == nil {
+			updateInvoice.ClientId = clientId
+		}
+
 		connection := invoices.dbSettings.GetDBConnection()
 		update := connection.Model(models.Invoice{}).Where("id = ?", updateInvoice.ID).Update(updateInvoice)
 
@@ -120,6 +136,11 @@ func (invoices *invoices) DeleteInvoice() {
 		}
 		log.Printf("Invoice deleted with %s", deleteInvoice.ID)
 
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		if err == nil {
+			deleteInvoice.ClientId = clientId
+		}
+
 		connection := invoices.dbSettings.GetDBConnection()
 		update := connection.Model(models.Invoice{}).Delete(deleteInvoice)
 
@@ -136,7 +157,7 @@ func (invoices *invoices) GetInvoiceDetailsById() {
 		var getInvoices = new([]models.InvoiceDetails)
 		connection := invoices.dbSettings.GetDBConnection()
 		invoiceId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-		connection.Table("invoice_details").Where("invoice_number = ?", invoiceId).Find(&getInvoices)
+		connection.Table("invoice_details").Where("invoice_number = ? and client_id = ?", invoiceId, app_jwt.GetUserInfo(c).ClientId).Find(&getInvoices)
 
 		return c.JSON(http.StatusOK, &getInvoices)
 	})
@@ -149,6 +170,11 @@ func (invoices *invoices) AddInvoiceDetails() {
 			return err
 		}
 		log.Printf("Invoice saved with %s", newInvoice)
+
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		if err == nil {
+			newInvoice.ClientId = clientId
+		}
 
 		connection := invoices.dbSettings.GetDBConnection()
 		save := connection.Save(newInvoice)
@@ -179,6 +205,11 @@ func (invoices *invoices) UpdateInvoiceDetail() {
 
 		log.Printf("Invoice updated with %s", updateInvoice)
 
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		if err == nil {
+			updateInvoice.ClientId = clientId
+		}
+
 		connection := invoices.dbSettings.GetDBConnection()
 		update := connection.Model(models.Invoice{}).Where("id = ?", updateInvoice.ID).Update(updateInvoice)
 
@@ -206,6 +237,11 @@ func (invoices *invoices) DeleteInvoiceDetail() {
 			return err
 		}
 		log.Printf("Invoice deleted with %s", deleteInvoice.ID)
+
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		if err == nil {
+			deleteInvoice.ClientId = clientId
+		}
 
 		connection := invoices.dbSettings.GetDBConnection()
 		update := connection.Model(models.Invoice{}).Delete(deleteInvoice)

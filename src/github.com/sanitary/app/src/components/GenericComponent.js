@@ -9,10 +9,9 @@ export class GenericComponent extends Component {
             baseURL: 'http://' + url,
             responseType: 'json',
             headers: {
-                'Authorization': 'engr.nomiabbasi@gmail.com',
-                'X-Client-ID': 'client-id-needs-to-be-updated'
+                'Authorization': 'engr.nomiabbasi@gmail.com'
             },
-            withCredentials: true,
+            withCredentials: false,
         });
 
         // Add a request interceptor
@@ -27,7 +26,6 @@ export class GenericComponent extends Component {
 
             if(window.localStorage.getItem("isLoggedIn") !== null){
                 let user = window.localStorage.getItem("isLoggedIn");
-                config.headers['X-Client-ID'] = JSON.parse(user)['client_id'];
                 config.headers['Authorization'] = `Bearer ${JSON.parse(user)['token']}`;
 
                 if(JSON.parse(user)['token']){

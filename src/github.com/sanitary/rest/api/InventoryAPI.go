@@ -7,6 +7,7 @@ import (
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
+	"github.com/sanitary/util/app_jwt"
 	"net/http"
 )
 
@@ -34,17 +35,19 @@ func (inventory *inventories) GetItems() {
 	inventory.echo.GET(InventoryEndPoint, func(c echo.Context) error {
 		var inventories = new([]models.Inventory)
 		connection := inventory.dbSettings.GetDBConnection()
-		connection.Where("client_id = ?", c.Request().Header.Get(config.CLIENT_HEADER)).Find(&inventories)
+		connection.Where("client_id = ?", app_jwt.GetUserInfo(c).ClientId).
+			Order("item_name ASC").
+			Find(&inventories)
 		return c.JSON(http.StatusOK, &inventories)
 	})
 }
 
-func (inventory *inventories) GetItemByID() {
+func (inventory *inventories) GetItemById() {
 	inventory.echo.GET(InventoryEndPoint, func(c echo.Context) error {
 		var getInventory = new(models.Inventory)
 		inventoryId := c.Param("id")
 		connection := inventory.dbSettings.GetDBConnection()
-		connection.Where("id = ? and client_id = ?", inventoryId, c.Request().Header.Get(config.CLIENT_HEADER)).First(&getInventory)
+		connection.Where("id = ? and client_id = ?", inventoryId, app_jwt.GetUserInfo(c).ClientId).First(&getInventory)
 		return c.JSON(http.StatusOK, &getInventory)
 	})
 }
@@ -57,7 +60,7 @@ func (inventory *inventories) AddItem() {
 		}
 		log.Printf("Item saved with %s", newItem)
 
-		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 
 		if err == nil {
 			newItem.ClientId = clientId
@@ -82,7 +85,7 @@ func (inventory *inventories) UpdateItem() {
 		}
 		log.Printf("Item saved with %s", updateItem)
 
-		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 
 		if err == nil {
 			updateItem.ClientId = clientId
@@ -107,7 +110,7 @@ func (inventory *inventories) DeleteItem() {
 		}
 		log.Printf("Item deleted with %s", deleteItem.ItemName)
 
-		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 		if err == nil {
 			deleteItem.ClientId = clientId
 		}

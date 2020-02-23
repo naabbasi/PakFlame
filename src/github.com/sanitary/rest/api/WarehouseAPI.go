@@ -7,6 +7,7 @@ import (
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
+	"github.com/sanitary/util/app_jwt"
 	"net/http"
 )
 
@@ -34,7 +35,9 @@ func (warehouse *warehouses) GetWarehouses() {
 	warehouse.echo.GET(WarehouseEndPoint, func(c echo.Context) error {
 		var allWarehouses = new([]models.Warehouse)
 		connection := warehouse.dbSettings.GetDBConnection()
-		connection.Where("client_id = ?", c.Request().Header.Get(config.CLIENT_HEADER)).Find(&allWarehouses)
+		connection.Where("client_id = ?", app_jwt.GetUserInfo(c).ClientId).
+			Order("name ASC").
+			Find(&allWarehouses)
 		return c.JSON(http.StatusOK, allWarehouses)
 	})
 }
@@ -44,7 +47,7 @@ func (warehouse *warehouses) GetWarehouseById() {
 		warehouseId := c.Param("warehouseId")
 		var allWarehouses = new(models.Warehouse)
 		connection := warehouse.dbSettings.GetDBConnection()
-		connection.First(&allWarehouses, "id = ? and client_id =?", &warehouseId, c.Request().Header.Get(config.CLIENT_HEADER))
+		connection.First(&allWarehouses, "id = ? and client_id =?", &warehouseId, app_jwt.GetUserInfo(c).ClientId)
 		return c.JSON(http.StatusOK, allWarehouses)
 	})
 }
@@ -57,7 +60,7 @@ func (warehouse *warehouses) AddWarehouse() {
 		}
 		log.Printf("warehouse saved with %s", newWarehouse)
 
-		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 		if err == nil {
 			newWarehouse.ClientId = clientId
 		}
@@ -81,7 +84,7 @@ func (warehouse *warehouses) UpdateWarehouse() {
 		}
 		log.Printf("warehouse saved with %s", updateWarehouse)
 
-		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 		if err == nil {
 			updateWarehouse.ClientId = clientId
 		}
@@ -105,7 +108,7 @@ func (warehouse *warehouses) DeleteWarehouse() {
 		}
 		log.Printf("warehouse deleted with %s", deleteWarehouse)
 
-		clientId, err := uuid.Parse(c.Request().Header.Get(config.CLIENT_HEADER))
+		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 		if err == nil {
 			deleteWarehouse.ClientId = clientId
 		}
