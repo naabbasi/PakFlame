@@ -162,7 +162,6 @@ export default class Customer extends GenericComponent {
                         <DataTable id="customerTable" value={this.state.customers} paginator={true} rows={25}  header={header} footer={footer}
                                    scrollable={true} scrollHeight="700px"
                                    selectionMode="single" selection={this.state.selectedCustomer} onSelectionChange={e => this.setState({selectedCustomer: e.value})}
-                                   onRowSelect={this.onCustomerSelect}
                                    globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
                             <Column field="firstName" header="First Name" sortable={true} style={{textAlign: 'left', width: '15%'}}/>
                             <Column field="lastName" header="Last Name" sortable={true} style={{textAlign: 'left', width: '15%'}}/>
@@ -170,7 +169,7 @@ export default class Customer extends GenericComponent {
                             <Column field="shopName" header="Shop Name" sortable={true} style={{textAlign: 'center', width: '10%'}}/>
                             <Column field="address" header="Address" sortable={true} style={{textAlign: 'center', width: '25%'}}/>
                             <Column field="status" header="Status" sortable={true} style={{textAlign: 'center', width: '11%'}}/>
-                            <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column)} style={{width: '12%'}}/>
+                            <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'customers', this.state)} style={{width: '12%'}}/>
                         </DataTable>
 
                         <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Customer Details" modal={true} footer={dialogFooter} onHide={() => this.setState({displayDialog: false})}>

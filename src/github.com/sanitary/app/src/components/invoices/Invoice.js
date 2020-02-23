@@ -7,7 +7,6 @@ import {InputText} from "primereact/inputtext";
 import {GenericComponent} from "../GenericComponent";
 import Navigation from "../layout/Navigation";
 import {Calendar} from "primereact/calendar";
-import {Accordion, AccordionTab} from "primereact/accordion";
 import ItemAutoComplete from "../autocomplete/ItemAutoComplete";
 import CustomerAutoComplete from "../autocomplete/CustomerAutoComplete";
 import {Dialog} from "primereact/dialog";
@@ -23,7 +22,8 @@ export default class Invoice extends GenericComponent {
             invoiceDetails: [],
             items: [],
             invoiceId: params.get('invoiceId') == null ? 0 : params.get('invoiceId'),
-            disableButtons: true
+            disableButtons: true,
+            disableAddItemButton: false
         };
 
         //Create refs
@@ -221,7 +221,8 @@ export default class Invoice extends GenericComponent {
         addItemDetails.push(details);
         this.setState({
             saveButton: false,
-            items: addItemDetails
+            items: addItemDetails,
+            disableAddItemButton: true
         });
         this.setState({});
         this.resetItemForm();
@@ -236,7 +237,6 @@ export default class Invoice extends GenericComponent {
         invoice.details['quantities'] = e.data['quantities'];
         invoice.details['price'] = e.data['price'];
         invoice.details['discount'] = e.data['discount'];
-        this.newInvoice = false;
 
         setTimeout(()=>{
             this.setState({invoice});
@@ -282,7 +282,8 @@ export default class Invoice extends GenericComponent {
         setTimeout(()=>{
             this.setState({invoice});
         });
-        this.setState({selectedItem: item});
+
+        this.setState({selectedItem: item, disableAddItemButton: false});
         this.calculateAmount();
     }
 
@@ -313,60 +314,58 @@ export default class Invoice extends GenericComponent {
                     <div className="content-section implementation">
                         {
                             this.state.invoice &&
-                            <div>
-                                <div className="p-datatable-header">
-                                    <div className="p-col-12 p-component">
-                                        <div className="p-col-12">
-                                            <div className="p-grid">
-                                                <div className="p-col" style={{padding:'.50em'}}>
+                            <div style={{padding: '10px'}}>
+                                <div className="">
+                                    <div className="p-col-12">
+                                        <div className="p-grid">
+                                            <div className="p-col" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
                                                         <CustomerAutoComplete ref={this.getCustomerAutoComplete} onChange={this.getSelectedCustomer}></CustomerAutoComplete>
                                                     </span>
-                                                </div>
+                                            </div>
 
-                                                <div className="p-col" style={{padding:'.50em'}}>
+                                            <div className="p-col" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
                                                         <Calendar id="createdAt" hideOnDateTimeSelect={true} showTime={true} onChange={(e) => {this.updateProperty('createdAt', e.target.value)}} value={this.state.invoice.createdAt}/>
                                                         <label htmlFor="createdAt">Date</label>
                                                     </span>
-                                                </div>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div className="p-col-12">
-                                            <div className="p-grid">
-                                                <div className="p-col" style={{padding:'.50em'}}>
+                                    <div className="p-col-12">
+                                        <div className="p-grid">
+                                            <div className="p-col" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
                                                         <InputText id="partyName" maxLength={250} onChange={(e) => {this.updateProperty('partyName', e.target.value)}} value={this.state.invoice.partyName}/>
                                                         <label htmlFor="partyName">Party Name</label>
                                                     </span>
-                                                </div>
+                                            </div>
 
-                                                <div className="p-col-3" style={{padding:'.50em'}}>
+                                            <div className="p-col-3" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
                                                         <InputText id="transport" onChange={(e) => {this.updateProperty('transport', e.target.value)}} value={this.state.invoice.transport}/>
                                                         <label htmlFor="transport">Transport</label>
                                                     </span>
-                                                </div>
+                                            </div>
 
-                                                <div className="p-col-3" style={{padding:'.50em'}}>
+                                            <div className="p-col-3" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
                                                         <InputText id="transportCharges"
                                                                    onChange={(e) => {this.updateProperty('transportCharges', e.target.value)}}
                                                                    onBlur={(e) => {this.updateProperty('transportCharges', this.Float(e.target.value))}} value={this.state.invoice.transportCharges}/>
                                                         <label htmlFor="transportCharges">Transport Charges</label>
                                                     </span>
-                                                </div>
                                             </div>
                                         </div>
-                                        <div className="p-col-12">
-                                            <div className="p-grid">
-                                                <div className="p-col" style={{padding:'.50em'}}>
+                                    </div>
+                                    <div className="p-col-12">
+                                        <div className="p-grid">
+                                            <div className="p-col" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
                                                         <InputText ref="address" maxLength={500} onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.invoice.address}/>
                                                         <label htmlFor="address">Address</label>
                                                     </span>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -423,7 +422,7 @@ export default class Invoice extends GenericComponent {
                                 </div>
                                 <div className="p-grid">
                                     <div className="p-col" style={{padding:'.50em'}}>
-                                        <Button label="Add" icon="pi pi-plus" className="p-button-rounded" onClick={this.addNew}/>
+                                        <Button label="Add" disabled={this.state.disableAddItemButton} icon="pi pi-plus" className="p-button-rounded" onClick={this.addNew}/>
                                         <Button disabled={false} label="Print" icon="pi pi-print" className="p-button-rounded" onClick={this.print}/>
                                         <Button disabled={this.state.disableButtons} label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInvoice}/>
                                         <Button disabled={this.state.disableButtons} label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteInvoice}/>

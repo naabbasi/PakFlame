@@ -149,7 +149,6 @@ export default class Warehouses extends GenericComponent {
                     <DataTable value={this.state.warehouses} paginator={true} rows={25}  header={header} footer={footer}
                                scrollable={true} scrollHeight="700px" responsive={true}
                                selectionMode="single" selection={this.state.selectedWarehouse} onSelectionChange={e => this.setState({selectedWWarehouse: e.value})}
-                               onRowSelect={this.onWarehouseSelect}
                                globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
                         <Column field="name" header="Warehouse Name" sortable={true} style={{width: '15%'}}/>
                         <Column field="location" header="Location" sortable={true} style={{width: '35%'}}/>

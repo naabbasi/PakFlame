@@ -285,7 +285,7 @@ export default class Inventory extends GenericComponent {
                                    scrollable={true} scrollHeight="700px"
                                    selectionMode="single" selection={this.state.selectedInventory}
                                    onSelectionChange={e => this.setState({selectedInventory: e.value})}
-                                   onRowSelect={this.onInventorySelect} globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
+                                   globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
 
                             <Column field="itemName" header="Item Name" sortable={true} />
                             <Column field="quantities" header="Quantity" sortable={true} style={{textAlign: 'right'}}/>
@@ -295,7 +295,7 @@ export default class Inventory extends GenericComponent {
                             <Column field="wholesaleRate" header="Wholesale Rate" sortable={true} style={{textAlign: 'right'}}/>
                             <Column field="retailRate" header="Retail Rate" sortable={true} style={{textAlign: 'right'}}/>
                             <Column field="itemStatus" header="Status" sortable={true}/>
-                            <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column)} style={{width: '12%'}}/>
+                            <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'inventory', this.state)} style={{width: '12%'}}/>
                         </DataTable>
 
                         <Dialog visible={this.state.displayItemDialog} style={{width: '60%'}} header="Inventory Details"

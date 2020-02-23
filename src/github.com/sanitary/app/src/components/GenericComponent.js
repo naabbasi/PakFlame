@@ -82,18 +82,30 @@ export class GenericComponent extends Component {
 
     actionColumn = (rowData,column, entityName, componentState) => {
         return <div className="p-clearfix" style={{textAlign: 'center'}}>
-            <a onClick={(e)=> this.editEntity(rowData['id'], entityName, componentState)}>Edit</a> |
-            <a onClick={(e)=> this.deleteEntity(rowData['id'], entityName, componentState)}>Delete</a>
+            <a onClick={(e)=> this.editEntity(rowData, entityName, componentState)}>Edit</a> |
+            <a onClick={(e)=> this.deleteEntity(rowData, entityName, componentState)}>Delete</a>
         </div>;
     };
 
-    editEntity(id, entityName, componentState) {
-        console.log(`editEntity ${id}, ${entityName}`);
+    editEntity(rowData, entityName, componentState) {
+        console.log(`editEntity ${rowData['id']}, ${entityName}`);
         console.log(componentState);
+
+        if(entityName === 'warehouses'){
+            this.onWarehouseSelect({data: rowData});
+        } else if(entityName === 'customers'){
+            this.onCustomerSelect({data: rowData});
+        } else if(entityName === 'workers'){
+            this.onWorkerSelect({data: rowData});
+        } if(entityName === 'inventory'){
+            this.onInventorySelect({data: rowData});
+        } else if(entityName === 'invoices') {
+            this.onInvoiceSelect({data: rowData});
+        }
     }
 
-    deleteEntity(id, entityName, componentState) {
-        console.log(`deleteEntity ${id}, ${entityName}, ${componentState}`);
+    deleteEntity(rowData, entityName, componentState) {
+        console.log(`deleteEntity ${rowData['id']}, ${entityName}, ${componentState}`);
         console.log(componentState)
     }
 }
