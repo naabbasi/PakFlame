@@ -10,6 +10,7 @@ import {Calendar} from "primereact/calendar";
 import {Accordion, AccordionTab} from "primereact/accordion";
 import ItemAutoComplete from "../autocomplete/ItemAutoComplete";
 import CustomerAutoComplete from "../autocomplete/CustomerAutoComplete";
+import {Dialog} from "primereact/dialog";
 
 export default class Invoice extends GenericComponent {
     constructor(props) {
@@ -192,10 +193,17 @@ export default class Invoice extends GenericComponent {
         let price = invoice.details['price'];
         let amountBeforeDiscount = this.Float(quantities * price);
         let discount = invoice.details['discount'];
-        let discountAmount = (discount / 100) * amountBeforeDiscount;
-        console.log("Discounted amount: " + discountAmount)
-        invoice.details['amount'] = amountBeforeDiscount;
-        invoice.details['totalAmount'] = amountBeforeDiscount - discountAmount;
+
+        if(discount === 0){
+            invoice.details['amount'] = amountBeforeDiscount;
+            invoice.details['totalAmount'] = amountBeforeDiscount;
+        } else {
+            let discountAmount = (discount / 100) * amountBeforeDiscount;
+            console.log("Discounted amount: " + discountAmount)
+            invoice.details['amount'] = amountBeforeDiscount;
+            invoice.details['totalAmount'] = amountBeforeDiscount - discountAmount;
+        }
+
         this.setState({invoice});
     }
 
@@ -215,7 +223,8 @@ export default class Invoice extends GenericComponent {
             saveButton: false,
             items: addItemDetails
         });
-        this.setState({})
+        this.setState({});
+        this.resetItemForm();
         console.log(this.state.items)
     }
 
@@ -232,6 +241,18 @@ export default class Invoice extends GenericComponent {
         setTimeout(()=>{
             this.setState({invoice});
         });
+    }
+
+    resetItemForm() {
+        let invoice = {...this.state.invoice};
+        invoice.details['quantities'] = 0;
+        invoice.details['price'] = 0;
+        invoice.details['discount'] = 0;
+
+        setTimeout(()=>{
+            this.setState({invoice});
+        });
+        this.getItemAutoComplete.current.selectItem({itemName: ''});
     }
 
     print() {
@@ -262,6 +283,7 @@ export default class Invoice extends GenericComponent {
             this.setState({invoice});
         });
         this.setState({selectedItem: item});
+        this.calculateAmount();
     }
 
     getSelectedCustomer(customer) {
@@ -279,6 +301,12 @@ export default class Invoice extends GenericComponent {
     }
 
     render() {
+        let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
+            <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveWarehouses}/>
+            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteWarehouse}/>
+            <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeWarehouseDialog}/>
+        </div>;
+
         return (
             <div>
                 <Navigation>
@@ -286,67 +314,63 @@ export default class Invoice extends GenericComponent {
                         {
                             this.state.invoice &&
                             <div>
-                                <Accordion multiple={true}>
-                                    <AccordionTab header={this.state.invoiceId === 0 ? "Sale Invoice" : "Sale Invoice # " + this.state.invoiceId}>
-                                        <div className="p-datatable-header">
-                                            <div className="p-col-12 p-component">
-                                                <div className="p-col-12">
-                                                    <div className="p-grid">
-                                                        <div className="p-col" style={{padding:'.50em'}}>
-                                                            <span className="p-float-label p-fluid">
-                                                                <CustomerAutoComplete ref={this.getCustomerAutoComplete} onChange={this.getSelectedCustomer}></CustomerAutoComplete>
-                                                            </span>
-                                                        </div>
-
-                                                        <div className="p-col" style={{padding:'.50em'}}>
-                                                            <span className="p-float-label p-fluid">
-                                                                <Calendar id="createdAt" hideOnDateTimeSelect={true} showTime={true} onChange={(e) => {this.updateProperty('createdAt', e.target.value)}} value={this.state.invoice.createdAt}/>
-                                                                <label htmlFor="createdAt">Date</label>
-                                                            </span>
-                                                        </div>
-                                                    </div>
+                                <div className="p-datatable-header">
+                                    <div className="p-col-12 p-component">
+                                        <div className="p-col-12">
+                                            <div className="p-grid">
+                                                <div className="p-col" style={{padding:'.50em'}}>
+                                                    <span className="p-float-label p-fluid">
+                                                        <CustomerAutoComplete ref={this.getCustomerAutoComplete} onChange={this.getSelectedCustomer}></CustomerAutoComplete>
+                                                    </span>
                                                 </div>
 
-                                                <div className="p-col-12">
-                                                    <div className="p-grid">
-                                                        <div className="p-col" style={{padding:'.50em'}}>
-                                                            <span className="p-float-label p-fluid">
-                                                                <InputText id="partyName" maxLength={250} onChange={(e) => {this.updateProperty('partyName', e.target.value)}} value={this.state.invoice.partyName}/>
-                                                                <label htmlFor="partyName">Party Name</label>
-                                                            </span>
-                                                        </div>
-
-                                                        <div className="p-col-3" style={{padding:'.50em'}}>
-                                                            <span className="p-float-label p-fluid">
-                                                                <InputText id="transport" onChange={(e) => {this.updateProperty('transport', e.target.value)}} value={this.state.invoice.transport}/>
-                                                                <label htmlFor="transport">Transport</label>
-                                                            </span>
-                                                        </div>
-
-                                                        <div className="p-col-3" style={{padding:'.50em'}}>
-                                                            <span className="p-float-label p-fluid">
-                                                                <InputText id="transportCharges"
-                                                                           onChange={(e) => {this.updateProperty('transportCharges', e.target.value)}}
-                                                                           onBlur={(e) => {this.updateProperty('transportCharges', this.Float(e.target.value))}} value={this.state.invoice.transportCharges}/>
-                                                                <label htmlFor="transportCharges">Transport Charges</label>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="p-col-12">
-                                                    <div className="p-grid">
-                                                        <div className="p-col" style={{padding:'.50em'}}>
-                                                            <span className="p-float-label p-fluid">
-                                                                <InputText ref="address" maxLength={500} onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.invoice.address}/>
-                                                                <label htmlFor="address">Address</label>
-                                                            </span>
-                                                        </div>
-                                                    </div>
+                                                <div className="p-col" style={{padding:'.50em'}}>
+                                                    <span className="p-float-label p-fluid">
+                                                        <Calendar id="createdAt" hideOnDateTimeSelect={true} showTime={true} onChange={(e) => {this.updateProperty('createdAt', e.target.value)}} value={this.state.invoice.createdAt}/>
+                                                        <label htmlFor="createdAt">Date</label>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
-                                    </AccordionTab>
-                                </Accordion>
+
+                                        <div className="p-col-12">
+                                            <div className="p-grid">
+                                                <div className="p-col" style={{padding:'.50em'}}>
+                                                    <span className="p-float-label p-fluid">
+                                                        <InputText id="partyName" maxLength={250} onChange={(e) => {this.updateProperty('partyName', e.target.value)}} value={this.state.invoice.partyName}/>
+                                                        <label htmlFor="partyName">Party Name</label>
+                                                    </span>
+                                                </div>
+
+                                                <div className="p-col-3" style={{padding:'.50em'}}>
+                                                    <span className="p-float-label p-fluid">
+                                                        <InputText id="transport" onChange={(e) => {this.updateProperty('transport', e.target.value)}} value={this.state.invoice.transport}/>
+                                                        <label htmlFor="transport">Transport</label>
+                                                    </span>
+                                                </div>
+
+                                                <div className="p-col-3" style={{padding:'.50em'}}>
+                                                    <span className="p-float-label p-fluid">
+                                                        <InputText id="transportCharges"
+                                                                   onChange={(e) => {this.updateProperty('transportCharges', e.target.value)}}
+                                                                   onBlur={(e) => {this.updateProperty('transportCharges', this.Float(e.target.value))}} value={this.state.invoice.transportCharges}/>
+                                                        <label htmlFor="transportCharges">Transport Charges</label>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="p-col-12">
+                                            <div className="p-grid">
+                                                <div className="p-col" style={{padding:'.50em'}}>
+                                                    <span className="p-float-label p-fluid">
+                                                        <InputText ref="address" maxLength={500} onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.invoice.address}/>
+                                                        <label htmlFor="address">Address</label>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="p-col-12 p-component">
                                     <div className="p-grid" style={{ paddingTop: '10px'}}>
                                         <div className="p-col" style={{padding:'.50em'}}>
@@ -426,6 +450,45 @@ export default class Invoice extends GenericComponent {
                                         </div>
                                     </div>
                                 </div>
+                                <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Warehouse Details"
+                                        modal={true} footer={dialogFooter}
+                                        onShow={()=> this.refs['firstName']}
+                                        onHide={() => this.setState({displayDialog: false})}>
+                                    {
+                                        this.state.warehouse &&
+                                        <div className="p-grid">
+                                            <div className="p-col-12">
+                                                <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="name" maxLength={255} onChange={(e) => {this.updateProperty('name', e.target.value)}} value={this.state.warehouse.name}/>
+                                                <label htmlFor="name">Name</label>
+                                            </span>
+                                                </div>
+
+                                                <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="location" maxLength={255} onChange={(e) => {this.updateProperty('location', e.target.value)}} value={this.state.warehouse.location}/>
+                                                <label htmlFor="location">Location</label>
+                                            </span>
+                                                </div>
+
+                                                <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="mobileNumber" maxLength={11} onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.warehouse.mobileNumber}/>
+                                                <label htmlFor="mobileNumber">Mobile Number</label>
+                                            </span>
+                                                </div>
+
+                                                <div className="p-col" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="email" maxLength={500} onChange={(e) => {this.updateProperty('email', e.target.value)}} value={this.state.warehouse.email}/>
+                                                <label htmlFor="email">Email</label>
+                                            </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </Dialog>
                             </div>
                         }
                     </div>

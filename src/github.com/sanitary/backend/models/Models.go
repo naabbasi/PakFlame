@@ -86,12 +86,13 @@ type Warehouse struct {
 
 type Inventory struct {
 	Model
-	CustomerId          uuid.UUID `gorm:"ForeignKey:customer_id; type: uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
-	CustomerName        string    `json:"customerName" xml:"customerName" form:"customerName" query:"customerName"`
-	ItemName            string    `json:"itemName" xml:"itemName" form:"itemName" query:"itemName"`
-	Quantities          uint64    `gorm:"type: INT8 " json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
-	SoldQuantities      uint64    `gorm:"type: INT8 " json:"soldQuantities" xml:"soldQuantities" form:"soldQuantities" query:"soldQuantities"`
-	RemainingQuantities uint64    `gorm:"NOT NULL; type: INT8 AS (quantities - sold_quantities) STORED" json:"remainingQuantities" xml:"remainingQuantities" form:"remainingQuantities" query:"remainingQuantities"`
+	CustomerId     uuid.UUID `gorm:"ForeignKey:customer_id; type: uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
+	CustomerName   string    `json:"customerName" xml:"customerName" form:"customerName" query:"customerName"`
+	ItemName       string    `json:"itemName" xml:"itemName" form:"itemName" query:"itemName"`
+	Quantities     uint64    `gorm:"type: INT8 " json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
+	SoldQuantities uint64    `gorm:"type: INT8 " json:"soldQuantities" xml:"soldQuantities" form:"soldQuantities" query:"soldQuantities"`
+	//RemainingQuantities uint64    `gorm:"NOT NULL; type: INT8 AS (quantities - sold_quantities) STORED" json:"remainingQuantities" xml:"remainingQuantities" form:"remainingQuantities" query:"remainingQuantities"`
+	RemainingQuantities uint64    `gorm:"NOT NULL; type: INT8" json:"remainingQuantities" xml:"remainingQuantities" form:"remainingQuantities" query:"remainingQuantities"`
 	QuantityAlert       uint64    `json:"quantityAlert" xml:"quantityAlert" form:"quantityAlert" query:"quantityAlert"`
 	PurchaseRate        float64   `json:"purchaseRate" xml:"purchaseRate" form:"purchaseRate" query:"purchaseRate"`
 	WholesaleRate       float64   `json:"wholesaleRate" xml:"wholesaleRate" form:"wholesaleRate" query:"wholesaleRate"`
