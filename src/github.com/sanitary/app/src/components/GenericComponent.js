@@ -78,9 +78,9 @@ export class GenericComponent extends Component {
         return "" + date;
     }
 
-    actionColumn = (rowData,column, entityName, componentState) => {
-        return <div className="p-clearfix" style={{textAlign: 'center'}}>
-            <a onClick={(e)=> this.editEntity(rowData, entityName, componentState)}>Edit</a> |
+    actionColumn = (rowData,column, entityName, componentState, label) => {
+        return <div className="p-clearfix ui-column-filter" style={{textAlign: 'center'}}>
+            <a onClick={(e)=> this.editEntity(rowData, entityName, componentState)}> {label === undefined ? 'Edit' : label}</a> |
             <a onClick={(e)=> this.deleteEntity(rowData, entityName, componentState)}>Delete</a>
         </div>;
     };

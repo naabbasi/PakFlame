@@ -183,6 +183,7 @@ func (invoices *invoices) AddInvoiceDetails() {
 			for _, newItem := range newInvoice.InvoiceDetails {
 				connection := invoices.dbSettings.GetDBConnection()
 				newItem.InvoiceNumber = newInvoice.ID
+				newItem.ClientId = clientId
 				saveItem := connection.Save(newItem)
 				if saveItem.RowsAffected == 1 {
 					fmt.Printf("Item: %v", newItem)
