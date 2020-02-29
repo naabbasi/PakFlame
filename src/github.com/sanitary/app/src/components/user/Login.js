@@ -61,7 +61,7 @@ export default class Login extends GenericComponent {
         const footer = (
             <div>
                 <div className="p-col p-fluid" style={{padding:'.75em'}}>
-                    <Button type="button" label="Login" icon="pi pi-sign-in" className="p-button-rounded"
+                    <Button type="submit" label="Login" icon="pi pi-sign-in" className="p-button-rounded"
                             onClick={this.login}/>
                 </div>
                 <div className="p-col p-fluid" style={{padding:'.75em'}}>

@@ -169,7 +169,7 @@ export default class Customer extends GenericComponent {
                             <Column field="shopName" header="Shop Name" sortable={true} style={{textAlign: 'center', width: '10%'}}/>
                             <Column field="address" header="Address" sortable={true} style={{textAlign: 'center', width: '25%'}}/>
                             <Column field="status" header="Status" sortable={true} style={{textAlign: 'center', width: '11%'}}/>
-                            <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'customers', this.state)} style={{width: '12%'}}/>
+                            <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'customers', this.state, 'Manage')} style={{width: '12%'}}/>
                         </DataTable>
 
                         <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Customer Details" modal={true} footer={dialogFooter} onHide={() => this.setState({displayDialog: false})}>

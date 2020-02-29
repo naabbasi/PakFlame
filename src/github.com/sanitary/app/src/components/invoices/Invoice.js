@@ -199,7 +199,7 @@ export default class Invoice extends GenericComponent {
             let discountAmount = (discount / 100) * amountBeforeDiscount;
             console.log("Discounted amount: " + discountAmount)
             invoice.details['amount'] = amountBeforeDiscount;
-            invoice.details['totalAmount'] = amountBeforeDiscount - discountAmount;
+            invoice.details['totalAmount'] = this.Float(amountBeforeDiscount - discountAmount);
         }
 
         this.setState({invoice});
