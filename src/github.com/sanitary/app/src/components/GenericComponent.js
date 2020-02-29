@@ -21,7 +21,7 @@ export class GenericComponent extends Component {
             if(window.localStorage.getItem("isLoggedIn") === null && window.location.hash !== "#/signup") {
                 window.location.hash = '/';
             } else if(window.localStorage.getItem("isLoggedIn") !== null && window.location.hash === "/") {
-                window.location.hash = '/customers';
+                window.location.hash = '/dashboard';
             }
 
             if(window.localStorage.getItem("isLoggedIn") !== null){

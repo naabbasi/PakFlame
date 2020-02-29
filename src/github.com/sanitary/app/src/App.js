@@ -10,6 +10,7 @@ import WorkerDetails from "./components/worker/WorkerDetails";
 
 const Login = lazy(() => import ("./components/user/Login"));
 const SignUp = lazy(() => import ("./components/user/SignUp"));
+const Dashboard = lazy(() => import ("./components/dashboard/Dashboard"));
 const Customer = lazy(() => import ("./components/customer/Customer"));
 const Invoices = lazy(() => import ("./components/invoices/Invoices"));
 const Invoice = lazy(() => import ("./components/invoices/Invoice"));
@@ -45,7 +46,7 @@ function App() {
                 <Switch>
                     <Route exact path="/" component={WaitingComponent(Login)}></Route>
                     <Route exact path="/signup" component={WaitingComponent(SignUp)}></Route>
-                    <Route exact path="/dashboard" component={WaitingComponent(Login)}></Route>
+                    <Route exact path="/dashboard" component={WaitingComponent(Dashboard)}></Route>
                     <Route exact path="/customers" component={WaitingComponent(Customer)}></Route>
                     <Route exact path="/customers/details" component={WaitingComponent(CustomerDetails)}></Route>
                     <Route exact path="/workers" component={WaitingComponent(Worker)}></Route>

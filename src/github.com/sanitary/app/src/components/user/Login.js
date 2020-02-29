@@ -21,7 +21,7 @@ export default class Login extends GenericComponent {
 
     componentDidMount() {
         if(window.localStorage.getItem("isLoggedIn") !== null && window.location.hash === "#/") {
-            window.location.hash = 'customers';
+            window.location.hash = 'dashboard';
         } else {
             this.byId('loginComponent').style.backgroundColor = '#007ad9';
             this.byId('loginComponent').className = 'p-show';
@@ -38,7 +38,7 @@ export default class Login extends GenericComponent {
                     if(response.status === 200){
                         console.log(response.data);
                         window.localStorage.setItem("isLoggedIn", JSON.stringify(response.data));
-                        window.location.hash="customers";
+                        window.location.hash="dashboard";
                     }
                 })
                 .catch(error => {

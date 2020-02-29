@@ -6,6 +6,11 @@ export default class Navigation extends GenericComponent {
     render() {
         const items = [
             {
+                label: 'Dashboard',
+                icon:'pi pi-fw pi-users',
+                command:()=>{ window.location.hash="dashboard"; },
+            },
+            {
                 label:'Manage Inventory',
                 icon:'pi pi-fw pi-folder-open',
                 items: [
@@ -44,6 +49,7 @@ export default class Navigation extends GenericComponent {
             {
                 label: 'Workers',
                 icon:'pi pi-fw pi-users',
+                align: 'right',
                 command:()=>{ window.location.hash="workers"; }
             },
             /*{
@@ -73,6 +79,7 @@ export default class Navigation extends GenericComponent {
             <div>
                 <Menubar model={items}>
                     <div style={{float: 'right', lineHeight: '42px', textAlign: 'right', marginRight: '5px'}}>
+                        <span className="pi pi-fw pi-bell"></span>
                         <span className="pi pi-fw pi-user"></span>
                         <span>{userInfo == null ? "" : userInfo['firstName']}</span>
                     </div>
