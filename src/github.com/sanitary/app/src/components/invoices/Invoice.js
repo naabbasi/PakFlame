@@ -163,7 +163,8 @@ export default class Invoice extends GenericComponent {
                     console.log(response);
                     if(response.status === 201){
                         this.setState({item: {}});
-                        this.newInvoice = false;
+                        this.newInvoiceItem = false;
+                        this.getItemAutoComplete.current.loadAllItems();
                     }
                 })
                 .catch(function (error) {
@@ -317,6 +318,7 @@ export default class Invoice extends GenericComponent {
 
     getSelectedItem(item) {
         let invoice = {...this.state.invoice};
+        invoice.details['itemId'] = item.id;
         invoice.details['itemName'] = item.itemName;
         invoice.details['quantities'] = item.quantities;
         invoice.details['price'] = item.retailRate;

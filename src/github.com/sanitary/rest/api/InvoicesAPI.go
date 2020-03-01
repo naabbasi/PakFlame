@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"github.com/google/uuid"
+	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
@@ -165,22 +166,33 @@ func (invoices *invoices) GetInvoiceItemsById() {
 
 func (invoices *invoices) AddInvoiceItem() {
 	invoices.echo.POST(InvoiceEndPoint+"/items", func(c echo.Context) error {
-		newInvoice := new(models.InvoiceDetails)
-		if err := c.Bind(newInvoice); err != nil {
+		newInvoiceItem := new(models.InvoiceDetails)
+		if err := c.Bind(newInvoiceItem); err != nil {
 			return err
 		}
-		log.Printf("Item saved with %s", newInvoice)
+		log.Printf("Item saved with %s", newInvoiceItem)
 
 		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 		if err == nil {
-			newInvoice.ClientId = clientId
+			newInvoiceItem.ClientId = clientId
 		}
 
 		connection := invoices.dbSettings.GetDBConnection()
-		save := connection.Save(newInvoice)
+
+		//Update inventory table to update quantities
+		itemInInventory := new(models.Inventory)
+		connection.Model(models.Inventory{}).Where("id = ?", newInvoiceItem.ItemId).First(itemInInventory)
+		remainingItemInInventory := itemInInventory.Quantities - newInvoiceItem.Quantities
+		itemInInventory.Quantities = remainingItemInInventory
+		updateItemInInventory := connection.Model(models.Inventory{}).Where("id = ?", itemInInventory.ID).Update(itemInInventory)
+
+		var save *gorm.DB
+		if updateItemInInventory.RowsAffected == 1 {
+			save = connection.Save(newInvoiceItem)
+		}
 
 		if save.RowsAffected == 1 {
-			return c.JSON(http.StatusCreated, fmt.Sprintf("Item has been added into invoice number %d", newInvoice.InvoiceNumber))
+			return c.JSON(http.StatusCreated, fmt.Sprintf("Item has been added into invoice number %d", newInvoiceItem.InvoiceNumber))
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to save new Invoice")
 		}
@@ -205,15 +217,6 @@ func (invoices *invoices) UpdateInvoiceItem() {
 		update := connection.Model(models.Invoice{}).Where("id = ?", updateInvoice.ID).Update(updateInvoice)
 
 		if update.RowsAffected == 1 {
-			/*for _, newItem := range updateInvoice.InvoiceDetails {
-				connection := invoices.dbSettings.GetDBConnection()
-				newItem.InvoiceNumber = updateInvoice.ID
-				saveItem := connection.Save(newItem)
-				if saveItem.RowsAffected == 1 {
-					fmt.Printf("Item: %v", newItem)
-				}
-			}*/
-
 			return c.JSON(http.StatusAccepted, "Invoice has been added")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to update Invoice")

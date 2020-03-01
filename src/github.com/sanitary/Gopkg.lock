@@ -75,7 +75,7 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:9f99ea2b6896be22b5efb75be67a4b2b059f8fac4691cdff9c77fdf05c7e8080"
+  digest = "1:24cb025270e3d99afe840fb3554e85e880dacdacfe3bfc71ce8c76dd2188c2a2"
   name = "github.com/johnfercher/maroto"
   packages = [
     "internal",
@@ -85,8 +85,8 @@
     "pkg/props",
   ]
   pruneopts = ""
-  revision = "824b3579fade9245b99128f7762aed036be3f7c5"
-  version = "v0.24.0"
+  revision = "10c95dafdfcb10d71bfe416d4879ec47b10820b9"
+  version = "v0.24.1"
 
 [[projects]]
   digest = "1:3d7457319824d4b7285d582d9533bb7b16b7a4f2effd07088960bda999f58f3a"
@@ -137,12 +137,12 @@
   version = "v1.3.0"
 
 [[projects]]
-  digest = "1:9b58ad18b38cf0d44b1d006fce319e45f200eafa406fe7f65fe0d0194b9f7a9f"
+  digest = "1:eab986cd0513d271bb1fd9c9d12acd7eb4cfd57cb604122c65bd0914e4637619"
   name = "github.com/mattn/go-colorable"
   packages = ["."]
   pruneopts = ""
-  revision = "98ec13f34aabf44cc914c65a1cfb7b9bc815aef1"
-  version = "v0.1.4"
+  revision = "68e95eba382c972aafde02ead2cd2426a8a92480"
+  version = "v0.1.6"
 
 [[projects]]
   digest = "1:87fecb4f5564bd9bc810e4c83d4ac434fd17599edc7b35e27580c2cfc48cdb7c"
@@ -178,30 +178,30 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:25f91815028080d7bf24c51388e38c55fba9d0cbb282d85447883d632def97d8"
+  digest = "1:2eda274020f8dfe2b4e66c55e0f86e17b9545fb0bad431b2ea520668b7c77f7b"
   name = "golang.org/x/crypto"
   packages = [
     "acme",
     "acme/autocert",
   ]
   pruneopts = ""
-  revision = "86ce3cb696783b739e41e834e2eead3e1b4aa3fb"
+  revision = "2aa609cf4a9d7d1126360de73b55b6002f9e052a"
 
 [[projects]]
   branch = "master"
-  digest = "1:a6b4c0203496549bdd9eb7a34a9c34aa428851951f3bdea48fc3332b3633d8fe"
+  digest = "1:9ac4dae84a6c14d4d0458d27a8c46fca553cfba156fe0c87f99c50d22034c7e3"
   name = "golang.org/x/net"
   packages = ["idna"]
   pruneopts = ""
-  revision = "16171245cfb220d5317888b716d69c1fb4e7992b"
+  revision = "244492dfa37ae2ce87222fd06250a03160745faa"
 
 [[projects]]
   branch = "master"
-  digest = "1:3ea80848296554a023d21260e4511243daa5bf3aa32efbc1171541d14e7b47b2"
+  digest = "1:43bd80c6ec9e3ce4864574194acb3ee84d0a6920a0ae4f8c256840dffeed4a01"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = ""
-  revision = "d101bd2416d505c0448a6ce8a282482678040a89"
+  revision = "c5d0d7b4ec882d5bfaf87b42d8463ca5e7f0bdd9"
 
 [[projects]]
   digest = "1:740b51a55815493a8d0f2b1e0d0ae48fe48953bf7eaf3fcc4198823bf67768c0"

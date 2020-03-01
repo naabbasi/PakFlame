@@ -17,14 +17,18 @@ export default class ItemAutoComplete extends GenericComponent {
     }
 
     componentDidMount() {
+        this.loadAllItems();
+    }
+
+    loadAllItems() {
         this.axios.get('/inventories')
-        .then( response => {
-            // handle success
-            if(response.status === 200){
-                console.log(response.data);
-                this.setState({items: response.data});
-            }
-        }).catch(function (error) {
+            .then( response => {
+                // handle success
+                if(response.status === 200){
+                    console.log(response.data);
+                    this.setState({items: response.data});
+                }
+            }).catch(function (error) {
             // handle error
             console.log(error);
         });
