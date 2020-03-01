@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"github.com/jung-kurt/gofpdf"
 	"github.com/sanitary/backend/models"
+	"runtime"
 )
 
 type Result struct {
 	models.Invoice
 	models.InvoiceDetails
 }
-
-const path = "D:/"
 
 var (
 	align     = []string{"C", "L", "C", "R", "R", "R", "R", "R"}
@@ -36,6 +35,12 @@ func Pdf(result *[]Result) {
 
 	invoiceId := generateHeader(result, pdf)
 	generateTable(result, pdf)
+	var path = "change_according_to_os"
+	if runtime.GOOS == "windows" {
+		path = "D:/"
+	} else {
+		path = "/opt/"
+	}
 	err := pdf.OutputFileAndClose(fmt.Sprintf("%sSaleInvoice-%d.pdf", path, invoiceId))
 
 	if err != nil {
@@ -96,7 +101,9 @@ func generateTable(result *[]Result, pdf *gofpdf.Fpdf) {
 	sumOfTotalAmount := 0.0
 	transportCharges := 0.0
 
-	for index, row := range *result {
+	itemSerial := 0
+
+	for _, row := range *result {
 		transportCharges = row.TransportCharges
 		invoiceDetails := models.InvoiceDetails{
 			ItemName:    row.ItemName,
@@ -130,7 +137,8 @@ func generateTable(result *[]Result, pdf *gofpdf.Fpdf) {
 		pdf.SetFont("Arial", "", 8)
 		pdf.SetFillColor(255, 255, 255)
 
-		pdf.CellFormat(colsWidth[0], 5, fmt.Sprintf("%d", index), "1", 0, align[0], false, 0, "")
+		itemSerial = itemSerial + 1
+		pdf.CellFormat(colsWidth[0], 5, fmt.Sprintf("%d", itemSerial), "1", 0, align[0], false, 0, "")
 		pdf.CellFormat(colsWidth[1], 5, invoiceDetails.ItemName, "1", 0, align[1], false, 0, "")
 		pdf.CellFormat(colsWidth[2], 5, invoiceDetails.Unit, "1", 0, align[2], false, 0, "")
 		pdf.CellFormat(colsWidth[3], 5, fmt.Sprintf("%d", quantities), "1", 0, align[3], false, 0, "")

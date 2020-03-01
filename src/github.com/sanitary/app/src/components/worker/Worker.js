@@ -155,7 +155,7 @@ export default class Worker extends GenericComponent {
                     <div className="content-section implementation">
                         <DataTable value={this.state.workers} paginator={true} rows={25}  header={header} footer={footer}
                                    scrollable={true} scrollHeight="700px"
-                                   selectionMode="single" selection={this.state.selectedWorker} onSelectionChange={e => this.setState({selectedWorker: e.value})}
+                                   selectionMode="none" selection={this.state.selectedWorker} onSelectionChange={e => this.setState({selectedWorker: e.value})}
                                    globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
                             <Column field="firstName" header="First Name" sortable={true} style={{textAlign: 'left', width: '15%'}}/>
                             <Column field="lastName" header="Last Name" sortable={true} style={{textAlign: 'left', width: '15%'}}/>

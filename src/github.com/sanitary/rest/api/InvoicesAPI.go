@@ -71,7 +71,7 @@ func (invoices *invoices) PrintInvoice() {
 		result := new([]generate.Result)
 		connection.Table("invoices").Select("invoices.*, invoice_details.*").
 			Joins("inner join invoice_details on invoices.id = invoice_details.invoice_number").
-			Where("id = ?", id).
+			Where("invoices.id = ?", id).
 			Find(result)
 
 		generate.Pdf(result)
@@ -152,8 +152,8 @@ func (invoices *invoices) DeleteInvoice() {
 	})
 }
 
-func (invoices *invoices) GetInvoiceDetailsById() {
-	invoices.echo.GET(InvoiceEndPoint+"/details/:id", func(c echo.Context) error {
+func (invoices *invoices) GetInvoiceItemsById() {
+	invoices.echo.GET(InvoiceEndPoint+"/items/:id", func(c echo.Context) error {
 		var getInvoices = new([]models.InvoiceDetails)
 		connection := invoices.dbSettings.GetDBConnection()
 		invoiceId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
@@ -163,13 +163,13 @@ func (invoices *invoices) GetInvoiceDetailsById() {
 	})
 }
 
-func (invoices *invoices) AddInvoiceDetails() {
-	invoices.echo.POST(InvoiceEndPoint+"/details", func(c echo.Context) error {
-		newInvoice := new(models.Invoice)
+func (invoices *invoices) AddInvoiceItem() {
+	invoices.echo.POST(InvoiceEndPoint+"/items", func(c echo.Context) error {
+		newInvoice := new(models.InvoiceDetails)
 		if err := c.Bind(newInvoice); err != nil {
 			return err
 		}
-		log.Printf("Invoice saved with %s", newInvoice)
+		log.Printf("Item saved with %s", newInvoice)
 
 		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
 		if err == nil {
@@ -180,25 +180,15 @@ func (invoices *invoices) AddInvoiceDetails() {
 		save := connection.Save(newInvoice)
 
 		if save.RowsAffected == 1 {
-			for _, newItem := range newInvoice.InvoiceDetails {
-				connection := invoices.dbSettings.GetDBConnection()
-				newItem.InvoiceNumber = newInvoice.ID
-				newItem.ClientId = clientId
-				saveItem := connection.Save(newItem)
-				if saveItem.RowsAffected == 1 {
-					fmt.Printf("Item: %v", newItem)
-				}
-			}
-
-			return c.JSON(http.StatusCreated, "Invoice has been added")
+			return c.JSON(http.StatusCreated, fmt.Sprintf("Item has been added into invoice number %d", newInvoice.InvoiceNumber))
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to save new Invoice")
 		}
 	})
 }
 
-func (invoices *invoices) UpdateInvoiceDetail() {
-	invoices.echo.PUT(InvoiceEndPoint+"/details", func(c echo.Context) error {
+func (invoices *invoices) UpdateInvoiceItem() {
+	invoices.echo.PUT(InvoiceEndPoint+"/items", func(c echo.Context) error {
 		updateInvoice := new(models.Invoice)
 		if err := c.Bind(updateInvoice); err != nil {
 			return err
@@ -231,8 +221,8 @@ func (invoices *invoices) UpdateInvoiceDetail() {
 	})
 }
 
-func (invoices *invoices) DeleteInvoiceDetail() {
-	invoices.echo.DELETE(InvoiceEndPoint+"/details", func(c echo.Context) error {
+func (invoices *invoices) DeleteInvoiceItem() {
+	invoices.echo.DELETE(InvoiceEndPoint+"/items", func(c echo.Context) error {
 		deleteInvoice := new(models.Invoice)
 		if err := c.Bind(deleteInvoice); err != nil {
 			return err

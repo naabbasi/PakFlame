@@ -180,7 +180,7 @@ export default class Invoices extends GenericComponent {
                     <div className="content-section implementation">
                         <DataTable refs="invoiceTable" value={this.state.invoices} paginator={true} rows={25}  header={header} footer={footer}
                                    scrollable={true} scrollHeight="700px"
-                                   selectionMode="single" selection={this.state.selectedInvoice} onSelectionChange={e => this.setState({selectedInvoice: e.value})}
+                                   selectionMode="none" selection={this.state.selectedInvoice} onSelectionChange={e => this.setState({selectedInvoice: e.value})}
                                    /*onRowSelect={this.onInvoiceSelect}*/
                                    globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
                             <Column field="id" header="S. #" sortable={true} style={{textAlign: 'left', width: '8%'}}/>

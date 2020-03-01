@@ -139,10 +139,10 @@ func main() {
 		invoices.UpdateInvoice()
 		invoices.DeleteInvoice()
 
-		invoices.GetInvoiceDetailsById()
-		invoices.AddInvoiceDetails()
-		invoices.UpdateInvoiceDetail()
-		invoices.DeleteInvoiceDetail()
+		invoices.GetInvoiceItemsById()
+		invoices.AddInvoiceItem()
+		invoices.UpdateInvoiceItem()
+		invoices.DeleteInvoiceItem()
 		invoices.PrintInvoice()
 
 		e.Static("/static", "app/static")

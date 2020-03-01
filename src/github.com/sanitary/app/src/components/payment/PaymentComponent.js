@@ -153,7 +153,7 @@ export default class PaymentComponent extends GenericComponent {
                             <div className="p-col p-fluid" style={{padding:'.5em'}}>
                                 <DataTable value={this.state.payments} paginator={true} rows={25}
                                            scrollable={true} scrollHeight="200px"
-                                           selectionMode="single" selection={this.state.selectedInventory}
+                                           selectionMode="none" selection={this.state.selectedInventory}
                                            onSelectionChange={e => this.setState({selectedInventory: e.value})}
                                            onRowSelect={this.onInventorySelect} emptyMessage="No record(s) found">
 

@@ -9,7 +9,7 @@ export default class Dashboard extends GenericComponent {
     render() {
         return (
             <div>
-                <a href={"/customers"}>Customers</a>
+                <a href={"#/customers"}>Customers</a>
             </div>
         );
     }

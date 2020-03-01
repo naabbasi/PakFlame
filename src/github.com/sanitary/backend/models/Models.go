@@ -130,6 +130,7 @@ type Invoice struct {
 }
 
 type InvoiceDetails struct {
+	Model
 	InvoiceNumber int64     `json:"invoiceNumber" xml:"invoiceNumber" form:"invoiceNumber" query:"invoiceNumber"`
 	ItemName      string    `json:"itemName" xml:"unit" form:"unit" query:"unit"`
 	Unit          string    `json:"unit" xml:"unit" form:"unit" query:"unit"`

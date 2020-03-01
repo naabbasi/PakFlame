@@ -78,6 +78,12 @@ export class GenericComponent extends Component {
         return "" + date;
     }
 
+    deleteActionColumn = (rowData,column, entityName, componentState, label) => {
+        return <div className="p-clearfix ui-column-filter" style={{textAlign: 'center'}}>
+            <a onClick={(e)=> this.deleteEntity(rowData, entityName, componentState)}>Delete</a>
+        </div>;
+    };
+
     actionColumn = (rowData,column, entityName, componentState, label) => {
         return <div className="p-clearfix ui-column-filter" style={{textAlign: 'center'}}>
             <a onClick={(e)=> this.editEntity(rowData, entityName, componentState)}> {label === undefined ? 'Edit' : label}</a> |
@@ -104,6 +110,6 @@ export class GenericComponent extends Component {
 
     deleteEntity(rowData, entityName, componentState) {
         console.log(`deleteEntity ${rowData['id']}, ${entityName}, ${componentState}`);
-        console.log(componentState)
+        console.log(componentState);
     }
 }
