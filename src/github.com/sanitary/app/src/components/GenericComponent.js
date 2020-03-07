@@ -110,6 +110,18 @@ export class GenericComponent extends Component {
 
     deleteEntity(rowData, entityName, componentState) {
         console.log(`deleteEntity ${rowData['id']}, ${entityName}, ${componentState}`);
+        console.log(rowData);
         console.log(componentState);
+        if(entityName === 'warehouses'){
+        } else if(entityName === 'customers'){
+            this.deleteCustomer(rowData['id']);
+        } else if(entityName === 'workers'){
+            this.deleteWorker(rowData['id']);
+        } if(entityName === 'inventory'){
+        } else if(entityName === 'invoices') {
+            this.deleteInvoice(rowData['id']);
+        } else if(entityName === 'invoice') {
+            this.deleteInvoiceItem(rowData['id']);
+        }
     }
 }

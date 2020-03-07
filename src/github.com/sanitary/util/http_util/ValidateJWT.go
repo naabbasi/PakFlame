@@ -1,4 +1,4 @@
-package app_jwt
+package http_util
 
 import (
 	"github.com/dgrijalva/jwt-go"
@@ -8,6 +8,11 @@ import (
 type UserInfo struct {
 	Username string
 	ClientId string
+}
+
+type CustomHttpResponse struct {
+	Message string      `json:"message"`
+	Result  interface{} `json:"result"`
 }
 
 func GetUserInfo(c echo.Context) UserInfo {

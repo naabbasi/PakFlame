@@ -23,7 +23,8 @@ export default class Invoice extends GenericComponent {
             items: [],
             invoiceId: params.get('invoiceId') == null ? 0 : params.get('invoiceId'),
             disableButtons: true,
-            disableAddItemButton: false
+            disableSaveButton: false,
+            disableAddItemButton: true
         };
 
         this.newInvoice = false;
@@ -34,7 +35,6 @@ export default class Invoice extends GenericComponent {
         this.getCustomerAutoComplete = React.createRef();
 
         this.saveInvoice = this.saveInvoice.bind(this);
-        this.deleteInvoice = this.deleteInvoice.bind(this);
         this.onInvoiceSelect = this.onInvoiceSelect.bind(this);
         this.addNewItem = this.addNewItem.bind(this);
         this.print = this.print.bind(this);
@@ -59,6 +59,7 @@ export default class Invoice extends GenericComponent {
             this.setState({
                 isEdit: true,
                 disableButtons: false,
+                disableSaveButton: true,
                 invoice: {
                     id: data['id'], customerId: data['customerId'], customerName: data['customerName'], createdAt: new Date(data['createdAt']), partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'],
                     details: {id: 0, itemName: 'My Item', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
@@ -115,7 +116,7 @@ export default class Invoice extends GenericComponent {
                 // handle success
                 console.log(response);
                 if(response.status === 201){
-                    this.setState({item: {}});
+                    this.setState({invoiceId: response.data['result'],item: {}, disableSaveButton: true, disableAddItemButton: false});
                     this.newInvoice = false;
                 }
             })
@@ -139,7 +140,7 @@ export default class Invoice extends GenericComponent {
         }
     }
 
-    deleteInvoice() {
+    deleteInvoice1() {
         this.axios.delete('/invoices', { data: { ...this.state.selectedInvoice}})
             .then( response => {
                 // handle success
@@ -162,9 +163,10 @@ export default class Invoice extends GenericComponent {
                     // handle success
                     console.log(response);
                     if(response.status === 201){
-                        this.setState({item: {}});
+                        this.setState({item: {}, disableAddItemButton: true});
                         this.newInvoiceItem = false;
                         this.getItemAutoComplete.current.loadAllItems();
+                        this.getInvoiceDetailsById(this.state.invoiceId);
                     }
                 })
                 .catch(function (error) {
@@ -197,13 +199,13 @@ export default class Invoice extends GenericComponent {
         }
     }
 
-    deleteInvoiceItem() {
-        this.axios.delete('/invoices/items', { data: { ...this.state.selectedInvoice}})
+    deleteInvoiceItem(itemId) {
+        this.axios.delete(`/invoices/items/${itemId}`)
             .then( response => {
                 // handle success
                 console.log(response);
                 if(response.status === 204){
-                    this.setState({invoices: null, selectedInvoice:null, invoice: null, displayDialog:false});
+                    this.getInvoiceDetailsById(this.state.invoiceId);
                 }
             })
             .catch(function (error) {
@@ -263,9 +265,7 @@ export default class Invoice extends GenericComponent {
         let addInvoiceItem = this.state.items;
         addInvoiceItem.push(details);
         this.setState({
-            saveButton: false,
-            items: addInvoiceItem,
-            disableAddItemButton: true
+            saveButton: false
         });
         this.resetItemForm();
 
@@ -327,7 +327,12 @@ export default class Invoice extends GenericComponent {
             this.setState({invoice});
         });
 
-        this.setState({selectedItem: item, disableAddItemButton: false});
+        if(this.state.invoiceId === 0){
+            this.setState({selectedItem: item, disableAddItemButton: true});
+        } else {
+            this.setState({selectedItem: item, disableAddItemButton: false});
+        }
+
         this.calculateAmount();
     }
 
@@ -351,12 +356,6 @@ export default class Invoice extends GenericComponent {
     }
 
     render() {
-        let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
-            <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveWarehouses}/>
-            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteWarehouse}/>
-            <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeWarehouseDialog}/>
-        </div>;
-
         return (
             <div>
                 <Navigation>
@@ -420,7 +419,7 @@ export default class Invoice extends GenericComponent {
                                     </div>
                                     <div className="p-grid">
                                         <div className="p-col p-clearfix" style={{padding:'.50em'}}>
-                                            <Button disabled={this.state.disableButtons} label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInvoice}/>
+                                            <Button disabled={this.state.disableSaveButton} label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInvoice}/>
                                             <Button disabled={this.state.disableButtons} label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteInvoice}/>
                                         </div>
                                     </div>

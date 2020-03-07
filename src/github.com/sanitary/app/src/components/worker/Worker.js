@@ -73,8 +73,8 @@ export default class Worker extends GenericComponent {
         }
     }
 
-    deleteWorker() {
-        this.axios.delete('/workers', { data: { ...this.state.selectedWorker}})
+    deleteWorker(workerId) {
+        this.axios.delete(`/workers/${workerId}`)
         .then( response => {
             // handle success
             console.log(response);

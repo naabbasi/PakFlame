@@ -18,7 +18,6 @@ export default class Customer extends GenericComponent {
         };
 
         this.saveCustomer = this.saveCustomer.bind(this);
-        this.deleteCustomer = this.deleteCustomer.bind(this);
         this.closeCustomerDialog = this.closeCustomerDialog.bind(this);
         this.onCustomerSelect = this.onCustomerSelect.bind(this);
         this.addNewCustomer = this.addNewCustomer.bind(this);
@@ -77,8 +76,8 @@ export default class Customer extends GenericComponent {
         }
     }
 
-    deleteCustomer() {
-        this.axios.delete('/customers', { data: { ...this.state.selectedCustomer}})
+    deleteCustomer(customerId) {
+        this.axios.delete(`/customers/${customerId}`)
         .then( response => {
             // handle success
             console.log(response);

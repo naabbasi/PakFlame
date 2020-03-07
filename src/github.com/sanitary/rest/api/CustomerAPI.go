@@ -1,13 +1,14 @@
 package api
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
-	"github.com/sanitary/util/app_jwt"
+	"github.com/sanitary/util/http_util"
 	"net/http"
 )
 
@@ -37,7 +38,7 @@ func (customer *customers) GetCustomers() {
 		connection := customer.dbSettings.GetDBConnection()
 		connection.Select("id, first_name, last_name, mobile_number, status, shop_name,"+
 			" address").
-			Where("client_id = ? ", app_jwt.GetUserInfo(c).ClientId).
+			Where("client_id = ? ", http_util.GetUserInfo(c).ClientId).
 			Order("first_name ASC").
 			Find(&allCustomer)
 
@@ -50,7 +51,7 @@ func (customer *customers) GetCustomerById() {
 		var findCustomer = new(models.Customer)
 		customerId := c.Param("id")
 		connection := customer.dbSettings.GetDBConnection()
-		connection.Table("customers").Where("id = ? and client_id = ?", customerId, app_jwt.GetUserInfo(c).ClientId).
+		connection.Table("customers").Where("id = ? and client_id = ?", customerId, http_util.GetUserInfo(c).ClientId).
 			First(&findCustomer)
 		return c.JSON(http.StatusOK, &findCustomer)
 	})
@@ -64,7 +65,7 @@ func (customer *customers) AddCustomer() {
 		}
 		log.Printf("Customer saved with %s", newCustomer)
 
-		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err == nil {
 			newCustomer.ClientId = clientId
 		}
@@ -89,7 +90,7 @@ func (customer *customers) UpdateCustomer() {
 
 		log.Printf("Customer updated with %s", updateCustomer)
 
-		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err == nil {
 			updateCustomer.ClientId = clientId
 		}
@@ -106,22 +107,17 @@ func (customer *customers) UpdateCustomer() {
 }
 
 func (customer *customers) DeleteCustomer() {
-	customer.echo.DELETE(CustomerEndPoint, func(c echo.Context) error {
-		deleteCustomer := new(models.Customer)
-		if err := c.Bind(deleteCustomer); err != nil {
-			return err
-		}
-		log.Printf("Worker deleted with %s", deleteCustomer.FirstName)
+	customer.echo.DELETE(CustomerEndPoint+"/:id", func(c echo.Context) error {
 
-		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
-		if err == nil {
-			deleteCustomer.ClientId = clientId
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("Unable to parse client id: %s", clientId))
 		}
 
 		connection := customer.dbSettings.GetDBConnection()
-		update := connection.Model(models.Customer{}).Where("id = ? and client_id = ?", deleteCustomer.ID, deleteCustomer.ClientId).Delete(deleteCustomer)
+		delete := connection.Where("id = ? and client_id = ?", c.Param("id"), clientId).Delete(models.Customer{})
 
-		if update.RowsAffected == 1 {
+		if delete.RowsAffected == 1 {
 			return c.JSON(http.StatusNoContent, "Customer has been deleted")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to delete customer")

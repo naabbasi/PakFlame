@@ -1,13 +1,14 @@
 package api
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
-	"github.com/sanitary/util/app_jwt"
+	"github.com/sanitary/util/http_util"
 	"net/http"
 )
 
@@ -36,7 +37,7 @@ func (worker *workers) Get() {
 		var allWorkers = new([]models.Worker)
 		connection := worker.dbSettings.GetDBConnection()
 		connection.
-			Where("client_id = ? ", app_jwt.GetUserInfo(c).ClientId).
+			Where("client_id = ? ", http_util.GetUserInfo(c).ClientId).
 			Order("first_name ASC").
 			Find(&allWorkers)
 		return c.JSON(http.StatusOK, &allWorkers)
@@ -48,7 +49,7 @@ func (worker *workers) GetWorkerById() {
 		var findWorker = new(models.Worker)
 		workerId := c.Param("id")
 		connection := worker.dbSettings.GetDBConnection()
-		connection.Table("workers").Where("id = ? and client_id = ?", workerId, app_jwt.GetUserInfo(c).ClientId).
+		connection.Table("workers").Where("id = ? and client_id = ?", workerId, http_util.GetUserInfo(c).ClientId).
 			First(&findWorker)
 		return c.JSON(http.StatusOK, &findWorker)
 	})
@@ -62,7 +63,7 @@ func (worker *workers) AddWorker() {
 		}
 		log.Printf("Worker saved with %s", newWorker.FirstName)
 
-		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err == nil {
 			newWorker.ClientId = clientId
 		}
@@ -86,7 +87,7 @@ func (worker *workers) UpdateWorker() {
 		}
 		log.Printf("Worker saved with %s", updateWorker.FirstName)
 
-		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err == nil {
 			updateWorker.ClientId = clientId
 		}
@@ -103,22 +104,16 @@ func (worker *workers) UpdateWorker() {
 }
 
 func (worker *workers) DeleteWorker() {
-	worker.echo.DELETE(WorkerEndPoint, func(c echo.Context) error {
-		deleteWorker := new(models.Worker)
-		if err := c.Bind(deleteWorker); err != nil {
-			return err
-		}
-		log.Printf("Worker deleted with %s", deleteWorker.FirstName)
-
-		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
-		if err == nil {
-			deleteWorker.ClientId = clientId
+	worker.echo.DELETE(WorkerEndPoint+"/:id", func(c echo.Context) error {
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("Unable to parse client id: %s", clientId))
 		}
 
 		connection := worker.dbSettings.GetDBConnection()
-		update := connection.Model(models.Worker{}).Where("id = ? and client_id = ?", deleteWorker.ID, deleteWorker.ClientId).Delete(deleteWorker)
+		delete := connection.Where("id = ? and client_id = ?", c.Param("id"), clientId).Delete(models.Worker{})
 
-		if update.RowsAffected == 1 {
+		if delete.RowsAffected == 1 {
 			return c.JSON(http.StatusNoContent, "Work has been deleted")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to update worker")

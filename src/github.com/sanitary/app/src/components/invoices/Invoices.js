@@ -16,7 +16,6 @@ export default class Invoices extends GenericComponent {
             companies: null
         };
         this.save = this.save.bind(this);
-        this.delete = this.delete.bind(this);
         this.close = this.close.bind(this);
         this.onInvoiceSelect = this.onInvoiceSelect.bind(this);
         this.addNew = this.addNew.bind(this);
@@ -75,8 +74,8 @@ export default class Invoices extends GenericComponent {
         }
     }
 
-    delete() {
-        this.axios.delete('/', { data: { ...this.state.selectedInvoice}})
+    deleteInvoice(invoiceId) {
+        this.axios.delete(`/invoices/${invoiceId}`)
         .then( response => {
             // handle success
             console.log(response);

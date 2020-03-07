@@ -9,7 +9,7 @@ import (
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
-	"github.com/sanitary/util/app_jwt"
+	"github.com/sanitary/util/http_util"
 	"github.com/sanitary/util/pdf/generate"
 	"net/http"
 	"strconv"
@@ -39,8 +39,8 @@ func (invoices *invoices) GetInvoices() {
 	invoices.echo.GET(InvoiceEndPoint, func(c echo.Context) error {
 		var getInvoices = new([]models.Invoice)
 		connection := invoices.dbSettings.GetDBConnection()
-		connection.Where("client_id = ?", app_jwt.GetUserInfo(c).ClientId).
-			Order("customer_name ASC").
+		connection.Where("client_id = ?", http_util.GetUserInfo(c).ClientId).
+			Order("id ASC").
 			Find(&getInvoices)
 		return c.JSON(http.StatusOK, &getInvoices)
 	})
@@ -52,7 +52,7 @@ func (invoices *invoices) GetInvoiceById() {
 		connection := invoices.dbSettings.GetDBConnection()
 		id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 		connection.Table("invoices").
-			Where("id = ? and client_id = ?", id, app_jwt.GetUserInfo(c).ClientId).
+			Where("id = ? and client_id = ?", id, http_util.GetUserInfo(c).ClientId).
 			First(&getInvoice)
 
 		if getInvoice.ID != 0 {
@@ -88,7 +88,7 @@ func (invoices *invoices) AddInvoice() {
 		}
 		log.Printf("Invoice saved with %s", newInvoice)
 
-		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err == nil {
 			newInvoice.ClientId = clientId
 		}
@@ -97,7 +97,7 @@ func (invoices *invoices) AddInvoice() {
 		save := connection.Save(newInvoice)
 
 		if save.RowsAffected == 1 {
-			return c.JSON(http.StatusCreated, "Invoice has been added")
+			return c.JSON(http.StatusCreated, http_util.CustomHttpResponse{Message: "Invoice has been added", Result: newInvoice.ID})
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to save new Invoice")
 		}
@@ -113,7 +113,7 @@ func (invoices *invoices) UpdateInvoice() {
 
 		log.Printf("Invoice updated with %s", updateInvoice)
 
-		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err == nil {
 			updateInvoice.ClientId = clientId
 		}
@@ -130,20 +130,20 @@ func (invoices *invoices) UpdateInvoice() {
 }
 
 func (invoices *invoices) DeleteInvoice() {
-	invoices.echo.DELETE(InvoiceEndPoint, func(c echo.Context) error {
+	invoices.echo.DELETE(InvoiceEndPoint+"/:id", func(c echo.Context) error {
 		deleteInvoice := new(models.Invoice)
 		if err := c.Bind(deleteInvoice); err != nil {
 			return err
 		}
 		log.Printf("Invoice deleted with %s", deleteInvoice.ID)
 
-		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err == nil {
 			deleteInvoice.ClientId = clientId
 		}
 
 		connection := invoices.dbSettings.GetDBConnection()
-		update := connection.Model(models.Invoice{}).Delete(deleteInvoice)
+		update := connection.Model(models.Invoice{}).Where("id = ?", c.Param("id")).Delete(deleteInvoice)
 
 		if update.RowsAffected == 1 {
 			return c.JSON(http.StatusNoContent, "Invoice has been deleted")
@@ -158,7 +158,7 @@ func (invoices *invoices) GetInvoiceItemsById() {
 		var getInvoices = new([]models.InvoiceDetails)
 		connection := invoices.dbSettings.GetDBConnection()
 		invoiceId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-		connection.Table("invoice_details").Where("invoice_number = ? and client_id = ?", invoiceId, app_jwt.GetUserInfo(c).ClientId).Find(&getInvoices)
+		connection.Table("invoice_details").Where("invoice_number = ? and client_id = ?", invoiceId, http_util.GetUserInfo(c).ClientId).Find(&getInvoices)
 
 		return c.JSON(http.StatusOK, &getInvoices)
 	})
@@ -172,7 +172,7 @@ func (invoices *invoices) AddInvoiceItem() {
 		}
 		log.Printf("Item saved with %s", newInvoiceItem)
 
-		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err == nil {
 			newInvoiceItem.ClientId = clientId
 		}
@@ -184,15 +184,21 @@ func (invoices *invoices) AddInvoiceItem() {
 		connection.Model(models.Inventory{}).Where("id = ?", newInvoiceItem.ItemId).First(itemInInventory)
 		remainingItemInInventory := itemInInventory.Quantities - newInvoiceItem.Quantities
 		itemInInventory.Quantities = remainingItemInInventory
-		updateItemInInventory := connection.Model(models.Inventory{}).Where("id = ?", itemInInventory.ID).Update(itemInInventory)
+		updateItemInInventory := connection.Exec("update inventories set quantities = ? where id = ?", itemInInventory.Quantities, itemInInventory.ID)
+
+		customerId, err := uuid.Parse(c.Param("customerId"))
 
 		var save *gorm.DB
 		if updateItemInInventory.RowsAffected == 1 {
+			connection.Model(models.Payment{EntityId: customerId})
 			save = connection.Save(newInvoiceItem)
 		}
 
 		if save.RowsAffected == 1 {
-			return c.JSON(http.StatusCreated, fmt.Sprintf("Item has been added into invoice number %d", newInvoiceItem.InvoiceNumber))
+			return c.JSON(http.StatusCreated, http_util.CustomHttpResponse{
+				Message: fmt.Sprintf("Item has been added into invoice number %d", newInvoiceItem.InvoiceNumber),
+				Result:  newInvoiceItem.InvoiceNumber,
+			})
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to save new Invoice")
 		}
@@ -201,14 +207,14 @@ func (invoices *invoices) AddInvoiceItem() {
 
 func (invoices *invoices) UpdateInvoiceItem() {
 	invoices.echo.PUT(InvoiceEndPoint+"/items", func(c echo.Context) error {
-		updateInvoice := new(models.Invoice)
+		updateInvoice := new(models.InvoiceDetails)
 		if err := c.Bind(updateInvoice); err != nil {
 			return err
 		}
 
 		log.Printf("Invoice updated with %s", updateInvoice)
 
-		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err == nil {
 			updateInvoice.ClientId = clientId
 		}
@@ -225,22 +231,18 @@ func (invoices *invoices) UpdateInvoiceItem() {
 }
 
 func (invoices *invoices) DeleteInvoiceItem() {
-	invoices.echo.DELETE(InvoiceEndPoint+"/items", func(c echo.Context) error {
-		deleteInvoice := new(models.Invoice)
-		if err := c.Bind(deleteInvoice); err != nil {
-			return err
-		}
-		log.Printf("Invoice deleted with %s", deleteInvoice.ID)
+	invoices.echo.DELETE(InvoiceEndPoint+"/items/:id", func(c echo.Context) error {
+		fmt.Println(c.Param("id"))
 
-		clientId, err := uuid.Parse(app_jwt.GetUserInfo(c).ClientId)
-		if err == nil {
-			deleteInvoice.ClientId = clientId
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("Unable to parse client id: %s", clientId))
 		}
 
 		connection := invoices.dbSettings.GetDBConnection()
-		update := connection.Model(models.Invoice{}).Delete(deleteInvoice)
+		delete := connection.Where("id = ? and client_id = ?", c.Param("id"), clientId).Delete(models.InvoiceDetails{})
 
-		if update.RowsAffected == 1 {
+		if delete.RowsAffected == 1 {
 			return c.JSON(http.StatusNoContent, "Invoice has been deleted")
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to delete Invoice")
