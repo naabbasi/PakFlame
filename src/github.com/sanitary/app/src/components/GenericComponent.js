@@ -122,6 +122,8 @@ export class GenericComponent extends Component {
             this.deleteInvoice(rowData['id']);
         } else if(entityName === 'invoice') {
             this.deleteInvoiceItem(rowData['id']);
+        } else if(entityName === 'payments') {
+            this.deletePayment(entityName, rowData['entityId'], rowData['id']);
         }
     }
 }

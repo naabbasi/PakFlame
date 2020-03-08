@@ -97,6 +97,15 @@ func (invoices *invoices) AddInvoice() {
 		save := connection.Save(newInvoice)
 
 		if save.RowsAffected == 1 {
+			payment := new(models.Payment)
+			payment.EntityId = newInvoice.CustomerId
+			payment.ClientId = clientId
+			savePayment := connection.Save(payment)
+
+			if savePayment.RowsAffected == 1 {
+				log.Print("Invoice payment has been added")
+			}
+
 			return c.JSON(http.StatusCreated, http_util.CustomHttpResponse{Message: "Invoice has been added", Result: newInvoice.ID})
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to save new Invoice")
@@ -186,11 +195,8 @@ func (invoices *invoices) AddInvoiceItem() {
 		itemInInventory.Quantities = remainingItemInInventory
 		updateItemInInventory := connection.Exec("update inventories set quantities = ? where id = ?", itemInInventory.Quantities, itemInInventory.ID)
 
-		customerId, err := uuid.Parse(c.Param("customerId"))
-
 		var save *gorm.DB
 		if updateItemInInventory.RowsAffected == 1 {
-			connection.Model(models.Payment{EntityId: customerId})
 			save = connection.Save(newInvoiceItem)
 		}
 
@@ -232,8 +238,6 @@ func (invoices *invoices) UpdateInvoiceItem() {
 
 func (invoices *invoices) DeleteInvoiceItem() {
 	invoices.echo.DELETE(InvoiceEndPoint+"/items/:id", func(c echo.Context) error {
-		fmt.Println(c.Param("id"))
-
 		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("Unable to parse client id: %s", clientId))

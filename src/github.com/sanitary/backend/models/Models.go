@@ -67,11 +67,14 @@ type Worker struct {
 }
 
 type Payment struct {
+	ID        uuid.UUID `gorm:"PRIMARY_KEY; type:uuid default gen_random_uuid();" json:"id" xml:"id" form:"id" query:"id"`
 	Amount    float64   `json:"amount" xml:"amount" form:"amount" query:"amount"`
 	Remaining float64   `json:"remaining" xml:"remaining" form:"remaining" query:"remaining"`
 	Total     float64   `json:"total" xml:"total" form:"total" query:"total"`
 	CreatedAt time.Time `json:"createdAt" xml:"createdAt" form:"createdAt" query:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
 	EntityId  uuid.UUID `json:"entityId" xml:"entityId" form:"entityId" query:"entityId"`
+	ClientId  uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type Warehouse struct {

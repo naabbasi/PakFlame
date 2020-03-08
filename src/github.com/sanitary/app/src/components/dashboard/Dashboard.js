@@ -1,5 +1,6 @@
 import React from 'react';
 import {GenericComponent} from "../GenericComponent";
+import Navigation from "../layout/Navigation";
 
 export default class Dashboard extends GenericComponent {
     constructor(props) {
@@ -8,9 +9,11 @@ export default class Dashboard extends GenericComponent {
 
     render() {
         return (
-            <div>
-                <a href={"#/customers"}>Customers</a>
-            </div>
+            <Navigation>
+                <div>
+                    <a href={"#/customers"}>Customers</a>
+                </div>
+            </Navigation>
         );
     }
 }

@@ -75,20 +75,19 @@ export default class PaymentComponent extends GenericComponent {
         }
     }
 
-    deletePayment() {
-        /*this.axios.delete('/', { data: { ...this.state.selectedInvoice}})
-            .then( response => {
-                // handle success
-                console.log(response);
-                if(response.status === 204){
-                    this.setState({invoices: null, selectedInvoice:null, invoice: null, displayDialog:false});
-                    this.getInvoices();
-                }
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            });*/
+    deletePayment(entityName, entityId, paymentId) {
+        this.axios.delete(`/payments/${entityId}/${paymentId}`)
+        .then( response => {
+            // handle success
+            console.log(response);
+            if(response.status === 204){
+                this.getPaymentsByEntityId(entityId);
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        });
     }
 
     render() {
@@ -148,7 +147,6 @@ export default class PaymentComponent extends GenericComponent {
                         </div>
                     </div>
                     <div className="p-col-12">
-                        <h4>Display All Saved Payment {this.state.payment['entityId']}</h4>
                         <div className="p-grid">
                             <div className="p-col p-fluid" style={{padding:'.5em'}}>
                                 <DataTable value={this.state.payments} paginator={true} rows={25}
@@ -161,6 +159,7 @@ export default class PaymentComponent extends GenericComponent {
                                     <Column field="remaining" header="Remaining" sortable={true} style={{textAlign: 'right'}}/>
                                     <Column field="total" header="Total Amount" sortable={true}/>
                                     <Column field="createdAt" header="Date" body={this.dateFormatter} sortable={true} style={{textAlign: 'right'}}/>
+                                    <Column header="Action" body={(rowData, column)=> this.deleteActionColumn(rowData, column, 'payments', this.state)} style={{width: '12%'}}/>
                                 </DataTable>
                             </div>
                         </div>
