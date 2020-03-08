@@ -138,6 +138,7 @@ type InvoiceDetails struct {
 	Amount        float64   `json:"amount" xml:"amount" form:"amount" query:"amount"`
 	Discount      float64   `json:"discount" xml:"discount" form:"discount" query:"discount"`
 	TotalAmount   float64   `json:"totalAmount" xml:"totalAmount" form:"totalAmount" query:"totalAmount"`
+	CustomerId    uuid.UUID `gorm:"-" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
 	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 

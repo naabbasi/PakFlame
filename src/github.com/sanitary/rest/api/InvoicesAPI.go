@@ -106,7 +106,7 @@ func (invoices *invoices) AddInvoice() {
 				log.Print("Invoice payment has been added")
 			}
 
-			return c.JSON(http.StatusCreated, http_util.CustomHttpResponse{Message: "Invoice has been added", Result: newInvoice.ID})
+			return c.JSON(http.StatusCreated, http_util.CustomHttpResponse{Message: "Invoice has been added", Result: newInvoice})
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to save new Invoice")
 		}
@@ -194,6 +194,8 @@ func (invoices *invoices) AddInvoiceItem() {
 		remainingItemInInventory := itemInInventory.Quantities - newInvoiceItem.Quantities
 		itemInInventory.Quantities = remainingItemInInventory
 		updateItemInInventory := connection.Exec("update inventories set quantities = ? where id = ?", itemInInventory.Quantities, itemInInventory.ID)
+
+		//Update amount in payment
 
 		var save *gorm.DB
 		if updateItemInInventory.RowsAffected == 1 {

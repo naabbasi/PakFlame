@@ -55,7 +55,7 @@ func CreatePostgreSQLSchema(db *gorm.DB) {
 	//db.Model(&models.Inventory{}).RemoveForeignKey("customer_id", "customers(id)")
 	//db.Model(&models.Invoice{}).RemoveForeignKey("customer_id", "customers(id)")
 
-	db.Model(&models.Inventory{}).AddForeignKey("company_id", "companies(id)", "RESTRICT", "RESTRICT")
+	//db.Model(&models.Inventory{}).AddForeignKey("company_id", "companies(id)", "RESTRICT", "RESTRICT")
 	//db.Model(&models.Invoice{}).AddForeignKey("customer_id", "customers(id)", "RESTRICT", "RESTRICT")
 	//db.Model(&models.User{}).AddUniqueIndex("idx_username","username","password")
 }

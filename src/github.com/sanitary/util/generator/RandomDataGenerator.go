@@ -62,7 +62,7 @@ func (data *data) createWarehouses(connection *gorm.DB, client *models.Client) {
 }
 
 func (data *data) createCustomers(connection *gorm.DB, client *models.Client) {
-	for num := 0; num < 100; num++ {
+	for num := 0; num < 10; num++ {
 		gofakeit.Seed(time.Now().UnixNano())
 		customer := &models.Customer{}
 		customer.FirstName = gofakeit.FirstName()
@@ -77,7 +77,7 @@ func (data *data) createCustomers(connection *gorm.DB, client *models.Client) {
 }
 
 func (data *data) createWorkers(connection *gorm.DB, client *models.Client) {
-	for num := 0; num < 100; num++ {
+	for num := 0; num < 10; num++ {
 		gofakeit.Seed(time.Now().UnixNano())
 		worker := &models.Worker{}
 		worker.FirstName = gofakeit.FirstName()
@@ -100,7 +100,7 @@ func (data *data) createCompanies(connection *gorm.DB, client *models.Client) *m
 }
 
 func (data *data) createInventories(company *models.Company, connection *gorm.DB, client *models.Client) {
-	for num := 0; num < 1000; num++ {
+	for num := 0; num < 25; num++ {
 		gofakeit.Seed(time.Now().UnixNano())
 		inventory := &models.Inventory{}
 		inventory.ItemName = gofakeit.Name()

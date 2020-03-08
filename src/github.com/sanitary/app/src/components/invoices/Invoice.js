@@ -62,7 +62,7 @@ export default class Invoice extends GenericComponent {
                 disableSaveButton: true,
                 invoice: {
                     id: data['id'], customerId: data['customerId'], customerName: data['customerName'], createdAt: new Date(data['createdAt']), partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'],
-                    details: {id: 0, itemName: 'My Item', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
+                    details: {id: 0, itemName: '', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0, customerId: ''},
                 },
             });
 
@@ -72,7 +72,7 @@ export default class Invoice extends GenericComponent {
                 disableButtons: false,
                 invoice: {
                     id: 0, customerId: '', customerName: '', createdAt: new Date(), partyName: '', transport: '', transportCharges: 0, address: '',
-                    details: {id: 0, itemName: '', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
+                    details: {id: 0, itemName: '', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0, customerId: ''},
                 },
             });
         }
@@ -114,9 +114,8 @@ export default class Invoice extends GenericComponent {
             this.axios.post('/invoices', this.state.invoice)
             .then( response => {
                 // handle success
-                console.log(response);
                 if(response.status === 201){
-                    this.setState({invoiceId: response.data['result'],item: {}, disableSaveButton: true, disableAddItemButton: false});
+                    this.setState({invoiceId: response.data['result']['id'],item: {}, disableSaveButton: true, disableAddItemButton: false});
                     this.newInvoice = false;
                 }
             })
@@ -256,11 +255,13 @@ export default class Invoice extends GenericComponent {
 
     addNewItem() {
         this.newInvoiceItem = true;
+        let invoice = {...this.state.invoice}
         let details = {...this.state.invoice.details};
         console.log("Adding new item in invoice");
         console.log(details);
         console.log(this.state.invoiceId);
         details['invoiceNumber'] = this.Int(this.state.invoiceId);
+        details['customerId'] = invoice['customerId'];
         delete details['createdAt'];
         let addInvoiceItem = this.state.items;
         addInvoiceItem.push(details);
