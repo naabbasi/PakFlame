@@ -261,7 +261,6 @@ export default class Invoice extends GenericComponent {
         console.log(details);
         console.log(this.state.invoiceId);
         details['invoiceNumber'] = this.Int(this.state.invoiceId);
-        details['customerId'] = invoice['customerId'];
         delete details['createdAt'];
         let addInvoiceItem = this.state.items;
         addInvoiceItem.push(details);
@@ -364,7 +363,9 @@ export default class Invoice extends GenericComponent {
                         {
                             this.state.invoice &&
                             <div style={{padding: '10px'}}>
-                                <div className="">
+                                <fieldset>
+                                    <legend>Customer Information</legend>
+                                    <div className="">
                                     <div className="p-col-12">
                                         <div className="p-grid">
                                             <div className="p-col" style={{padding:'.50em'}}>
@@ -425,8 +426,10 @@ export default class Invoice extends GenericComponent {
                                         </div>
                                     </div>
                                 </div>
+                                </fieldset>
                                 <div className="p-col-12 p-component">
                                     <fieldset>
+                                        <legend>Item(s) Details</legend>
                                         <div className="p-grid" style={{ paddingTop: '10px'}}>
                                             <div className="p-col" style={{padding:'.50em'}}>
                                                 <span className="p-float-label p-fluid">

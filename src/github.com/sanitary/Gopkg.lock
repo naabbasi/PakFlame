@@ -3,248 +3,133 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0a965d5b13be11c39d3cf35ba43de922765928bdca7e0596aec036d67ef4b5cd"
   name = "github.com/alexbrainman/printer"
   packages = ["."]
-  pruneopts = ""
   revision = "345afe414dee601bf59b3ed4fb3e0282a51a5d43"
 
 [[projects]]
-  digest = "1:b529f4bf748979caa18b599d40d13e8b6e591a74b340f315ce4f95e119c288c2"
   name = "github.com/boombuler/barcode"
-  packages = [
-    ".",
-    "aztec",
-    "codabar",
-    "code128",
-    "code39",
-    "datamatrix",
-    "ean",
-    "qr",
-    "twooffive",
-    "utils",
-  ]
-  pruneopts = ""
+  packages = [".","aztec","codabar","code128","code39","datamatrix","ean","qr","twooffive","utils"]
   revision = "3cfea5ab600ae37946be2b763b8ec2c1cf2d272d"
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:9c68571071e94742b3cdd6cd3e8356aa7fdd516545c5fc929ebc6e1925550727"
   name = "github.com/brianvoe/gofakeit"
-  packages = [
-    ".",
-    "data",
-  ]
-  pruneopts = ""
+  packages = [".","data"]
   revision = "19b40d7d6241163eba8b06ddec1041a36db06c54"
   version = "v3.20.2"
 
 [[projects]]
-  digest = "1:6098222470fe0172157ce9bbef5d2200df4edde17ee649c5d6e48330e4afa4c6"
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
-  pruneopts = ""
   revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
   version = "v3.2.0"
 
 [[projects]]
-  digest = "1:ad92aa49f34cbc3546063c7eb2cabb55ee2278b72842eda80e2a20a8a06a8d73"
   name = "github.com/google/uuid"
   packages = ["."]
-  pruneopts = ""
   revision = "0cd6bf5da1e1c83f8b45653022c74f71af0538a4"
   version = "v1.1.1"
 
 [[projects]]
-  digest = "1:282afc5172b5e118c47d7c61b054dfec00e69d137912f9f7b636a045cd4adb80"
   name = "github.com/jinzhu/gorm"
-  packages = [
-    ".",
-    "dialects/postgres",
-  ]
-  pruneopts = ""
+  packages = [".","dialects/postgres"]
   revision = "79a77d771dee4e4b60e9c543e8663bbc80466670"
   version = "v1.9.12"
 
 [[projects]]
-  digest = "1:a7b97371fb9af808b6a4fcc6693276ef7869bb1f282c3c87038c6c7e74ef4ae6"
   name = "github.com/jinzhu/inflection"
   packages = ["."]
-  pruneopts = ""
   revision = "f5c5f50e6090ae76a29240b61ae2a90dd810112e"
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:24cb025270e3d99afe840fb3554e85e880dacdacfe3bfc71ce8c76dd2188c2a2"
   name = "github.com/johnfercher/maroto"
-  packages = [
-    "internal",
-    "pkg/color",
-    "pkg/consts",
-    "pkg/pdf",
-    "pkg/props",
-  ]
-  pruneopts = ""
+  packages = ["internal","pkg/color","pkg/consts","pkg/pdf","pkg/props"]
   revision = "10c95dafdfcb10d71bfe416d4879ec47b10820b9"
   version = "v0.24.1"
 
 [[projects]]
-  digest = "1:3d7457319824d4b7285d582d9533bb7b16b7a4f2effd07088960bda999f58f3a"
   name = "github.com/jung-kurt/gofpdf"
-  packages = [
-    ".",
-    "contrib/barcode",
-  ]
-  pruneopts = ""
+  packages = [".","contrib/barcode"]
   revision = "a2a0e7f8a28b2eabe1a32097f0071a0f715a8102"
   version = "v1.16.2"
 
 [[projects]]
-  digest = "1:4beb546223497fdc767dd15f2f48e271598817cecda2beaf2ad7bf43282d5bf7"
   name = "github.com/labstack/echo"
-  packages = [
-    ".",
-    "middleware",
-  ]
-  pruneopts = ""
+  packages = [".","middleware"]
   revision = "38772c686c76b501f94bd6cd5b77f5842e93b559"
   version = "v3.3.10"
 
 [[projects]]
-  digest = "1:a9554efb4c5688083ede9e3df301f2aac7575d48d0fe4d7df5734c9534d73600"
   name = "github.com/labstack/gommon"
-  packages = [
-    "bytes",
-    "color",
-    "log",
-    "random",
-  ]
-  pruneopts = ""
+  packages = ["bytes","color","log","random"]
   revision = "4919956f6fb227b548f004da27c7c6b20fba499f"
   version = "v0.3.0"
 
 [[projects]]
-  digest = "1:b424ab60bdff8b8899fa0b27c9b35083f2607fbbaa7b6430617c53ca4501d286"
   name = "github.com/lib/pq"
-  packages = [
-    ".",
-    "hstore",
-    "oid",
-    "scram",
-  ]
-  pruneopts = ""
+  packages = [".","hstore","oid","scram"]
   revision = "99274577be97ac9b1d95a2d61d566dc9b7cc6a54"
   version = "v1.3.0"
 
 [[projects]]
-  digest = "1:eab986cd0513d271bb1fd9c9d12acd7eb4cfd57cb604122c65bd0914e4637619"
   name = "github.com/mattn/go-colorable"
   packages = ["."]
-  pruneopts = ""
   revision = "68e95eba382c972aafde02ead2cd2426a8a92480"
   version = "v0.1.6"
 
 [[projects]]
-  digest = "1:87fecb4f5564bd9bc810e4c83d4ac434fd17599edc7b35e27580c2cfc48cdb7c"
   name = "github.com/mattn/go-isatty"
   packages = ["."]
-  pruneopts = ""
   revision = "7b513a986450394f7bbf1476909911b3aa3a55ce"
   version = "v0.0.12"
 
 [[projects]]
   branch = "master"
-  digest = "1:c2a0e0f6733d6fed0f68fcef228b8a8aa5c8b0c2d32db1648ea18b14f28a3e02"
   name = "github.com/ruudk/golang-pdf417"
   packages = ["."]
-  pruneopts = ""
   revision = "1af4ab5afa58c956c53ed723dee66437498b9415"
 
 [[projects]]
-  digest = "1:857a9ecd5cb13379ecc8f798f6e6b6b574c98b9355657d91e068275f1120aaf7"
   name = "github.com/valyala/bytebufferpool"
   packages = ["."]
-  pruneopts = ""
   revision = "e746df99fe4a3986f4d4f79e13c1e0117ce9c2f7"
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:c8b536f08002f0916e288eb66b7d961e3a854542f50532255a7c737edd22987a"
   name = "github.com/valyala/fasttemplate"
   packages = ["."]
-  pruneopts = ""
   revision = "8fcc7a99b5795b7c3e95172237cf93282fc339a9"
   version = "v1.1.0"
 
 [[projects]]
   branch = "master"
-  digest = "1:2eda274020f8dfe2b4e66c55e0f86e17b9545fb0bad431b2ea520668b7c77f7b"
   name = "golang.org/x/crypto"
-  packages = [
-    "acme",
-    "acme/autocert",
-  ]
-  pruneopts = ""
+  packages = ["acme","acme/autocert"]
   revision = "2aa609cf4a9d7d1126360de73b55b6002f9e052a"
 
 [[projects]]
   branch = "master"
-  digest = "1:9ac4dae84a6c14d4d0458d27a8c46fca553cfba156fe0c87f99c50d22034c7e3"
   name = "golang.org/x/net"
   packages = ["idna"]
-  pruneopts = ""
   revision = "244492dfa37ae2ce87222fd06250a03160745faa"
 
 [[projects]]
   branch = "master"
-  digest = "1:43bd80c6ec9e3ce4864574194acb3ee84d0a6920a0ae4f8c256840dffeed4a01"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  pruneopts = ""
   revision = "c5d0d7b4ec882d5bfaf87b42d8463ca5e7f0bdd9"
 
 [[projects]]
-  digest = "1:740b51a55815493a8d0f2b1e0d0ae48fe48953bf7eaf3fcc4198823bf67768c0"
   name = "golang.org/x/text"
-  packages = [
-    "collate",
-    "collate/build",
-    "internal/colltab",
-    "internal/gen",
-    "internal/language",
-    "internal/language/compact",
-    "internal/tag",
-    "internal/triegen",
-    "internal/ucd",
-    "language",
-    "secure/bidirule",
-    "transform",
-    "unicode/bidi",
-    "unicode/cldr",
-    "unicode/norm",
-    "unicode/rangetable",
-  ]
-  pruneopts = ""
+  packages = ["collate","collate/build","internal/colltab","internal/gen","internal/language","internal/language/compact","internal/tag","internal/triegen","internal/ucd","language","secure/bidirule","transform","unicode/bidi","unicode/cldr","unicode/norm","unicode/rangetable"]
   revision = "342b2e1fbaa52c93f31447ad2c6abc048c63e475"
   version = "v0.3.2"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  input-imports = [
-    "github.com/alexbrainman/printer",
-    "github.com/brianvoe/gofakeit",
-    "github.com/dgrijalva/jwt-go",
-    "github.com/google/uuid",
-    "github.com/jinzhu/gorm",
-    "github.com/jinzhu/gorm/dialects/postgres",
-    "github.com/johnfercher/maroto/pkg/consts",
-    "github.com/johnfercher/maroto/pkg/pdf",
-    "github.com/johnfercher/maroto/pkg/props",
-    "github.com/jung-kurt/gofpdf",
-    "github.com/labstack/echo",
-    "github.com/labstack/echo/middleware",
-    "github.com/labstack/gommon/log",
-  ]
+  inputs-digest = "8ff94b7e5ad45efcb75643553c256a70d6888fc4281b7a2a5edfb15f10037ab6"
   solver-name = "gps-cdcl"
   solver-version = 1
