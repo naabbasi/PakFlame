@@ -9,7 +9,8 @@ import (
 
 type Result struct {
 	models.Invoice
-	models.InvoiceDetails
+	InvoiceDetails []models.InvoiceDetails
+	models.Payment
 }
 
 var (
@@ -17,7 +18,7 @@ var (
 	colsWidth = []float64{6, 30, 9, 10, 15, 20, 20, 20}
 )
 
-func Pdf(result *[]Result) {
+func Pdf(result *Result) {
 	pdf := gofpdf.New("P", "mm", "A5", "")
 	pdf.SetHeaderFunc(func() {
 		pdf.SetFont("Arial", "B", 12)
@@ -48,19 +49,15 @@ func Pdf(result *[]Result) {
 	}
 }
 
-func generateHeader(result *[]Result, pdf *gofpdf.Fpdf) int64 {
+func generateHeader(result *Result, pdf *gofpdf.Fpdf) int64 {
 	invoice := models.Invoice{}
-	for index, row := range *result {
-		invoice = models.Invoice{
-			ID:               row.ID,
-			CustomerName:     row.CustomerName,
-			PartyName:        row.PartyName,
-			Transport:        row.Transport,
-			TransportCharges: row.TransportCharges,
-		}
 
-		fmt.Printf("Index: %d, row: %v", index, invoice)
-		break
+	invoice = models.Invoice{
+		ID:               result.Invoice.ID,
+		CustomerName:     result.Invoice.CustomerName,
+		PartyName:        result.Invoice.PartyName,
+		Transport:        result.Invoice.Transport,
+		TransportCharges: result.Invoice.TransportCharges,
 	}
 
 	pdf.AddPage()
@@ -79,7 +76,7 @@ func generateHeader(result *[]Result, pdf *gofpdf.Fpdf) int64 {
 	return invoice.ID
 }
 
-func generateTable(result *[]Result, pdf *gofpdf.Fpdf) {
+func generateTable(result *Result, pdf *gofpdf.Fpdf) {
 	headers := []string{"S #", "Item Description", "Unit", "Qty", "Price", "Amount", "Discount", "Total Amount"}
 
 	pdf.SetFont("Arial", "B", 8)
@@ -103,8 +100,8 @@ func generateTable(result *[]Result, pdf *gofpdf.Fpdf) {
 
 	itemSerial := 0
 
-	for _, row := range *result {
-		transportCharges = row.TransportCharges
+	for _, row := range result.InvoiceDetails {
+		transportCharges = result.Invoice.TransportCharges
 		invoiceDetails := models.InvoiceDetails{
 			ItemName:    row.ItemName,
 			Unit:        row.Unit,
@@ -160,4 +157,6 @@ func generateTable(result *[]Result, pdf *gofpdf.Fpdf) {
 		pdf.CellFormat(20, 5, fmt.Sprintf("%.0f", totalDiscount), "1", 0, "R", false, 0, "")
 		pdf.CellFormat(20, 5, fmt.Sprintf("%.2f", sumOfTotalAmount+transportCharges), "1", 0, "R", false, 0, "")
 	})
+
+	result.Payment.Total = sumOfTotalAmount + transportCharges
 }

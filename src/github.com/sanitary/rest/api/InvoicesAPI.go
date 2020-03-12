@@ -13,6 +13,7 @@ import (
 	"github.com/sanitary/util/pdf/generate"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 const (
@@ -69,22 +70,37 @@ func (invoices *invoices) PrintInvoice() {
 		id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 		//connection.Table("invoices").Where("id = ?", id).First(&getInvoice)
 
-		result := new([]generate.Result)
-		connection.Table("invoices").Select("invoices.*, invoice_details.*").
-			Joins("inner join invoice_details on invoices.id = invoice_details.invoice_number").
-			Where("invoices.id = ?", id).
-			Find(result)
+		//result := new([]generate.Result)
+		result := new(generate.Result)
+		connection.Where("id = ? and client_id = ?", id, http_util.GetUserInfo(c).ClientId).
+			Find(&result.Invoice)
+
+		connection.Where("invoice_number = ? and client_id = ?", id, http_util.GetUserInfo(c).ClientId).
+			Find(&result.InvoiceDetails)
 
 		generate.Pdf(result)
 
 		//TODO: Payment will be update to customer while printing invoice
 		payment := new(models.Payment)
-		/*payment.EntityId = newInvoice.CustomerId
-		payment.ClientId = clientId*/
-		savePayment := connection.Save(payment)
+		connection.Where("entity_id = ? and client_id = ?", result.Invoice.CustomerId, result.Invoice.ClientId).
+			First(&payment)
 
-		if savePayment.RowsAffected == 1 {
-			log.Print("Invoice payment has been added")
+		if payment.ID == uuid.Nil {
+			result.Payment.CreatedAt = time.Now()
+			result.Payment.UpdatedAt = time.Now()
+			result.Payment.EntityId = result.Invoice.CustomerId
+			result.Payment.ClientId = result.Invoice.ClientId
+			savePayment := connection.Save(&result.Payment)
+
+			if savePayment.RowsAffected == 1 {
+				log.Print("Invoice payment has been added")
+			}
+		} else {
+			payment.Total = result.Payment.Total
+			updatePayment := connection.Table("payments").Update(&payment)
+			if updatePayment.RowsAffected == 1 {
+				log.Print("Invoice payment has been updated")
+			}
 		}
 		return c.JSON(http.StatusOK, "Invoice printed successfully")
 	})

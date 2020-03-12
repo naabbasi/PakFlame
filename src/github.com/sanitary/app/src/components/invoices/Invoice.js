@@ -59,7 +59,7 @@ export default class Invoice extends GenericComponent {
             this.setState({
                 isEdit: true,
                 disableButtons: false,
-                disableSaveButton: true,
+                disableSaveButton: false,
                 invoice: {
                     id: data['id'], customerId: data['customerId'], customerName: data['customerName'], createdAt: new Date(data['createdAt']), partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'],
                     details: {id: 0, itemName: '', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0, customerId: ''},
