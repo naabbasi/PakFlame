@@ -76,6 +76,16 @@ func (invoices *invoices) PrintInvoice() {
 			Find(result)
 
 		generate.Pdf(result)
+
+		//TODO: Payment will be update to customer while printing invoice
+		payment := new(models.Payment)
+		/*payment.EntityId = newInvoice.CustomerId
+		payment.ClientId = clientId*/
+		savePayment := connection.Save(payment)
+
+		if savePayment.RowsAffected == 1 {
+			log.Print("Invoice payment has been added")
+		}
 		return c.JSON(http.StatusOK, "Invoice printed successfully")
 	})
 }
@@ -97,15 +107,6 @@ func (invoices *invoices) AddInvoice() {
 		save := connection.Save(newInvoice)
 
 		if save.RowsAffected == 1 {
-			payment := new(models.Payment)
-			payment.EntityId = newInvoice.CustomerId
-			payment.ClientId = clientId
-			savePayment := connection.Save(payment)
-
-			if savePayment.RowsAffected == 1 {
-				log.Print("Invoice payment has been added")
-			}
-
 			return c.JSON(http.StatusCreated, http_util.CustomHttpResponse{Message: "Invoice has been added", Result: newInvoice})
 		} else {
 			return c.JSON(http.StatusInternalServerError, "Unable to save new Invoice")
