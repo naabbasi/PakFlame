@@ -16,7 +16,11 @@ RUN pwd
 ENV GOPATH=/opt/AbuZarTraders
 RUN ls -la /opt/AbuZarTraders/src/github.com/sanitary/
 RUN cd src/github.com/sanitary/ && dep ensure && go build -o ../../../bin/AbuZarTrader github.com/sanitary/rest/main/
+
+RUN cd src/github.com/sanitary/app && npm install && npm run build && mkdir -p ../../../bin/app/ && cp -r app/build/* ../../../bin/app/
+
 RUN ls -la /opt/AbuZarTraders/bin
+
 RUN /opt/AbuZarTraders/bin/AbuZarTrader
 #RUN dep ensure
 # Build the binary.
