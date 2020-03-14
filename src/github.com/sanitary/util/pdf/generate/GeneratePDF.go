@@ -14,8 +14,8 @@ type Result struct {
 }
 
 var (
-	align     = []string{"C", "L", "C", "R", "R", "R", "R", "R"}
-	colsWidth = []float64{6, 30, 9, 10, 15, 20, 20, 20}
+	align     = []string{"C", "L", "R", "R", "R", "R", "R"}
+	colsWidth = []float64{6, 39, 10, 15, 20, 20, 20}
 )
 
 func Pdf(result *Result) {
@@ -50,9 +50,7 @@ func Pdf(result *Result) {
 }
 
 func generateHeader(result *Result, pdf *gofpdf.Fpdf) int64 {
-	invoice := models.Invoice{}
-
-	invoice = models.Invoice{
+	invoice := models.Invoice{
 		ID:               result.Invoice.ID,
 		CustomerName:     result.Invoice.CustomerName,
 		PartyName:        result.Invoice.PartyName,
@@ -77,7 +75,7 @@ func generateHeader(result *Result, pdf *gofpdf.Fpdf) int64 {
 }
 
 func generateTable(result *Result, pdf *gofpdf.Fpdf) {
-	headers := []string{"S #", "Item Description", "Unit", "Qty", "Price", "Amount", "Discount", "Total Amount"}
+	headers := []string{"S #", "Item Description", "Qty", "Price", "Amount", "Discount", "Total Amount"}
 
 	pdf.SetFont("Arial", "B", 8)
 	pdf.SetFillColor(240, 240, 240)
@@ -137,12 +135,11 @@ func generateTable(result *Result, pdf *gofpdf.Fpdf) {
 		itemSerial = itemSerial + 1
 		pdf.CellFormat(colsWidth[0], 5, fmt.Sprintf("%d", itemSerial), "1", 0, align[0], false, 0, "")
 		pdf.CellFormat(colsWidth[1], 5, invoiceDetails.ItemName, "1", 0, align[1], false, 0, "")
-		pdf.CellFormat(colsWidth[2], 5, invoiceDetails.Unit, "1", 0, align[2], false, 0, "")
-		pdf.CellFormat(colsWidth[3], 5, fmt.Sprintf("%d", quantities), "1", 0, align[3], false, 0, "")
-		pdf.CellFormat(colsWidth[4], 5, fmt.Sprintf("%.2f", price), "1", 0, align[4], false, 0, "")
-		pdf.CellFormat(colsWidth[5], 5, fmt.Sprintf("%.2f", amount), "1", 0, align[5], false, 0, "")
-		pdf.CellFormat(colsWidth[6], 5, fmt.Sprintf("%.0f", discountOnItem), "1", 0, align[6], false, 0, "")
-		pdf.CellFormat(colsWidth[7], 5, fmt.Sprintf("%.2f", totalAmount), "1", 0, align[7], false, 0, "")
+		pdf.CellFormat(colsWidth[2], 5, fmt.Sprintf("%d", quantities), "1", 0, align[2], false, 0, "")
+		pdf.CellFormat(colsWidth[3], 5, fmt.Sprintf("%.2f", price), "1", 0, align[3], false, 0, "")
+		pdf.CellFormat(colsWidth[4], 5, fmt.Sprintf("%.2f", amount), "1", 0, align[4], false, 0, "")
+		pdf.CellFormat(colsWidth[5], 5, fmt.Sprintf("%.0f", discountOnItem), "1", 0, align[5], false, 0, "")
+		pdf.CellFormat(colsWidth[6], 5, fmt.Sprintf("%.2f", totalAmount), "1", 0, align[6], false, 0, "")
 		pdf.Ln(0)
 	}
 
