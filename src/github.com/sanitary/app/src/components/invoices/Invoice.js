@@ -18,7 +18,6 @@ export default class Invoice extends GenericComponent {
 
         this.state = {
             invoice: null,
-            isEdit: false,
             invoiceDetails: [],
             items: [],
             invoiceId: params.get('invoiceId') == null ? 0 : params.get('invoiceId'),
@@ -57,11 +56,11 @@ export default class Invoice extends GenericComponent {
         if(data) {
             this.getInvoiceDetailsById(data['id']);
             this.setState({
-                isEdit: true,
                 disableButtons: false,
                 disableSaveButton: false,
                 invoice: {
-                    id: data['id'], customerId: data['customerId'], customerName: data['customerName'], createdAt: new Date(data['createdAt']), partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'],
+                    id: data['id'], customerId: data['customerId'], customerName: data['customerName'], createdAt: new Date(data['createdAt']),
+                    partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'], readonly: data['readonly'],
                     details: {id: 0, itemName: '', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0, customerId: ''},
                 },
             });
@@ -71,7 +70,7 @@ export default class Invoice extends GenericComponent {
             this.setState({
                 disableButtons: false,
                 invoice: {
-                    id: 0, customerId: '', customerName: '', createdAt: new Date(), partyName: '', transport: '', transportCharges: 0, address: '',
+                    id: 0, customerId: '', customerName: '', createdAt: new Date(), partyName: '', transport: '', transportCharges: 0, address: '', readonly: false,
                     details: {id: 0, itemName: '', createdAt: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0, customerId: ''},
                 },
             });
@@ -327,7 +326,7 @@ export default class Invoice extends GenericComponent {
             this.setState({invoice});
         });
 
-        if(this.state.invoiceId === 0){
+        if(this.state.invoiceId === 0 && this.state.invoice.readonly === false){
             this.setState({selectedItem: item, disableAddItemButton: true});
         } else {
             this.setState({selectedItem: item, disableAddItemButton: false});
@@ -438,14 +437,7 @@ export default class Invoice extends GenericComponent {
                                             </div>
                                         </div>
                                         <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                            <div className="p-col-6" style={{padding:'.50em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText id="unit" maxLength={250} onChange={(e) => {this.updateProperty('unit', e.target.value, true)}} value={this.state.invoice.details.unit}/>
-                                                <label htmlFor="unit">Unit</label>
-                                            </span>
-                                            </div>
-
-                                            <div className="p-col-6" style={{padding:'.50em'}}>
+                                            <div className="p-col-4" style={{padding:'.50em'}}>
                                                 <span className="p-float-label p-fluid">
                                                     <InputText id="quantities" keyfilter="pint"
                                                                onChange={(e) => {this.updateProperty('quantities', this.Int(e.target.value), true)}}
@@ -454,26 +446,25 @@ export default class Invoice extends GenericComponent {
                                                     <label htmlFor="quantities">Quantities</label>
                                                 </span>
                                             </div>
-                                        </div>
-                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                            <div className="p-col-6" style={{padding:'.50em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText id="price" keyfilter="pint"
-                                                           onChange={(e) => {this.updateProperty('price', this.Int(e.target.value), true)}}
-                                                           onBlur={(e) => {this.calculateAmount()}}
-                                                           value={this.state.invoice.details.price}/>
-                                                <label htmlFor="price">Price</label>
-                                            </span>
+
+                                            <div className="p-col-4" style={{padding:'.50em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText id="price" keyfilter="pint"
+                                                               onChange={(e) => {this.updateProperty('price', this.Int(e.target.value), true)}}
+                                                               onBlur={(e) => {this.calculateAmount()}}
+                                                               value={this.state.invoice.details.price}/>
+                                                    <label htmlFor="price">Price</label>
+                                                </span>
                                             </div>
 
-                                            <div className="p-col-6" style={{padding:'.50em'}}>
-                                            <span className="p-float-label p-fluid">
-                                                <InputText id="discount" keyfilter="pint"
-                                                           onChange={(e) => {this.updateProperty('discount', this.Int(e.target.value), true)}}
-                                                           onBlur={(e) => {this.calculateAmount()}}
-                                                           value={this.state.invoice.details.discount}/>
-                                                <label htmlFor="discount">Discount</label>
-                                            </span>
+                                            <div className="p-col-4" style={{padding:'.50em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText id="discount" keyfilter="pint"
+                                                               onChange={(e) => {this.updateProperty('discount', this.Int(e.target.value), true)}}
+                                                               onBlur={(e) => {this.calculateAmount()}}
+                                                               value={this.state.invoice.details.discount}/>
+                                                    <label htmlFor="discount">Discount</label>
+                                                </span>
                                             </div>
                                         </div>
                                         <div className="p-grid">

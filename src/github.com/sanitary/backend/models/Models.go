@@ -122,6 +122,7 @@ type Invoice struct {
 	Address          string           `json:"address" xml:"address" form:"address" query:"address"`
 	Transport        string           `json:"transport" xml:"transport" form:"transport" query:"transport"`
 	TransportCharges float64          `json:"transportCharges" xml:"transportCharges" form:"transportCharges" query:"transportCharges"`
+	Readonly         bool             `gorm:"not null; default: false;" json:"readonly" xml:"readonly" form:"readonly" query:"readonly"`
 	InvoiceDetails   []InvoiceDetails `json:"invoiceDetails" xml:"invoiceDetails" form:"invoiceDetails" query:"invoiceDetails"`
 	CustomerId       uuid.UUID        `json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
 	ClientId         uuid.UUID        `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`

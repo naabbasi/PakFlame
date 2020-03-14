@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/jung-kurt/gofpdf"
 	"github.com/sanitary/backend/models"
+	"log"
 	"runtime"
 )
 
@@ -45,7 +46,9 @@ func Pdf(result *Result) {
 	err := pdf.OutputFileAndClose(fmt.Sprintf("%sSaleInvoice-%d.pdf", path, invoiceId))
 
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
+	} else {
+		log.Printf(fmt.Sprintf("%sSaleInvoice-%d.pdf file has been generated", path, invoiceId))
 	}
 }
 
@@ -56,12 +59,13 @@ func generateHeader(result *Result, pdf *gofpdf.Fpdf) int64 {
 		PartyName:        result.Invoice.PartyName,
 		Transport:        result.Invoice.Transport,
 		TransportCharges: result.Invoice.TransportCharges,
+		CreatedAt:        result.Invoice.CreatedAt,
 	}
 
 	pdf.AddPage()
 	pdf.SetFont("Arial", "", 8)
 	pdf.CellFormat(65, 5, fmt.Sprintf("Invoice #: %d", invoice.ID), "1", 0, "L", false, 0, "")
-	pdf.CellFormat(65, 5, fmt.Sprintf("Date: %s", invoice.CreatedAt.Format("01 December 2006")), "1", 0, "L", false, 0, "")
+	pdf.CellFormat(65, 5, fmt.Sprintf("Date: %s", invoice.CreatedAt.Format("01 January 2006")), "1", 0, "L", false, 0, "")
 	pdf.Ln(-1)
 
 	pdf.CellFormat(43.33, 5, fmt.Sprintf("Customer: %s", invoice.CustomerName), "1", 0, "L", false, 0, "")
@@ -155,5 +159,6 @@ func generateTable(result *Result, pdf *gofpdf.Fpdf) {
 		pdf.CellFormat(20, 5, fmt.Sprintf("%.2f", sumOfTotalAmount+transportCharges), "1", 0, "R", false, 0, "")
 	})
 
+	result.Payment.Amount = sumOfTotalAmount + transportCharges
 	result.Payment.Total = sumOfTotalAmount + transportCharges
 }

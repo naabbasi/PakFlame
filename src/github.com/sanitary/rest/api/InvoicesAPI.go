@@ -75,15 +75,16 @@ func (invoices *invoices) PrintInvoice() {
 		connection.Where("id = ? and client_id = ?", id, http_util.GetUserInfo(c).ClientId).
 			Find(&result.Invoice)
 
+		result.Invoice.Readonly = true
+
 		connection.Where("invoice_number = ? and client_id = ?", id, http_util.GetUserInfo(c).ClientId).
 			Find(&result.InvoiceDetails)
 
-		generate.Pdf(result)
-
-		//TODO: Payment will be update to customer while printing invoice
 		payment := new(models.Payment)
 		connection.Where("entity_id = ? and client_id = ?", result.Invoice.CustomerId, result.Invoice.ClientId).
 			First(&payment)
+
+		generate.Pdf(result)
 
 		if payment.ID == uuid.Nil {
 			result.Payment.CreatedAt = time.Now()
@@ -102,6 +103,13 @@ func (invoices *invoices) PrintInvoice() {
 				log.Print("Invoice payment has been updated")
 			}
 		}
+
+		result.Readonly = true
+		makeInvoiceRealonly := connection.Table("invoices").Update(&result.Invoice)
+		if makeInvoiceRealonly.RowsAffected == 1 {
+			log.Print("Invoice has been set to readonly")
+		}
+
 		return c.JSON(http.StatusOK, "Invoice printed successfully")
 	})
 }
@@ -211,8 +219,6 @@ func (invoices *invoices) AddInvoiceItem() {
 		remainingItemInInventory := itemInInventory.Quantities - newInvoiceItem.Quantities
 		itemInInventory.Quantities = remainingItemInInventory
 		updateItemInInventory := connection.Exec("update inventories set quantities = ? where id = ?", itemInInventory.Quantities, itemInInventory.ID)
-
-		//Update amount in payment
 
 		var save *gorm.DB
 		if updateItemInInventory.RowsAffected == 1 {
