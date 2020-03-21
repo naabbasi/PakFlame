@@ -92,6 +92,9 @@ func main() {
 		restrictedPath := e.Group("/restricted")
 		restrictedPath.Use(middleware.JWT([]byte(config.JWT_SECRET)))
 
+		dashboard := api.NewDashboard(restrictedPath)
+		dashboard.TopTenItemsByQuantities()
+
 		customers := api.NewCustomer(restrictedPath)
 		customers.GetCustomers()
 		customers.GetCustomerById()
