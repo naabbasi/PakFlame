@@ -9,6 +9,7 @@ import Navigation from "../layout/Navigation";
 import {Calendar} from "primereact/calendar";
 import ItemAutoComplete from "../autocomplete/ItemAutoComplete";
 import CustomerAutoComplete from "../autocomplete/CustomerAutoComplete";
+import {Fieldset} from "primereact/fieldset";
 
 export default class Invoice extends GenericComponent {
     constructor(props) {
@@ -362,7 +363,7 @@ export default class Invoice extends GenericComponent {
                         {
                             this.state.invoice &&
                             <div style={{padding: '10px'}}>
-                                <fieldset>
+                                <Fieldset legend="Item(s) Details">
                                     <legend>Customer Information</legend>
                                     <div className="">
                                     <div className="p-col-12">
@@ -425,10 +426,9 @@ export default class Invoice extends GenericComponent {
                                         </div>
                                     </div>
                                 </div>
-                                </fieldset>
+                                </Fieldset>
                                 <div className="p-col-12 p-component">
-                                    <fieldset>
-                                        <legend>Item(s) Details</legend>
+                                    <Fieldset legend="Item(s) Details">
                                         <div className="p-grid" style={{ paddingTop: '10px'}}>
                                             <div className="p-col" style={{padding:'.50em'}}>
                                                 <span className="p-float-label p-fluid">
@@ -492,7 +492,7 @@ export default class Invoice extends GenericComponent {
                                                 </DataTable>
                                             </div>
                                         </div>
-                                    </fieldset>
+                                    </Fieldset>
                                 </div>
                             </div>
                         }
