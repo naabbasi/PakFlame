@@ -8,19 +8,22 @@ import {InputText} from "primereact/inputtext";
 import {GenericComponent} from "../GenericComponent";
 import Navigation from "../layout/Navigation";
 import PaymentComponentModal from "../payment/PaymentComponentModel";
+import {Dropdown} from "primereact/dropdown";
 
 export default class Customer extends GenericComponent {
     constructor() {
         super();
         this.state = {
             customers: [],
-            askReasonDialog: false
+            askReasonDialog: false,
+            orderStatus: ''
         };
 
         this.saveCustomer = this.saveCustomer.bind(this);
         this.closeCustomerDialog = this.closeCustomerDialog.bind(this);
         this.onCustomerSelect = this.onCustomerSelect.bind(this);
         this.addNewCustomer = this.addNewCustomer.bind(this);
+        this.onOrderStatusChange = this.onOrderStatusChange.bind(this);
     }
 
     async componentDidMount() {
@@ -111,14 +114,15 @@ export default class Customer extends GenericComponent {
         this.setState({
             displayDialog:true,
             askReasonDialog: false,
-            customer: Object.assign({}, this.state.eventCustomerData)
+            customer: Object.assign({}, this.state.eventCustomerData),
+            orderStatus: {label: this.state.eventCustomerData['orderStatus'], status: this.state.eventCustomerData['orderStatus']}
         });
     }
 
     addNewCustomer() {
         this.newCustomer = true;
         this.setState({
-            customer: {firstName: '', lastName: '', mobileNumber: '', shopName: '', address: '', status: ''},
+            customer: {firstName: '', lastName: '', mobileNumber: '', shopName: '', address: '', orderStatus: ''},
             displayDialog: true
         });
     }
@@ -128,7 +132,20 @@ export default class Customer extends GenericComponent {
         window.location.hash = `#/customers/details?id=${this.state.eventCustomerData['id']}`;
     }
 
+    onOrderStatusChange(e) {
+        console.log(e.value)
+        this.setState({orderStatus: e.value});
+        this.updateProperty('orderStatus', e.value.status);
+    }
+
     render() {
+        const orderStatusOptions = [
+            {label: 'In Process', status: 'In Process'},
+            {label: 'Delivered', status: 'Delivered'},
+            {label: 'Pending', status: 'Pending'},
+            {label: 'Cancel', status: 'Cancel'}
+        ];
+
         let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
             <div style={{float: 'left'}}>Customers Information</div>
             <div style={{'textAlign':'left', float: 'right'}}>
@@ -164,10 +181,10 @@ export default class Customer extends GenericComponent {
                                    globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
                             <Column field="firstName" header="First Name" sortable={true} style={{textAlign: 'left', width: '15%'}}/>
                             <Column field="lastName" header="Last Name" sortable={true} style={{textAlign: 'left', width: '15%'}}/>
-                            <Column field="mobileNumber" header="Mobile #" sortable={true} style={{textAlign: 'center', width: '12%'}}/>
-                            <Column field="shopName" header="Shop Name" sortable={true} style={{textAlign: 'center', width: '10%'}}/>
-                            <Column field="address" header="Address" sortable={true} style={{textAlign: 'center', width: '25%'}}/>
-                            <Column field="status" header="Status" sortable={true} style={{textAlign: 'center', width: '11%'}}/>
+                            <Column field="mobileNumber" header="Mobile #" sortable={true} style={{textAlign: 'center', width: '14%'}}/>
+                            <Column field="shopName" header="Shop Name" sortable={true} style={{textAlign: 'left', width: '10%'}}/>
+                            <Column field="address" header="Address" sortable={true} style={{textAlign: 'left', width: '25%'}}/>
+                            <Column field="orderStatus" header="Status" sortable={true} style={{textAlign: 'center', width: '11%'}}/>
                             <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'customers', this.state, 'Manage')} style={{width: '12%'}}/>
                         </DataTable>
 
@@ -220,8 +237,7 @@ export default class Customer extends GenericComponent {
                                         <div className="p-grid" style={{ paddingTop: '10px'}}>
                                             <div className="p-col" style={{padding:'.75em'}}>
                                                 <span className="p-float-label p-fluid">
-                                                    <InputText ref="status" maxLength={255} onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.customer.status}/>
-                                                    <label htmlFor="status">Status</label>
+                                                    <Dropdown value={this.state.orderStatus} options={orderStatusOptions} onChange={this.onOrderStatusChange} placeholder="Select Order Status" optionLabel="label"/>
                                                 </span>
                                             </div>
                                         </div>

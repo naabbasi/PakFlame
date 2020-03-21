@@ -69,7 +69,7 @@ func (data *data) createCustomers(connection *gorm.DB, client *models.Client) {
 		customer.LastName = gofakeit.LastName()
 		customer.MobileNumber = gofakeit.PhoneFormatted()
 		customer.Address = gofakeit.Address().Address
-		customer.Status = "in_process"
+		customer.OrderStatus = "In Process"
 		customer.ShopName = gofakeit.FirstName()
 		customer.ClientId = client.ID
 		connection.Create(&customer)
@@ -82,7 +82,7 @@ func (data *data) createWorkers(connection *gorm.DB, client *models.Client) {
 		worker := &models.Worker{}
 		worker.FirstName = gofakeit.FirstName()
 		worker.LastName = gofakeit.LastName()
-		worker.Status = "Working"
+		worker.OrderStatus = "Working"
 		worker.MobileNumber = gofakeit.PhoneFormatted()
 		worker.Address = gofakeit.Address().Address
 		worker.ClientId = client.ID

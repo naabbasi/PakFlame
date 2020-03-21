@@ -53,17 +53,17 @@ type Person struct {
 
 type Customer struct {
 	Person
-	ShopName string    `json:"shopName" xml:"shopName" form:"shopName" query:"shopName"`
-	Status   string    `json:"status" xml:"status" form:"status" query:"status"`
-	Address  string    `json:"address" xml:"address" form:"address" query:"address"`
-	ClientId uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+	ShopName    string    `json:"shopName" xml:"shopName" form:"shopName" query:"shopName"`
+	OrderStatus string    `json:"orderStatus" xml:"orderStatus" form:"orderStatus" query:"orderStatus"`
+	Address     string    `json:"address" xml:"address" form:"address" query:"address"`
+	ClientId    uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type Worker struct {
 	Person
-	Address  string    `json:"address" xml:"address" form:"address" query:"address"`
-	Status   string    `json:"status" xml:"status" form:"status" query:"status"`
-	ClientId uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+	Address     string    `json:"address" xml:"address" form:"address" query:"address"`
+	OrderStatus string    `json:"orderStatus" xml:"orderStatus" form:"orderStatus" query:"orderStatus"`
+	ClientId    uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type Payment struct {
