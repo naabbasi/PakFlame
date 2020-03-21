@@ -61,9 +61,9 @@ type Customer struct {
 
 type Worker struct {
 	Person
-	Address     string    `json:"address" xml:"address" form:"address" query:"address"`
-	OrderStatus string    `json:"orderStatus" xml:"orderStatus" form:"orderStatus" query:"orderStatus"`
-	ClientId    uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+	Address       string    `json:"address" xml:"address" form:"address" query:"address"`
+	WorkingStatus string    `json:"workingStatus" xml:"workingStatus" form:"workingStatus" query:"workingStatus"`
+	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type Payment struct {

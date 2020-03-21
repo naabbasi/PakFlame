@@ -6,6 +6,7 @@ import {Dialog} from "primereact/dialog";
 import {InputText} from "primereact/inputtext";
 import {GenericComponent} from "../GenericComponent";
 import Navigation from "../layout/Navigation";
+import {Dropdown} from "primereact/dropdown";
 
 export default class Worker extends GenericComponent {
 
@@ -13,12 +14,14 @@ export default class Worker extends GenericComponent {
         super(props);
         this.state = {
             eventWorkerData: {},
-            askReasonDialog: false
+            askReasonDialog: false,
+            workingStatus: ''
         };
         this.saveWorker = this.saveWorker.bind(this);
         this.deleteWorker = this.deleteWorker.bind(this);
         this.closeWorkerDialog = this.closeWorkerDialog.bind(this);
         this.onWorkerSelect = this.onWorkerSelect.bind(this);
+        this.onWorkingStatusChange = this.onWorkingStatusChange.bind(this);
         this.addNew = this.addNew.bind(this);
     }
 
@@ -108,14 +111,15 @@ export default class Worker extends GenericComponent {
         this.setState({
             displayDialog:true,
             askReasonDialog: false,
-            worker: Object.assign({}, this.state.eventWorkerData)
+            worker: Object.assign({}, this.state.eventWorkerData),
+            workingStatus: {label: this.state.eventWorkerData['workingStatus'], status: this.state.eventWorkerData['workingStatus']}
         });
     }
 
     addNew() {
         this.newWorker = true;
         this.setState({
-            worker: {firstName: '', lastName: '', mobileNumber: '', address: '', status: ''},
+            worker: {firstName: '', lastName: '', mobileNumber: '', address: '', workingStatus: ''},
             displayDialog: true
         });
     }
@@ -125,7 +129,20 @@ export default class Worker extends GenericComponent {
         window.location.hash = `#/workers/details?id=${this.state.eventWorkerData['id']}`;
     }
 
+    onWorkingStatusChange(e) {
+        console.log(e.value)
+        this.setState({workingStatus: e.value});
+        this.updateProperty('workingStatus', e.value.status);
+    }
+
     render() {
+        const workingStatusOptions = [
+            {label: 'Working', status: 'Working'},
+            {label: 'Joining', status: 'Joining'},
+            {label: 'Left', status: 'Left'},
+            {label: 'Terminate', status: 'Terminate'},
+        ];
+
         let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
             <div style={{float: 'left'}}>Workers Information</div>
             <div style={{'textAlign':'left', float: 'right'}}>
@@ -160,8 +177,8 @@ export default class Worker extends GenericComponent {
                             <Column field="firstName" header="First Name" sortable={true} style={{textAlign: 'left', width: '15%'}}/>
                             <Column field="lastName" header="Last Name" sortable={true} style={{textAlign: 'left', width: '15%'}}/>
                             <Column field="mobileNumber" header="Mobile #" sortable={true} style={{textAlign: 'center', width: '14%'}}/>
-                            <Column field="address" header="Address" sortable={true} style={{textAlign: 'center', width: '25%'}}/>
-                            <Column field="status" header="Status" sortable={true} style={{textAlign: 'center', width: '11%'}}/>
+                            <Column field="address" header="Address" sortable={true} style={{textAlign: 'left', width: '25%'}}/>
+                            <Column field="workingStatus" header="Status" sortable={true} style={{textAlign: 'center', width: '11%'}}/>
                             <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'workers', this.state, 'Manage')} style={{width: '12%'}}/>
                         </DataTable>
 
@@ -203,8 +220,7 @@ export default class Worker extends GenericComponent {
 
                                         <div className="p-col" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText ref="status" maxLength={255} onChange={(e) => {this.updateProperty('status', e.target.value)}} value={this.state.worker.status}/>
-                                                <label htmlFor="status">Status</label>
+                                                <Dropdown value={this.state.workingStatus} options={workingStatusOptions} onChange={this.onWorkingStatusChange} placeholder="Select Worker Status" optionLabel="label"/>
                                             </span>
                                         </div>
                                     </div>

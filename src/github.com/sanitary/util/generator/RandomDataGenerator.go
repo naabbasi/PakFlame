@@ -82,7 +82,7 @@ func (data *data) createWorkers(connection *gorm.DB, client *models.Client) {
 		worker := &models.Worker{}
 		worker.FirstName = gofakeit.FirstName()
 		worker.LastName = gofakeit.LastName()
-		worker.OrderStatus = "Working"
+		worker.WorkingStatus = "Working"
 		worker.MobileNumber = gofakeit.PhoneFormatted()
 		worker.Address = gofakeit.Address().Address
 		worker.ClientId = client.ID
