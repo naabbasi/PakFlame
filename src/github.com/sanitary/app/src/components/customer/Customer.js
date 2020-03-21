@@ -176,7 +176,7 @@ export default class Customer extends GenericComponent {
                 <Navigation>
                     <div className="content-section implementation">
                         <DataTable id="customerTable" value={this.state.customers} paginator={true} rows={25}  header={header} footer={footer}
-                                   scrollable={true} scrollHeight="700px"
+                                   scrollable={true} scrollHeight="700px" responsive={true}
                                    selectionMode="none" selection={this.state.selectedCustomer} onSelectionChange={e => this.setState({selectedCustomer: e.value})}
                                    globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
                             <Column field="firstName" header="First Name" sortable={true} style={{textAlign: 'left', width: '15%'}}/>

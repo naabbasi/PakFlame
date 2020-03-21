@@ -255,7 +255,6 @@ export default class Invoice extends GenericComponent {
 
     addNewItem() {
         this.newInvoiceItem = true;
-        let invoice = {...this.state.invoice}
         let details = {...this.state.invoice.details};
         console.log("Adding new item in invoice");
         console.log(details);
@@ -305,14 +304,13 @@ export default class Invoice extends GenericComponent {
             .then( response => {
                 // handle success
                 if(response.status === 200){
-
+                    console.log("Invoice printed")
                 }
             })
             .catch(function (error) {
                 // handle error
                 console.log(error);
             });
-        } else {
         }
     }
 
@@ -476,7 +474,7 @@ export default class Invoice extends GenericComponent {
                                         <div className="p-grid">
                                             <div className="p-col p-fluid" style={{padding:'.5em'}}>
                                                 <DataTable value={this.state.items} paginator={true} rows={25}
-                                                           scrollable={true} scrollHeight="200px"
+                                                           scrollable={true} scrollHeight="200px" responsive={true}
                                                            selectionMode="none" selection={this.state.selectedInventory}
                                                            onSelectionChange={e => this.setState({selectedInventory: e.value})}
                                                            onRowSelect={this.onItemSelect} emptyMessage="No record(s) found">

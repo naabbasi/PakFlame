@@ -282,7 +282,7 @@ export default class Inventory extends GenericComponent {
                 <Navigation>
                     <div className="content-section implementation">
                         <DataTable value={this.state.inventories} paginator={true} rows={25}  header={header} footer={footer}
-                                   scrollable={true} scrollHeight="700px"
+                                   scrollable={true} scrollHeight="700px" responsive={true}
                                    selectionMode="none" selection={this.state.selectedInventory}
                                    onSelectionChange={e => this.setState({selectedInventory: e.value})}
                                    globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
