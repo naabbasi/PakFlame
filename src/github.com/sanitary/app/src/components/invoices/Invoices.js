@@ -170,7 +170,7 @@ export default class Invoices extends GenericComponent {
         </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button style={{float:'left'}} label="Add" icon="pi pi-plus" onClick={this.addNew}/>
+            <Button className="p-button-rounded" style={{float:'left'}} label="Add Invoice" icon="pi pi-plus" onClick={this.addNew}/>
         </div>;
 
         return (

@@ -152,7 +152,7 @@ export default class Worker extends GenericComponent {
         </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button style={{float:'left'}} label="Add" icon="pi pi-plus" onClick={this.addNew}/>
+            <Button className="p-button-rounded" style={{float:'left'}} label="Add Worker" icon="pi pi-plus" onClick={this.addNew}/>
         </div>;
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
@@ -162,8 +162,8 @@ export default class Worker extends GenericComponent {
         </div>;
 
         let askReasonFooterWorker = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button style={{float:'left'}} label="Edit Worker" icon="pi pi-plus" onClick={this.editWorker.bind(this)}/>
-            <Button style={{float:'left'}} label="Manage Payment" icon="pi pi-plus" onClick={this.addNewPaymentForWorker.bind(this)}/>
+            <Button className="p-button-rounded" style={{float:'left'}} label="Edit Worker" icon="pi pi-plus" onClick={this.editWorker.bind(this)}/>
+            <Button className="p-button-rounded" style={{float:'left'}} label="Manage Payment" icon="pi pi-plus" onClick={this.addNewPaymentForWorker.bind(this)}/>
         </div>;
 
         return (

@@ -155,7 +155,7 @@ export default class Customer extends GenericComponent {
         </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button style={{float:'left'}} label="Add Customer" icon="pi pi-plus" onClick={this.addNewCustomer}/>
+            <Button className="p-button-rounded" style={{float:'left'}} label="Add Customer" icon="pi pi-plus" onClick={this.addNewCustomer}/>
         </div>;
 
         let dialogFooter = <div className="p-grid p-align-center" style={{ paddingTop: '10px'}}>
@@ -167,8 +167,8 @@ export default class Customer extends GenericComponent {
         </div>;
 
         let askReasonFooter = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button style={{float:'left'}} label="Edit Customer" icon="pi pi-plus" onClick={this.editCustomer.bind(this)}/>
-            <Button style={{float:'left'}} label="Manage Payment" icon="pi pi-plus" onClick={this.addNewPayment.bind(this)}/>
+            <Button className="p-button-rounded" style={{float:'left'}} label="Edit Customer" icon="pi pi-plus" onClick={this.editCustomer.bind(this)}/>
+            <Button className="p-button-rounded" style={{float:'left'}} label="Manage Payment" icon="pi pi-plus" onClick={this.addNewPayment.bind(this)}/>
         </div>;
 
         return (

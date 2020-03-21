@@ -134,7 +134,7 @@ export default class Warehouses extends GenericComponent {
         </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button style={{float:'left'}} label="Add" icon="pi pi-plus" onClick={this.addNewWarehouse}/>
+            <Button className="p-button-rounded" style={{float:'left'}} label="Add Wearhouse" icon="pi pi-plus" onClick={this.addNewWarehouse}/>
         </div>;
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">

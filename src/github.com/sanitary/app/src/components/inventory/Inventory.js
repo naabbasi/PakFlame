@@ -261,8 +261,8 @@ export default class Inventory extends GenericComponent {
         </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button style={{float:'left', marginRight: '5px'}} label="Add Item" icon="pi pi-plus" onClick={this.addNew}/>
-            <Button style={{float:'left'}} label="Add Company" icon="pi pi-plus" onClick={this.addNewCompany}/>
+            <Button className="p-button-rounded" style={{float:'left', marginRight: '5px'}} label="Add Item" icon="pi pi-plus" onClick={this.addNew}/>
+            <Button className="p-button-rounded" style={{float:'left'}} label="Add Company" icon="pi pi-plus" onClick={this.addNewCompany}/>
         </div>
 
         let dialogItemFooter = <div className="ui-dialog-buttonpane p-clearfix">
