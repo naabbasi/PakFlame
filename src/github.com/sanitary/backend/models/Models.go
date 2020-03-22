@@ -24,9 +24,23 @@ type ModelNoPK struct {
 	UpdatedAt time.Time `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
 }
 
+type SysInfo struct {
+	Model
+	License   string `json:"license" xml:"license" form:"license" query:"license"`
+	Migration bool   `json:"migration" xml:"migration" form:"migration" query:"migration"`
+}
+
+func (sysinfo SysInfo) ToString() string {
+	return fmt.Sprintf("id: %s\nlicense: %s\nmigration: %v", sysinfo.ID, sysinfo.License, sysinfo.Migration)
+}
+
 type Client struct {
 	ModelSoftDelete
 	ClientName string `sql:"index" json:"clientName" xml:"clientName" form:"clientName" query:"clientName"`
+}
+
+func (client Client) ToString() string {
+	return fmt.Sprintf("id: %s\nclient name: %s", client.ID, client.ClientName)
 }
 
 type ClientConfiguration struct {
@@ -59,11 +73,19 @@ type Customer struct {
 	ClientId    uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
+func (customer Customer) ToString() string {
+	return fmt.Sprintf("id: %d\nfirst name: %s\nlast name: %s\norder status: %s", customer.ID, customer.FirstName, customer.LastName, customer.OrderStatus)
+}
+
 type Worker struct {
 	Person
 	Address       string    `json:"address" xml:"address" form:"address" query:"address"`
 	WorkingStatus string    `json:"workingStatus" xml:"workingStatus" form:"workingStatus" query:"workingStatus"`
 	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+}
+
+func (worker Worker) ToString() string {
+	return fmt.Sprintf("id: %d\nfirst name: %s\nlast name: %s\norder status: %s", worker.ID, worker.FirstName, worker.LastName, worker.WorkingStatus)
 }
 
 type Payment struct {
@@ -77,6 +99,10 @@ type Payment struct {
 	ClientId  uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
+func (payment Payment) ToString() string {
+	return fmt.Sprintf("id: %d\nfirst name: %0.3f\nlast name: %0.3f\norder status: %0.3f", payment.ID, payment.Amount, payment.Remaining, payment.Total)
+}
+
 type Warehouse struct {
 	Model
 	Name         string    `json:"name" xml:"name" form:"name" query:"name"`
@@ -85,6 +111,24 @@ type Warehouse struct {
 	MobileNumber string    `json:"mobileNumber" xml:"mobileNumber" form:"mobileNumber" query:"mobileNumber"`
 	Status       string    `json:"status" xml:"status" form:"status" query:"status"`
 	ClientId     uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+}
+
+func (warehouse Warehouse) ToString() string {
+	return fmt.Sprintf("id: %dname: %s\nlocation: %s\nemail: %s\nmobile number: %s", warehouse.ID, warehouse.Name, warehouse.Location, warehouse.Email, warehouse.MobileNumber)
+}
+
+type Company struct {
+	Model
+	CompanyName   string      `json:"companyName" xml:"companyName" form:"companyName" query:"companyName"`
+	MobileNumber  string      `json:"mobileNumber" xml:"mobileNumber" form:"mobileNumber" query:"mobileNumber"`
+	Email         string      `json:"email" xml:"email" form:"email" query:"email"`
+	ContactPerson string      `json:"contactPerson" xml:"contactPerson" form:"contactPerson" query:"contactPerson"`
+	Inventory     []Inventory `json:"inventories" xml:"inventories" form:"inventories" query:"inventories"`
+	ClientId      uuid.UUID   `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+}
+
+func (company Company) ToString() string {
+	return fmt.Sprintf("id: %dcompany name: %s\nmobile number: %s\nemail: %s\nmobile number: %s", company.ID, company.CompanyName, company.MobileNumber, company.Email, company.MobileNumber)
 }
 
 type Inventory struct {
@@ -102,15 +146,7 @@ type Inventory struct {
 }
 
 func (inventory Inventory) ToString() string {
-	return fmt.Sprintf("id: %d\nname: %s\nprice: %0.1f\nquantity: %d\ncreated: %s", inventory.ID, inventory.ItemName, inventory.PurchaseRate, inventory.Quantities, inventory.CreatedAt.Format("02/01/2006"))
-}
-
-type Company struct {
-	Model
-	CompanyName  string      `json:"companyName" xml:"companyName" form:"companyName" query:"companyName"`
-	MobileNumber string      `json:"mobileNumber" xml:"mobileNumber" form:"mobileNumber" query:"mobileNumber"`
-	Inventory    []Inventory `json:"inventories" xml:"inventories" form:"inventories" query:"inventories"`
-	ClientId     uuid.UUID   `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+	return fmt.Sprintf("id: %d\nname: %s\nprice: %0.3f\nquantity: %d\ncreated: %s", inventory.ID, inventory.ItemName, inventory.PurchaseRate, inventory.Quantities, inventory.CreatedAt.Format("02/01/2006"))
 }
 
 type Invoice struct {
@@ -140,10 +176,4 @@ type InvoiceDetails struct {
 	Discount      float64   `json:"discount" xml:"discount" form:"discount" query:"discount"`
 	TotalAmount   float64   `json:"totalAmount" xml:"totalAmount" form:"totalAmount" query:"totalAmount"`
 	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
-}
-
-type SysInfo struct {
-	Model
-	License   string `json:"license" xml:"license" form:"license" query:"license"`
-	Migration bool   `json:"migration" xml:"migration" form:"migration" query:"migration"`
 }
