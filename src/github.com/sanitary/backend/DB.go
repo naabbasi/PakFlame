@@ -3,8 +3,8 @@ package backend
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	"github.com/labstack/gommon/log"
 	"github.com/sanitary/config"
+	"log"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -35,7 +35,7 @@ func (db *DBSettings) GetDBConnection() *gorm.DB {
 	connection, err := gorm.Open(db.dialect, db.url)
 
 	if err != nil {
-		log.Errorf("Error occurred: ", err.Error())
+		log.Panicf("Error occurred: %v", err.Error())
 	}
 
 	if db.debug {

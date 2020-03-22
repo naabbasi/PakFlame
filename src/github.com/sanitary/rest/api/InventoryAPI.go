@@ -3,11 +3,11 @@ package api
 import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo"
-	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
 	"github.com/sanitary/util/http_util"
+	"log"
 	"net/http"
 )
 

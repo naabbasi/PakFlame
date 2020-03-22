@@ -77,7 +77,6 @@ export default class Warehouses extends GenericComponent {
         this.axios.delete(`/warehouses/${warehouseId}`)
             .then( response => {
                 // handle success
-                console.log(response);
                 if(response.status === 204){
                     this.setState({warehouses: null, selectedWarehouse:null, warehouse: null, displayDialog:false});
                     this.getWarehouses();

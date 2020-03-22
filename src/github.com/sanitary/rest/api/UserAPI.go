@@ -3,10 +3,10 @@ package api
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
-	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
+	"log"
 	"net/http"
 	"time"
 )

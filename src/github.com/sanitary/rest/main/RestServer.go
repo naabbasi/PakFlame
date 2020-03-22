@@ -4,12 +4,12 @@ import (
 	"flag"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/schema"
 	"github.com/sanitary/config"
 	"github.com/sanitary/rest/api"
 	"github.com/sanitary/util/generator"
+	"log"
 
 	"net/http"
 	"os"
@@ -89,7 +89,7 @@ func main() {
 		users.DeleteUser()
 		users.Login()
 
-		restrictedPath := e.Group("/restricted")
+		restrictedPath := e.Group("/secure")
 		restrictedPath.Use(middleware.JWT([]byte(config.JWT_SECRET)))
 
 		dashboard := api.NewDashboard(restrictedPath)

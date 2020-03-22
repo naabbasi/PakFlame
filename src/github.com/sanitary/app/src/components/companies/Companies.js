@@ -82,7 +82,6 @@ export default class Companies extends GenericComponent {
         this.axios.delete(`/companies/${companyId}`)
             .then( response => {
                 // handle success
-                console.log(response);
                 if(response.status === 204){
                     this.setState({companies: null, selectedWarehouse:null, company: null, displayDialog:false});
                     this.getWarehouses();

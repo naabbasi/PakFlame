@@ -29,7 +29,7 @@ export class GenericComponent extends Component {
                 config.headers['Authorization'] = `Bearer ${JSON.parse(user)['token']}`;
 
                 if(JSON.parse(user)['token']){
-                    config.url = '/restricted/api' + config.url;
+                    config.url = '/secure/api' + config.url;
                 }
             } else {
                 config.url = '/api' + config.url;

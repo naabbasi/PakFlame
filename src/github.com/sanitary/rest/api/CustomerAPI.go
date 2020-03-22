@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/labstack/echo"
-	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
 	"github.com/sanitary/util/http_util"
+	"log"
 	"net/http"
 )
 
@@ -47,9 +47,9 @@ func (customer *customers) GetCustomers() {
 }
 
 func (customer *customers) GetCustomerById() {
-	customer.echo.GET(CustomerEndPoint+"/:id", func(c echo.Context) error {
+	customer.echo.GET(CustomerEndPoint+"/:customerId", func(c echo.Context) error {
 		var findCustomer = new(models.Customer)
-		customerId := c.Param("id")
+		customerId := c.Param("customerId")
 		connection := customer.dbSettings.GetDBConnection()
 		connection.Table("customers").Where("id = ? and client_id = ?", customerId, http_util.GetUserInfo(c).ClientId).
 			First(&findCustomer)
@@ -107,7 +107,7 @@ func (customer *customers) UpdateCustomer() {
 }
 
 func (customer *customers) DeleteCustomer() {
-	customer.echo.DELETE(CustomerEndPoint+"/:id", func(c echo.Context) error {
+	customer.echo.DELETE(CustomerEndPoint+"/:customerId", func(c echo.Context) error {
 
 		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err != nil {
@@ -115,7 +115,7 @@ func (customer *customers) DeleteCustomer() {
 		}
 
 		connection := customer.dbSettings.GetDBConnection()
-		delete := connection.Where("id = ? and client_id = ?", c.Param("id"), clientId).Delete(models.Customer{})
+		delete := connection.Where("id = ? and client_id = ?", c.Param("customerId"), clientId).Delete(models.Customer{})
 
 		if delete.RowsAffected == 1 {
 			return c.JSON(http.StatusNoContent, "Customer has been deleted")
