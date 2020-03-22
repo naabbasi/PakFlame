@@ -94,6 +94,8 @@ func main() {
 
 		dashboard := api.NewDashboard(restrictedPath)
 		dashboard.TopTenItemsByQuantities()
+		dashboard.TopEntities()
+		dashboard.QuantityAlter()
 
 		customers := api.NewCustomer(restrictedPath)
 		customers.GetCustomers()

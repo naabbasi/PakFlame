@@ -55,12 +55,53 @@ func (dashboard *dashboard) TopTenItemsByQuantities() {
 	})
 }
 
-func (dashboard *dashboard) GetCompanyById() {
-	dashboard.echo.GET(DashboardEndPoint+"/:companyId", func(c echo.Context) error {
-		companyId := c.Param("companyId")
-		var allCompanies = new(models.Company)
+func (dashboard *dashboard) TopEntities() {
+	dashboard.echo.GET(DashboardEndPoint+"/entity/:entityName", func(c echo.Context) error {
 		connection := dashboard.dbSettings.GetDBConnection()
-		connection.First(&allCompanies, "id = ?", &companyId)
-		return c.JSON(http.StatusOK, allCompanies)
+
+		if c.Param("entityName") == "warehouses" {
+			totalWarehouses := new(int64)
+			connection.Model(&models.Warehouse{}).Where("client_id = ? ", http_util.GetUserInfo(c).ClientId).
+				Count(totalWarehouses)
+
+			return c.JSON(http.StatusOK, totalWarehouses)
+		} else if c.Param("entityName") == "companies" {
+			totalCompanies := new(int64)
+			connection.Model(&models.Company{}).Where("client_id = ? ", http_util.GetUserInfo(c).ClientId).
+				Count(totalCompanies)
+
+			return c.JSON(http.StatusOK, totalCompanies)
+		} else if c.Param("entityName") == "customers" {
+			totalCompanies := new(int64)
+			connection.Model(&models.Customer{}).Where("client_id = ? ", http_util.GetUserInfo(c).ClientId).
+				Count(totalCompanies)
+
+			return c.JSON(http.StatusOK, totalCompanies)
+		} else if c.Param("entityName") == "workers" {
+			totalCompanies := new(int64)
+			connection.Model(&models.Worker{}).Where("client_id = ? ", http_util.GetUserInfo(c).ClientId).
+				Count(totalCompanies)
+
+			return c.JSON(http.StatusOK, totalCompanies)
+		}
+
+		return c.JSON(http.StatusBadRequest, "Please provide correct entity name")
+	})
+}
+
+func (dashboard *dashboard) QuantityAlter() {
+	dashboard.echo.GET(DashboardEndPoint+"/quantityAlert", func(c echo.Context) error {
+		var quantityAlert = new([]models.Inventory)
+		connection := dashboard.dbSettings.GetDBConnection()
+
+		connection.Where("quantities <= quantity_alert AND client_id = ? ", http_util.GetUserInfo(c).ClientId).
+			Order("item_name ASC").
+			Find(&quantityAlert)
+
+		if len(*quantityAlert) == 0 {
+			return c.JSON(http.StatusNotFound, "No data found")
+		} else {
+			return c.JSON(http.StatusOK, quantityAlert)
+		}
 	})
 }
