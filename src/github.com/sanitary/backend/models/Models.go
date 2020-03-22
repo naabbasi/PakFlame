@@ -120,9 +120,9 @@ func (warehouse Warehouse) ToString() string {
 type Company struct {
 	Model
 	CompanyName   string      `json:"companyName" xml:"companyName" form:"companyName" query:"companyName"`
+	ContactPerson string      `json:"contactPerson" xml:"contactPerson" form:"contactPerson" query:"contactPerson"`
 	MobileNumber  string      `json:"mobileNumber" xml:"mobileNumber" form:"mobileNumber" query:"mobileNumber"`
 	Email         string      `json:"email" xml:"email" form:"email" query:"email"`
-	ContactPerson string      `json:"contactPerson" xml:"contactPerson" form:"contactPerson" query:"contactPerson"`
 	Inventory     []Inventory `json:"inventories" xml:"inventories" form:"inventories" query:"inventories"`
 	ClientId      uuid.UUID   `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }

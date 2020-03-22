@@ -1,11 +1,14 @@
 package api
 
 import (
+	"fmt"
+	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"github.com/sanitary/backend"
 	"github.com/sanitary/backend/models"
 	"github.com/sanitary/config"
+	"github.com/sanitary/util/http_util"
 	"net/http"
 )
 
@@ -33,7 +36,22 @@ func (company *companies) GetCompanies() {
 	company.echo.GET(CompanyEndPoint, func(c echo.Context) error {
 		var allCompanies = new([]models.Company)
 		connection := company.dbSettings.GetDBConnection()
-		connection.Find(&allCompanies)
+		connection.
+			Where("client_id = ? ", http_util.GetUserInfo(c).ClientId).
+			Order("company_name ASC").
+			Find(&allCompanies)
+		return c.JSON(http.StatusOK, allCompanies)
+	})
+}
+
+func (company *companies) GetCompanyById() {
+	company.echo.GET(CompanyEndPoint+"/:companyId", func(c echo.Context) error {
+		companyId := c.Param("companyId")
+		var allCompanies = new(models.Company)
+		connection := company.dbSettings.GetDBConnection()
+		connection.
+			Where("id = ? and client_id = ?", companyId, http_util.GetUserInfo(c).ClientId).
+			First(&allCompanies)
 		return c.JSON(http.StatusOK, allCompanies)
 	})
 }
@@ -45,6 +63,11 @@ func (company *companies) AddCompany() {
 			return err
 		}
 		log.Printf("Company saved with %s", newCompany)
+
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
+		if err == nil {
+			newCompany.ClientId = clientId
+		}
 
 		connection := company.dbSettings.GetDBConnection()
 		save := connection.Save(newCompany)
@@ -65,6 +88,11 @@ func (company *companies) UpdateCompany() {
 		}
 		log.Printf("Company saved with %s", updateCompany)
 
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
+		if err == nil {
+			updateCompany.ClientId = clientId
+		}
+
 		connection := company.dbSettings.GetDBConnection()
 		update := connection.Model(models.Company{}).Where("id = ?", updateCompany.ID).Update(updateCompany)
 
@@ -77,30 +105,19 @@ func (company *companies) UpdateCompany() {
 }
 
 func (company *companies) DeleteCompany() {
-	company.echo.DELETE(CompanyEndPoint, func(c echo.Context) error {
-		deleteCompany := new(models.Company)
-		if err := c.Bind(deleteCompany); err != nil {
-			return err
+	company.echo.DELETE(CompanyEndPoint+"/:id", func(c echo.Context) error {
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("Unable to parse client id: %s", clientId))
 		}
-		log.Printf("Company deleted with %s", deleteCompany)
 
 		connection := company.dbSettings.GetDBConnection()
-		update := connection.Model(models.Company{}).Delete(deleteCompany)
+		delete := connection.Where("id = ? and client_id = ?", c.Param("id"), clientId).Delete(models.Company{})
 
-		if update.RowsAffected == 1 {
+		if delete.RowsAffected == 1 {
 			return c.JSON(http.StatusNoContent, "Company has been deleted")
 		} else {
-			return c.JSON(http.StatusInternalServerError, "Unable to update worker")
+			return c.JSON(http.StatusInternalServerError, "Unable to delete company")
 		}
-	})
-}
-
-func (company *companies) GetCompanyById() {
-	company.echo.GET(CompanyEndPoint+"/:companyId", func(c echo.Context) error {
-		companyId := c.Param("companyId")
-		var allCompanies = new(models.Company)
-		connection := company.dbSettings.GetDBConnection()
-		connection.First(&allCompanies, "id = ?", &companyId)
-		return c.JSON(http.StatusOK, allCompanies)
 	})
 }

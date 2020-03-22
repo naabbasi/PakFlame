@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
@@ -101,25 +102,19 @@ func (warehouse *warehouses) UpdateWarehouse() {
 }
 
 func (warehouse *warehouses) DeleteWarehouse() {
-	warehouse.echo.DELETE(WarehouseEndPoint, func(c echo.Context) error {
-		deleteWarehouse := new(models.Warehouse)
-		if err := c.Bind(deleteWarehouse); err != nil {
-			return err
-		}
-		log.Printf("warehouse deleted with %s", deleteWarehouse)
-
+	warehouse.echo.DELETE(WarehouseEndPoint+"/:id", func(c echo.Context) error {
 		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
-		if err == nil {
-			deleteWarehouse.ClientId = clientId
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("Unable to parse client id: %s", clientId))
 		}
 
 		connection := warehouse.dbSettings.GetDBConnection()
-		update := connection.Model(models.Warehouse{}).Where("id = ? and client_id = ?", deleteWarehouse.ID, deleteWarehouse.ClientId).Delete(deleteWarehouse)
+		delete := connection.Where("id = ? and client_id = ?", c.Param("id"), clientId).Delete(models.Warehouse{})
 
-		if update.RowsAffected == 1 {
-			return c.JSON(http.StatusNoContent, "warehouse has been deleted")
+		if delete.RowsAffected == 1 {
+			return c.JSON(http.StatusNoContent, "Warehouse has been deleted")
 		} else {
-			return c.JSON(http.StatusInternalServerError, "Unable to update worker")
+			return c.JSON(http.StatusInternalServerError, "Unable to delete warehouse")
 		}
 	})
 }

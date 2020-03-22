@@ -18,6 +18,11 @@ export default class Navigation extends GenericComponent {
                         label:'Warehouses',
                         icon:'pi pi-fw pi-folder-open',
                         command:()=>{ window.location.hash="warehouses"; },
+                    },
+                    {
+                        label:'Companies',
+                        icon:'pi pi-fw pi-folder-open',
+                        command:()=>{ window.location.hash="companies"; },
                     },{
                         label:'Inventory',
                         icon:'pi pi-fw pi-folder-open',
@@ -77,7 +82,7 @@ export default class Navigation extends GenericComponent {
         let userInfo = JSON.parse(window.localStorage.getItem("isLoggedIn"));
         return (
             <div>
-                <Menubar model={items}>
+                <Menubar model={items} responsive={true}>
                     <div style={{float: 'right', lineHeight: '42px', textAlign: 'right', marginRight: '5px'}}>
                         <span className="pi pi-fw pi-bell"></span>
                         <span className="pi pi-fw pi-user"></span>

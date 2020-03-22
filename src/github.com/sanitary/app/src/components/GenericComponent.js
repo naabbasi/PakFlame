@@ -97,6 +97,8 @@ export class GenericComponent extends Component {
 
         if(entityName === 'warehouses'){
             this.onWarehouseSelect({data: rowData});
+        } else if(entityName === 'companies'){
+            this.onCompanySelect({data: rowData});
         } else if(entityName === 'customers'){
             this.onCustomerSelect({data: rowData});
         } else if(entityName === 'workers'){
@@ -113,6 +115,9 @@ export class GenericComponent extends Component {
         console.log(rowData);
         console.log(componentState);
         if(entityName === 'warehouses'){
+            this.deleteWarehouse(rowData['id']);
+        } else if(entityName === 'companies'){
+            this.deleteCompany(rowData['id']);
         } else if(entityName === 'customers'){
             this.deleteCustomer(rowData['id']);
         } else if(entityName === 'workers'){

@@ -7,33 +7,37 @@ import {Button} from "primereact/button";
 import {GenericComponent} from "../GenericComponent";
 import {Dialog} from "primereact/dialog";
 
-export default class Warehouses extends GenericComponent {
+export default class Companies extends GenericComponent {
     constructor(props) {
         super(props);
         this.state = {
-            warehouses: [],
-            warehouse: {},
+            companies: [],
+            company: {},
             selectedWarehouse: {}
         };
 
-        this.addNewWarehouse = this.addNewWarehouse.bind(this);
-        this.saveWarehouses = this.saveWarehouses.bind(this);
-        this.deleteWarehouse = this.deleteWarehouse.bind(this);
-        this.closeWarehouseDialog = this.closeWarehouseDialog.bind(this);
-        this.onWarehouseSelect = this.onWarehouseSelect.bind(this);
+        //creating refs
+        this.companiesDataTable = React.createRef();
+
+        this.addNewCompany = this.addNewCompany.bind(this);
+        this.saveCompany = this.saveCompany.bind(this);
+        this.closeCompanyDialog = this.closeCompanyDialog.bind(this);
+        this.onCompanySelect = this.onCompanySelect.bind(this);
     }
 
     async componentDidMount() {
+        //this.companiesDataTable.current.props.loading = true;
+        console.log(this.companiesDataTable.current);
         this.getWarehouses();
     }
 
     getWarehouses() {
-        // Make a request for a warehouses
-        this.axios.get('/warehouses')
+        // Make a request for a companies
+        this.axios.get('/companies')
             .then( response => {
                 // handle success
                 if(response.status === 200){
-                    this.setState({warehouses: response.data});
+                    this.setState({companies: response.data});
                 }
             })
             .catch(function (error) {
@@ -42,13 +46,13 @@ export default class Warehouses extends GenericComponent {
             });
     }
 
-    saveWarehouses() {
-        if(this.newWarehouse){
-            this.axios.post('/warehouses', this.state.warehouse)
+    saveCompany() {
+        if(this.NewCompany){
+            this.axios.post('/companies', this.state.company)
                 .then( response => {
                     // handle success
                     if(response.status === 201){
-                        this.setState({warehouses: null, selectedWarehouse:null, warehouse: null, displayDialog:false});
+                        this.setState({companies: null, selectedWarehouse:null, company: null, displayDialog:false});
                         this.getWarehouses();
                     }
                 })
@@ -58,12 +62,12 @@ export default class Warehouses extends GenericComponent {
                 });
         }
         else{
-            this.axios.put('/warehouses',this.state.warehouse)
+            this.axios.put('/companies',this.state.company)
                 .then( response => {
                     // handle success
                     console.log(response);
                     if(response.status === 202){
-                        this.setState({warehouses: null, selectedWarehouse:null, warehouse: null, displayDialog:false});
+                        this.setState({companies: null, selectedWarehouse:null, company: null, displayDialog:false});
                         this.getWarehouses();
                     }
                 })
@@ -74,13 +78,13 @@ export default class Warehouses extends GenericComponent {
         }
     }
 
-    deleteWarehouse() {
-        this.axios.delete('/warehouses', { data: { ...this.state.selectedWarehouse}})
+    deleteCompany(companyId) {
+        this.axios.delete(`/companies/${companyId}`)
             .then( response => {
                 // handle success
                 console.log(response);
                 if(response.status === 204){
-                    this.setState({warehouses: null, selectedWarehouse:null, warehouse: null, displayDialog:false});
+                    this.setState({companies: null, selectedWarehouse:null, company: null, displayDialog:false});
                     this.getWarehouses();
                 }
             })
@@ -90,37 +94,37 @@ export default class Warehouses extends GenericComponent {
             });
     }
 
-    addNewWarehouse() {
-        this.newWarehouse = true;
+    addNewCompany() {
+        this.NewCompany = true;
         this.setState({
-            warehouse: {name: '', location: '', mobileNumber: '', email: ''},
+            company: {companyName: '', contactPerson: '', mobileNumber: '', email: ''},
             displayDialog: true
         });
     }
 
     editWarehouse(e) {
-        this.newWarehouse = false;
+        this.NewCompany = false;
         this.setState({
             displayDialog:true,
-            warehouse: Object.assign({}, e.data)
+            company: Object.assign({}, e.data)
         });
     }
 
-    closeWarehouseDialog() {
-        this.setState({selectedWarehouse:null, warehouse: null, displayDialog:false});
+    closeCompanyDialog() {
+        this.setState({selectedWarehouse:null, company: null, displayDialog:false});
     }
 
     updateProperty(property, value) {
-        let warehouse = this.state.warehouse;
-        warehouse[property] = value;
-        this.setState({warehouse: warehouse});
+        let company = this.state.company;
+        company[property] = value;
+        this.setState({company: company});
     }
 
-    onWarehouseSelect(e){
-        this.newWarehouse = false;
+    onCompanySelect(e){
+        this.NewCompany = false;
         this.setState({
             displayDialog:true,
-            warehouse: Object.assign({}, e.data)
+            company: Object.assign({}, e.data)
         });
     }
 
@@ -134,61 +138,60 @@ export default class Warehouses extends GenericComponent {
         </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button className="p-button-rounded" style={{float:'left'}} label="Add Wearhouse" icon="pi pi-plus" onClick={this.addNewWarehouse}/>
+            <Button className="p-button-rounded" style={{float:'left'}} label="Add Company" icon="pi pi-plus" onClick={this.addNewCompany}/>
         </div>;
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
-            <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveWarehouses}/>
-            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteWarehouse}/>
-            <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeWarehouseDialog}/>
+            <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveCompany}/>
+            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteCompany}/>
+            <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeCompanyDialog}/>
         </div>;
 
         return <div>
             <Navigation>
                 <div className="content-section implementation">
-                    <DataTable value={this.state.warehouses} paginator={true} rows={25}  header={header} footer={footer}
+                    <DataTable ref={this.companiesDataTable} loading={false} value={this.state.companies} paginator={true} rows={25}  header={header} footer={footer}
                                scrollable={true} scrollHeight="700px" responsive={true}
                                selectionMode="none" selection={this.state.selectedWarehouse} onSelectionChange={e => this.setState({selectedWWarehouse: e.value})}
                                globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
-                        <Column field="name" header="Warehouse Name" sortable={true} style={{width: '15%'}}/>
-                        <Column field="location" header="Location" sortable={true} style={{width: '35%'}}/>
-                        <Column field="email" header="Email" sortable={true} style={{width: '25.33%'}}/>
-                        <Column field="mobileNumber" header="Mobile #" sortable={true} style={{width: '12%'}}/>
-                        <Column field="status" header="Status" sortable={true} style={{textAlign: 'center', width: '11%'}}/>
-                        <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'warehouses', this.state)} style={{width: '12%'}}/>
+                        <Column field="companyName" header="Company Name" sortable={true} style={{width: '25%'}}/>
+                        <Column field="contactPerson" header="Contact Person" sortable={true} style={{width: '25%'}}/>
+                        <Column field="mobileNumber" header="Mobile #" sortable={true} style={{width: '19%'}}/>
+                        <Column field="email" header="Email" sortable={true} style={{textAlign: 'left', width: '19%'}}/>
+                        <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'companies', this.state)} style={{width: '12%'}}/>
                     </DataTable>
                     <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Warehouse Details"
                             modal={true} footer={dialogFooter}
                             onShow={()=> this.refs['firstName']}
                             onHide={() => this.setState({displayDialog: false})}>
                         {
-                            this.state.warehouse &&
+                            this.state.company &&
                             <div className="p-grid">
                                 <div className="p-col-12">
                                     <div className="p-col" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText ref="name" maxLength={255} onChange={(e) => {this.updateProperty('name', e.target.value)}} value={this.state.warehouse.name}/>
-                                                <label htmlFor="name">Name</label>
+                                                <InputText ref="companyName" maxLength={255} onChange={(e) => {this.updateProperty('companyName', e.target.value)}} value={this.state.company.companyName}/>
+                                                <label htmlFor="companyName">Company Name</label>
                                             </span>
                                     </div>
 
                                     <div className="p-col" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText ref="location" maxLength={255} onChange={(e) => {this.updateProperty('location', e.target.value)}} value={this.state.warehouse.location}/>
-                                                <label htmlFor="location">Location</label>
+                                                <InputText ref="contactPerson" maxLength={255} onChange={(e) => {this.updateProperty('contactPerson', e.target.value)}} value={this.state.company.contactPerson}/>
+                                                <label htmlFor="contactPerson">Contact Person</label>
                                             </span>
                                     </div>
 
                                     <div className="p-col" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText ref="mobileNumber" maxLength={11} onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.warehouse.mobileNumber}/>
+                                                <InputText ref="mobileNumber" maxLength={11} onChange={(e) => {this.updateProperty('mobileNumber', e.target.value)}} value={this.state.company.mobileNumber}/>
                                                 <label htmlFor="mobileNumber">Mobile Number</label>
                                             </span>
                                     </div>
 
                                     <div className="p-col" style={{padding:'.75em'}}>
                                             <span className="p-float-label p-fluid">
-                                                <InputText ref="email" maxLength={500} onChange={(e) => {this.updateProperty('email', e.target.value)}} value={this.state.warehouse.email}/>
+                                                <InputText ref="email" maxLength={500} onChange={(e) => {this.updateProperty('email', e.target.value)}} value={this.state.company.email}/>
                                                 <label htmlFor="email">Email</label>
                                             </span>
                                     </div>
