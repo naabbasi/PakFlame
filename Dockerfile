@@ -14,10 +14,10 @@ WORKDIR /opt/AbuZarTraders
 COPY . .
 RUN pwd
 ENV GOPATH=/opt/AbuZarTraders
-RUN ls -la /opt/AbuZarTraders/src/github.com/sanitary/
-RUN cd src/github.com/sanitary/ && dep ensure && go build -o ../../../bin/AbuZarTrader github.com/sanitary/rest/main/
+RUN ls -la /opt/AbuZarTraders/src/github.com/pakflame/
+RUN cd src/github.com/pakflame/ && dep ensure && go build -o ../../../bin/AbuZarTrader github.com/pakflame/rest/main/
 
-RUN cd src/github.com/sanitary/app && npm install && npm run build && mkdir -p ../../../bin/app/ && cp -r app/build/* ../../../bin/app/
+RUN cd src/github.com/pakflame/app && npm install && npm run build && mkdir -p ../../../bin/app/ && cp -r app/build/* ../../../bin/app/
 
 RUN ls -la /opt/AbuZarTraders/bin
 
