@@ -12,6 +12,11 @@ git config \
   --global \
   url."https://noman.ali.abbasy@gmail.com:@7fc26a50048df50a658ad3c6c08c0bc819e8e328@github.com".insteadOf \
   "https://github.com"
-  
+
 git config --global --add url."git@github.com:".insteadOf "https://github.com/"
 git config --global --add url."git@github.com:".insteadOf "https://github.com/"
+
+## GO Modules
+1. go mod init github.com/sanitary inside the directories (src/github.com/sanitary)
+ - cd /opt/Workspaces/GoLang/IMS/src/github.com/sanitary && go mod init github.com/sanitary
+ - go get ./... (To install all dependency) | go build ./...

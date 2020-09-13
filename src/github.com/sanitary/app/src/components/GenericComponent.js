@@ -6,7 +6,7 @@ export class GenericComponent extends Component {
         super(props);
         let url = window.location.hostname;
         this.axios = axios.create({
-            baseURL: 'http://' + url,
+            baseURL: `http://${url}`,
             responseType: 'json',
             headers: {
                 'Authorization': 'engr.nomiabbasi@gmail.com'

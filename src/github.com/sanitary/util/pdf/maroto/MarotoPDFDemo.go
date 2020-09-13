@@ -2,15 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/johnfercher/maroto/pkg/consts"
-	"github.com/johnfercher/maroto/pkg/pdf"
-	"github.com/johnfercher/maroto/pkg/props"
-	"math/rand"
-	"time"
 )
 
 func main() {
-	mpdf := pdf.NewMaroto(consts.Portrait, consts.A5)
+	/*mpdf := pdf.NewMaroto(consts.Portrait, consts.A5)
 
 	mpdf.RegisterHeader(func() {
 		mpdf.SetBorder(false)
@@ -111,13 +106,13 @@ func main() {
 			mpdf.Col(func() {
 				mpdf.Signature("Signature", props.Font{Family: consts.Helvetica, Size: 8})
 			})
-		})*/
+		})
 	})
 
 	err := mpdf.OutputFileAndClose("hello.pdf")
 	if err != nil {
 		return
-	}
+	}*/
 }
 
 func getTableContents() ([]string, [][]string) {

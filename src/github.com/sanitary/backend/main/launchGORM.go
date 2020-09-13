@@ -31,11 +31,6 @@ func main() {
 		schema.DropSchema(connection)
 	}
 
-
-
 	data := generator.New()
-	data.CreateUsers(connection)
-	data.CreateCustomers(connection)
-	company := data.CreateCompanies(connection)
-	data.CreateInventories(company, connection)
+	data.Import(connection)
 }

@@ -1,14 +1,7 @@
 package main
 
-import (
-	"fmt"
-	"github.com/alexbrainman/printer"
-	"os"
-	"strings"
-)
-
 func main() {
-	printers, _ := printer.ReadNames()
+	/*printers, _ := printer.ReadNames()
 
 	defaultPrinter, _ := printer.Default()
 
@@ -32,5 +25,5 @@ func main() {
 		fmt.Fprintf(p, "%s\r\n", line)
 	}
 
-	os.Exit(0)
+	os.Exit(0)*/
 }
