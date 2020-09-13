@@ -209,7 +209,7 @@ export default class Dashboard extends GenericComponent {
                                         <div style={{float: 'left'}}>Inventory - Excessive Items</div>
                                     </div>
                                 } value={this.state.excessItemsByQuantities} rows={25}
-                                           scrollable={true} scrollHeight="265px"
+                                           scrollable={true} scrollHeight="265px" responsive={true}
                                            selectionMode="none" emptyMessage="No record(s) found">
                                     <Column field="itemName" header="Item Name" sortable={false} style={{textAlign: 'left', width: '70%'}}/>
                                     <Column field="quantities" header="Quantities" sortable={false} style={{textAlign: 'right', width: '30%'}}/>
