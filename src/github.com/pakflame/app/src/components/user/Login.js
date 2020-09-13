@@ -74,7 +74,7 @@ export default class Login extends GenericComponent {
             <div id="loginComponent" style={{position: 'absolute', width: '100%', height: '100%'}} className="p-hidden">
                 <form>
                     <div className="LoginBox">
-                        <Card title="AbuZar Traders" subTitle="Please sign-in"
+                        <Card title="Pak Flame" subTitle="Please sign-in"
                               className="ui-card-shadow" footer={footer}>
 
                             <div className="p-col-12">

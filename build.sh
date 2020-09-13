@@ -12,7 +12,7 @@ cd $CURRENT_DIR/src/github.com/pakflame
 
 $GOROOT/bin/go get ./...
 
-$GOROOT/bin/go build -o ../../../bin/AbuZarTrader github.com/pakflame/rest/main/
+$GOROOT/bin/go build -o ../../../bin/pakflame github.com/pakflame/rest/main/
 
 cd app
 npm run build
