@@ -45,8 +45,8 @@ func (company *companies) GetCompanies() {
 }
 
 func (company *companies) GetCompanyById() {
-	company.echo.GET(CompanyEndPoint+"/:companyId", func(c echo.Context) error {
-		companyId := c.Param("companyId")
+	company.echo.GET(CompanyEndPoint+"/:id", func(c echo.Context) error {
+		companyId := c.Param("id")
 		var allCompanies = new(models.Company)
 		connection := company.dbSettings.GetDBConnection()
 		connection.

@@ -28,6 +28,7 @@ export default class Inventory extends GenericComponent {
         this.deleteCompany = this.deleteCompany.bind(this);
         this.addNewCompany = this.addNewCompany.bind(this);
         this.onItemStatusChange = this.onItemStatusChange.bind(this);
+        this.onItemTagsChange = this.onItemTagsChange.bind(this);
     }
 
     async componentDidMount() {
@@ -118,7 +119,8 @@ export default class Inventory extends GenericComponent {
         this.setState({
             displayItemDialog:true,
             newInventory: Object.assign({}, e.data),
-            itemStatus: {label: e.data['itemStatus'], status: e.data['itemStatus']}
+            itemStatus: {label: e.data['itemStatus'], status: e.data['itemStatus']},
+            itemTags: {label: e.data['itemTags'], category: e.data['itemTags']}
         });
 
         this.getCompanyById(e.data['companyId']);
@@ -127,7 +129,7 @@ export default class Inventory extends GenericComponent {
     addNew() {
         this.newItem = true;
         this.setState({
-            newInventory: {itemName: '', quantities: 0, quantityAlert: 0, purchaseRate: 0, wholesaleRate: 0, retailRate: 0, itemStatus: ''},
+            newInventory: {itemName: '', quantities: 0, quantityAlert: 0, purchaseRate: 0, wholesaleRate: 0, retailRate: 0, itemStatus: '', itemTags: ''},
             itemStatus: null,
             displayItemDialog: true
         });
@@ -145,6 +147,12 @@ export default class Inventory extends GenericComponent {
         console.log(e.value)
         this.setState({itemStatus: e.value});
         this.updateProperty('itemStatus', e.value.status);
+    }
+
+    onItemTagsChange(e) {
+        console.log(e.value)
+        this.setState({itemTags: e.value});
+        this.updateProperty('itemTags', e.value.category);
     }
 
     /*Company related method*/
@@ -229,7 +237,7 @@ export default class Inventory extends GenericComponent {
     }
 
     getCompanyById(companyId) {
-        this.axios.get('/companies/' + companyId)
+        this.axios.get(`/companies/${companyId}`)
             .then( response => {
                 // handle success
                 console.log(response);
@@ -248,8 +256,13 @@ export default class Inventory extends GenericComponent {
     render() {
         const itemStatusOptions = [
             {label: 'Available', status: 'Available'},
-            {label: 'Out of Stock', status: 'Out of Stock'},
-            {label: 'Discontinue', status: 'Discontinue'}
+            {label: 'Out of Stock', status: 'Out of Stock'}
+            /*{label: 'Discontinue', status: 'Discontinue'}*/
+        ];
+
+        const itemTagsOptions = [
+            {label: 'Geyser', category: 'Geyser'},
+            {label: 'Stove', category: 'Stove'}
         ];
 
         let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
@@ -290,11 +303,12 @@ export default class Inventory extends GenericComponent {
                             <Column field="itemName" header="Item Name" sortable={true} />
                             <Column field="quantities" header="Quantity" sortable={true} style={{textAlign: 'right'}}/>
                             <Column field="quantityAlert" header="Quantity Alert" sortable={true} style={{textAlign: 'right'}}/>
+                            {/*<Column field="wholesaleRate" header="Wholesale Rate" sortable={true} style={{textAlign: 'right'}}/>
+                            <Column field="retailRate" header="Retail Rate" sortable={true} style={{textAlign: 'right'}}/>*/}
+                            <Column field="itemTags" header="Tag(s)" sortable={true}/>
+                            <Column field="itemStatus" header="Status" sortable={true}/>
                             <Column field="createdAt" header="Purchase Date" body={this.dateFormatter}  sortable={true} style={{textAlign: 'center', overflowWrap: 'break-word'}}/>
                             <Column field="purchaseRate" header="Purchase Rate" sortable={true} style={{textAlign: 'right'}}/>
-                            <Column field="wholesaleRate" header="Wholesale Rate" sortable={true} style={{textAlign: 'right'}}/>
-                            <Column field="retailRate" header="Retail Rate" sortable={true} style={{textAlign: 'right'}}/>
-                            <Column field="itemStatus" header="Status" sortable={true}/>
                             <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'inventory', this.state)} style={{width: '12%'}}/>
                         </DataTable>
 
@@ -355,24 +369,18 @@ export default class Inventory extends GenericComponent {
 
                                             <div className="p-col-6" style={{padding:'.75em'}}>
                                                 <span className="p-float-label p-fluid">
-                                                    <InputText id="wholesaleRate" keyfilter="num"
-                                                               onChange={(e) => {this.updateProperty('wholesaleRate', e.target.value)}}
-                                                               onBlur={(e) => {this.updateProperty('wholesaleRate', this.Float(e.target.value))}}
-                                                               value={this.state.newInventory.wholesaleRate}/>
-                                                    <label htmlFor="wholesaleRate">Wholesale Rate</label>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                            <div className="p-col-6" style={{padding:'.75em'}}>
-                                                <span className="p-float-label p-fluid">
                                                     <InputText id="retailRate" keyfilter="num"
                                                                onChange={(e) => {this.updateProperty('retailRate', e.target.value)}}
                                                                onBlur={(e) => {this.updateProperty('retailRate', this.Float(e.target.value))}}
                                                                value={this.state.newInventory.retailRate}/>
                                                     <label htmlFor="retailRate">Retail Rate</label>
                                                 </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                            <div className="p-col-6 p-fluid" style={{padding:'.75em'}}>
+                                                <Dropdown value={this.state.itemTags} options={itemTagsOptions} onChange={this.onItemTagsChange} placeholder="Select Category" optionLabel="label"/>
                                             </div>
                                             <div className="p-col-6 p-fluid" style={{padding:'.75em'}}>
                                                 <Dropdown value={this.state.itemStatus} options={itemStatusOptions} onChange={this.onItemStatusChange} placeholder="Select Item Status" optionLabel="label"/>

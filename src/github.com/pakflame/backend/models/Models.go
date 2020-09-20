@@ -140,6 +140,7 @@ type Inventory struct {
 	WholesaleRate float64   `json:"wholesaleRate" xml:"wholesaleRate" form:"wholesaleRate" query:"wholesaleRate"`
 	RetailRate    float64   `json:"retailRate" xml:"retailRate" form:"retailRate" query:"retailRate"`
 	ItemStatus    string    `json:"itemStatus" xml:"itemStatus" form:"itemStatus" query:"itemStatus"`
+	ItemTags      string    `json:"itemTags" xml:"itemTags" form:"itemTags" query:"itemTags"`
 	CompanyId     uuid.UUID `gorm:"ForeignKey:company_id; type: uuid; NOT NULL" json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
 	WarehouseId   uuid.UUID `gorm:"ForeignKey:warehouse_id; type: uuid; NOT NULL" json:"warehouse_id" xml:"warehouse_id" form:"warehouse_id" query:"warehouse_id"`
 	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid; NOT NULL" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
@@ -147,6 +148,15 @@ type Inventory struct {
 
 func (inventory Inventory) ToString() string {
 	return fmt.Sprintf("id: %d\nname: %s\nprice: %0.3f\nquantity: %d\ncreated: %s", inventory.ID, inventory.ItemName, inventory.PurchaseRate, inventory.Quantities, inventory.CreatedAt.Format("02/01/2006"))
+}
+
+type Product struct {
+	Model
+	ProductName   string    `json:"productName" xml:"productName" form:"productName" query:"productName"`
+	ProductType   string    `json:"productType" xml:"productType" form:"productType" query:"productType"`
+	ProductPrice  float64   `json:"productPrice" xml:"productPrice" form:"productPrice" query:"productPrice"`
+	ProductDate   time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"productDate" xml:"productDate" form:"productDate" query:"productDate"`
+	ProductStatus string    `json:"productStatus" xml:"productStatus" form:"productStatus" query:"productStatus"`
 }
 
 type Invoice struct {

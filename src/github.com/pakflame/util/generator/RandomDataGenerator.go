@@ -34,10 +34,10 @@ func (data *data) createUsers(connection *gorm.DB, client *models.Client) {
 		ClientId:  client.ID,
 	})
 	connection.Create(&models.User{
-		Username:  "waris",
+		Username:  "mabbasi",
 		Password:  "786",
-		FirstName: "Abdul Waris",
-		LastName:  "Zai",
+		FirstName: "Musaveer Ali",
+		LastName:  "Abbasi",
 		ClientId:  client.ID,
 	})
 }
@@ -92,7 +92,7 @@ func (data *data) createWorkers(connection *gorm.DB, client *models.Client) {
 
 func (data *data) createCompanies(connection *gorm.DB, client *models.Client) *models.Company {
 	company := &models.Company{}
-	company.CompanyName = "Company 1"
+	company.CompanyName = "PakFlame"
 	company.MobileNumber = "03012525461"
 	company.ClientId = client.ID
 	connection.Create(company)
