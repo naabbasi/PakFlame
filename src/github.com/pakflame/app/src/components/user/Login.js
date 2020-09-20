@@ -23,7 +23,7 @@ export default class Login extends GenericComponent {
         if(window.localStorage.getItem("isLoggedIn") !== null && window.location.hash === "#/") {
             window.location.hash = 'dashboard';
         } else {
-            this.byId('loginComponent').style.backgroundColor = '#007ad9';
+            this.byId('loginComponent').style.backgroundColor = '#7B95A3';
             this.byId('loginComponent').className = 'p-show';
             this.refs['loginStatus'].className = 'p-hidden';
         }

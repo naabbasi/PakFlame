@@ -107,6 +107,8 @@ export class GenericComponent extends Component {
             this.onInventorySelect({data: rowData});
         } else if(entityName === 'invoices') {
             this.onInvoiceSelect({data: rowData});
+        } else if(entityName === 'products') {
+            this.onProductSelect({data: rowData});
         }
     }
 
@@ -129,6 +131,8 @@ export class GenericComponent extends Component {
             this.deleteInvoiceItem(rowData['id']);
         } else if(entityName === 'payments') {
             this.deletePayment(entityName, rowData['entityId'], rowData['id']);
+        } else if(entityName === 'products') {
+            this.deleteProduct(rowData['id']);
         }
     }
 }

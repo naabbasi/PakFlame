@@ -155,8 +155,10 @@ type Product struct {
 	ProductName   string    `json:"productName" xml:"productName" form:"productName" query:"productName"`
 	ProductType   string    `json:"productType" xml:"productType" form:"productType" query:"productType"`
 	ProductPrice  float64   `json:"productPrice" xml:"productPrice" form:"productPrice" query:"productPrice"`
+	ProductModel  string    `json:"productModel" xml:"productModel" form:"productModel" query:"productModel"`
 	ProductDate   time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"productDate" xml:"productDate" form:"productDate" query:"productDate"`
 	ProductStatus string    `json:"productStatus" xml:"productStatus" form:"productStatus" query:"productStatus"`
+	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type Invoice struct {

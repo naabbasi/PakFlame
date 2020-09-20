@@ -27,6 +27,10 @@ export default class Navigation extends GenericComponent {
                         label:'Inventory',
                         icon:'pi pi-fw pi-folder-open',
                         command:()=>{ window.location.hash="inventory"; }
+                    },{
+                        label:'Products',
+                        icon:'pi pi-fw pi-folder-open',
+                        command:()=>{ window.location.hash="products"; }
                     }
                 ]
             },

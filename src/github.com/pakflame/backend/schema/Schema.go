@@ -14,6 +14,7 @@ func init() {
 		&models.Worker{},
 		&models.Company{},
 		&models.Inventory{},
+		&models.Product{},
 		&models.Invoice{},
 		&models.InvoiceDetails{},
 	}
@@ -22,7 +23,7 @@ func init() {
 func CreateMySQLSchema(db *gorm.DB) {
 	// Migrate the schema
 	//db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(models.User{}) //If already exists then will throw error
-	db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(models.User{}, models.Worker{}, models.Customer{})
+	db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(models.User{}, models.Worker{}, models.Customer{}, models.Product{})
 
 	db.Model(&models.User{}).AddUniqueIndex("idx_username", "username")
 	db.Model(&models.Worker{}).AddUniqueIndex("idx_mobile_number", "mobile_number")
@@ -41,6 +42,7 @@ func CreatePostgreSQLSchema(db *gorm.DB) {
 		&models.Company{},
 		&models.Warehouse{},
 		&models.Inventory{},
+		&models.Product{},
 		&models.Invoice{},
 		&models.InvoiceDetails{},
 		&models.User{})
@@ -70,6 +72,7 @@ func DropSchema(db *gorm.DB) {
 		&models.Payment{},
 		&models.Warehouse{},
 		&models.Inventory{},
+		&models.Product{},
 		&models.Invoice{},
 		&models.InvoiceDetails{},
 		&models.Company{},

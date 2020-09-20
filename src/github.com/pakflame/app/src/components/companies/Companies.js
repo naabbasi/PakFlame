@@ -13,7 +13,7 @@ export default class Companies extends GenericComponent {
         this.state = {
             companies: [],
             company: {},
-            selectedWarehouse: {}
+            selectedCompany: {}
         };
 
         //creating refs
@@ -28,10 +28,10 @@ export default class Companies extends GenericComponent {
     async componentDidMount() {
         //this.companiesDataTable.current.props.loading = true;
         console.log(this.companiesDataTable.current);
-        this.getWarehouses();
+        this.getCompanies();
     }
 
-    getWarehouses() {
+    getCompanies() {
         // Make a request for a companies
         this.axios.get('/companies')
             .then( response => {
@@ -52,8 +52,8 @@ export default class Companies extends GenericComponent {
                 .then( response => {
                     // handle success
                     if(response.status === 201){
-                        this.setState({companies: null, selectedWarehouse:null, company: null, displayDialog:false});
-                        this.getWarehouses();
+                        this.setState({companies: null, selectedCompany:null, company: null, displayDialog:false});
+                        this.getCompanies();
                     }
                 })
                 .catch(function (error) {
@@ -67,8 +67,8 @@ export default class Companies extends GenericComponent {
                     // handle success
                     console.log(response);
                     if(response.status === 202){
-                        this.setState({companies: null, selectedWarehouse:null, company: null, displayDialog:false});
-                        this.getWarehouses();
+                        this.setState({companies: null, selectedCompany:null, company: null, displayDialog:false});
+                        this.getCompanies();
                     }
                 })
                 .catch(function (error) {
@@ -83,8 +83,8 @@ export default class Companies extends GenericComponent {
             .then( response => {
                 // handle success
                 if(response.status === 204){
-                    this.setState({companies: null, selectedWarehouse:null, company: null, displayDialog:false});
-                    this.getWarehouses();
+                    this.setState({companies: null, selectedCompany:null, company: null, displayDialog:false});
+                    this.getCompanies();
                 }
             })
             .catch(function (error) {
@@ -101,7 +101,7 @@ export default class Companies extends GenericComponent {
         });
     }
 
-    editWarehouse(e) {
+    editCompany(e) {
         this.NewCompany = false;
         this.setState({
             displayDialog:true,
@@ -110,7 +110,7 @@ export default class Companies extends GenericComponent {
     }
 
     closeCompanyDialog() {
-        this.setState({selectedWarehouse:null, company: null, displayDialog:false});
+        this.setState({selectedCompany:null, company: null, displayDialog:false});
     }
 
     updateProperty(property, value) {
@@ -129,10 +129,10 @@ export default class Companies extends GenericComponent {
 
     render() {
         let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
-            <div style={{float: 'left'}}>Warehouses Information</div>
+            <div style={{float: 'left'}}>Companies Information</div>
             <div style={{'textAlign':'left', float: 'right'}}>
                 <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
-                <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search Warehouse(s)" size="50"/>
+                <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search Companies" size="50"/>
             </div>
         </div>;
 
@@ -151,7 +151,7 @@ export default class Companies extends GenericComponent {
                 <div className="content-section implementation">
                     <DataTable ref={this.companiesDataTable} loading={false} value={this.state.companies} paginator={true} rows={25}  header={header} footer={footer}
                                scrollable={true} scrollHeight="700px" responsive={true}
-                               selectionMode="none" selection={this.state.selectedWarehouse} onSelectionChange={e => this.setState({selectedWWarehouse: e.value})}
+                               selectionMode="none" selection={this.state.selectedCompany} onSelectionChange={e => this.setState({selectedWCompany: e.value})}
                                globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
                         <Column field="companyName" header="Company Name" sortable={true} style={{width: '25%'}}/>
                         <Column field="contactPerson" header="Contact Person" sortable={true} style={{width: '25%'}}/>
@@ -159,7 +159,7 @@ export default class Companies extends GenericComponent {
                         <Column field="email" header="Email" sortable={true} style={{textAlign: 'left', width: '19%'}}/>
                         <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'companies', this.state)} style={{width: '12%'}}/>
                     </DataTable>
-                    <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Warehouse Details"
+                    <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Company Details"
                             modal={true} footer={dialogFooter}
                             onShow={()=> this.refs['firstName']}
                             onHide={() => this.setState({displayDialog: false})}>

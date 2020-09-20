@@ -144,6 +144,13 @@ func main() {
 		invoices.UpdateInvoice()
 		invoices.DeleteInvoice()
 
+		products := api.NewProduct(restrictedPath)
+		products.GetProducts()
+		products.GetProductsById()
+		products.AddProducts()
+		products.UpdateProduct()
+		products.DeleteProduct()
+
 		invoices.GetInvoiceItemsById()
 		invoices.AddInvoiceItem()
 		invoices.UpdateInvoiceItem()

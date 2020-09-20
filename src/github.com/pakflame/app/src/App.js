@@ -17,6 +17,7 @@ const Invoices = lazy(() => import ("./components/invoices/Invoices"));
 const Invoice = lazy(() => import ("./components/invoices/Invoice"));
 const Worker = lazy(() => import ("./components/worker/Worker"));
 const Inventory = lazy(() => import ("./components/inventory/Inventory"));
+const Products = lazy(() => import ("./components/products/Products"));
 const Warehouse = lazy(() => import ("./components/warehouses/Warehouses"));
 
 class NotFound extends Component {
@@ -56,6 +57,7 @@ function App() {
                     <Route path="/warehouses" component={WaitingComponent(Warehouse)}></Route>
                     <Route path="/companies" component={WaitingComponent(Companies)}></Route>
                     <Route path="/inventory" component={WaitingComponent(Inventory)}></Route>
+                    <Route path="/products" component={WaitingComponent(Products)}></Route>
                     <Route path="/invoices/all" component={WaitingComponent(Invoices)}></Route>
                     <Route path="/invoices/invoice" component={WaitingComponent(Invoice)}></Route>
                     <Route path="/learn/callchildfunctionfrmparent" component={WaitingComponent(CallChildFunction)}></Route>
