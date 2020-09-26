@@ -1,15 +1,22 @@
 @echo off
 set GOOS=windows
 set GOARCH=amd64
-
+set CURR_DIR=%cd%
 echo GOROOT %GOROOT%
-echo GOPATH %GOPATH%
 
-%GOROOT%\bin\dep ensure
+echo Checking new changes from server
+git pull .
 
-%GOROOT%\bin\go build -o ../../../bin/AbuZarTrader.exe github.com/pakflame/rest/main/
+echo Downloading project dependencies
+cd src\github.com\pakflame
+%GOROOT%\bin\go get ./...
 
-cd app
+%GOROOT%\bin\go build -o ../../../bin/PakFlame.exe github.com/pakflame/rest/main/
+
+cd %CURR_DIR%
+
+echo "Building frontend"
+cd src\github.com\pakflame\app
 call npm run build
 
 cd ..

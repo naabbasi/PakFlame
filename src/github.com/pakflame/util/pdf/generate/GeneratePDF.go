@@ -23,11 +23,11 @@ func Pdf(result *Result) {
 	pdf := gofpdf.New("P", "mm", "A5", "")
 	pdf.SetHeaderFunc(func() {
 		pdf.SetFont("Arial", "B", 12)
-		pdf.CellFormat(130, 5, "AbuZar Traders", "", 0, "C", false, 0, "")
+		pdf.CellFormat(130, 5, "PakFlame - Al-Wajid Engineering Works", "", 0, "C", false, 0, "")
 		pdf.Ln(-1)
 
 		pdf.SetFont("Arial", "", 8)
-		pdf.CellFormat(130, 5, "Pathan colony, City gate, Hyderabad Mobile # 03012525461", "", 0, "C", false, 0, "")
+		pdf.CellFormat(130, 5, "Plot # 540, A & B, Munawarabad Unit # 5, Latifabad, Hyd", "", 0, "C", false, 0, "")
 		pdf.Ln(-1)
 
 		pdf.SetFont("Arial", "B", 8)
@@ -39,7 +39,7 @@ func Pdf(result *Result) {
 	generateTable(result, pdf)
 	var path = "change_according_to_os"
 	if runtime.GOOS == "windows" {
-		path = "D:/"
+		path = "E:\\PakFlame\\invoices\\"
 	} else {
 		path = "/opt/"
 	}
