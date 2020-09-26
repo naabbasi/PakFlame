@@ -100,7 +100,7 @@ export default class Products extends GenericComponent {
     addNewProduct() {
         this.NewProduct = true;
         this.setState({
-            product: {productName: '', productType: '', productPrice: 0, productStatus: '', productModel: '', productDate: new Date()},
+            product: {productName: '', productType: '', productPrice: 0, productQuantities: 0, productStatus: '', productModel: '', productDate: new Date()},
             displayDialog: true
         });
     }
@@ -177,13 +177,14 @@ export default class Products extends GenericComponent {
                         <Column field="productName" header="Product Name" sortable={true} style={{width: '25%'}}/>
                         <Column field="productType" header="Product Type" sortable={true} style={{width: '25%'}}/>
                         <Column field="productModel" header="Product Model" sortable={true} style={{width: '19%'}}/>
+                        <Column field="productQuantities" header="Product Quantity" sortable={true} style={{width: '19%'}}/>
                         <Column field="productPrice" header="Product Price" sortable={true} style={{width: '19%'}}/>
                         <Column field="productStatus" header="Product Status" sortable={true} style={{textAlign: 'left', width: '19%'}}/>
                         <Column field="productDate" header="Product Date" sortable={true} style={{textAlign: 'left', width: '19%'}}/>
                         <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'products', this.state)} style={{width: '12%'}}/>
                     </DataTable>
                     <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Product Details"
-                            modal={true} footer={dialogFooter}
+                            modal={true} footer={dialogFooter} maximizable={true} blockScroll={true}
                             onShow={()=> this.refs['firstName']}
                             onHide={() => this.setState({displayDialog: false})}>
                         {
@@ -192,9 +193,45 @@ export default class Products extends GenericComponent {
                                 <div className="p-col-12">
                                     <div className="p-col" style={{padding:'.75em'}}>
                                         <span className="p-float-label p-fluid">
-                                                <InputText ref="productName" maxLength={255} onChange={(e) => {this.updateProperty('productName', e.target.value)}} value={this.state.product.productName}/>
-                                                <label htmlFor="productName">Product Name</label>
-                                            </span>
+                                            <InputText ref="productName" maxLength={255} onChange={(e) => {this.updateProperty('productName', e.target.value)}} value={this.state.product.productName}/>
+                                            <label htmlFor="productName">Product Name</label>
+                                        </span>
+                                    </div>
+
+                                    <div className="p-col" style={{padding:'.75em'}}>
+                                        <span className="p-float-label p-fluid">
+                                            <InputText ref="productModel" maxLength={500} onChange={(e) => {this.updateProperty('productModel', e.target.value)}} value={this.state.product.productModel}/>
+                                            <label htmlFor="productModel">Product Model</label>
+                                        </span>
+                                    </div>
+
+                                    <div className="p-col" style={{padding:'.75em'}}>
+                                        <span className="p-float-label p-fluid">
+                                            <InputText ref="productQuantities" maxLength={500}
+                                                       onChange={(e) => {this.updateProperty('productQuantities', e.target.value)}}
+                                                       onBlur={(e) => {this.updateProperty('productQuantities', this.Float(e.target.value))}}
+                                                       value={this.state.product.productQuantities}/>
+                                            <label htmlFor="productQuantities">Product Quantity</label>
+                                        </span>
+                                    </div>
+
+                                    <div className="p-col" style={{padding:'.75em'}}>
+                                        <span className="p-float-label p-fluid">
+                                            <InputText ref="productPrice" maxLength={11}
+                                                       onChange={(e) => {this.updateProperty('productPrice', e.target.value)}}
+                                                       onBlur={(e) => {this.updateProperty('productPrice', this.Float(e.target.value))}}
+                                                       value={this.state.product.productPrice}/>
+                                            <label htmlFor="productPrice">Product Price</label>
+                                        </span>
+                                    </div>
+
+                                    <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                        <div className="p-col-6 p-fluid" style={{padding:'.75em'}}>
+                                            <Dropdown value={this.state.productType} options={itemTagsOptions} editable={true} onChange={this.onProductTagsChange} placeholder="Select Category" optionLabel="label"/>
+                                        </div>
+                                        <div className="p-col-6 p-fluid" style={{padding:'.75em'}}>
+                                            <Dropdown value={this.state.productStatus} options={itemStatusOptions} editable={true} onChange={this.onProductStatusChange} placeholder="Select Item Status" optionLabel="label"/>
+                                        </div>
                                     </div>
 
                                     <div className="p-col" style={{padding:'.75em'}}>
@@ -202,32 +239,6 @@ export default class Products extends GenericComponent {
                                             <Calendar id="productDate" hideOnDateTimeSelect={true} showTime={false} onChange={(e) => {this.updateProperty('productDate', e.target.value)}} value={this.state.product.productDate}/>
                                             <label htmlFor="productDate">Date</label>
                                         </span>
-                                    </div>
-
-                                    <div className="p-col" style={{padding:'.75em'}}>
-                                        <span className="p-float-label p-fluid">
-                                                <InputText ref="productPrice" maxLength={11}
-                                                           onChange={(e) => {this.updateProperty('productPrice', e.target.value)}}
-                                                           onBlur={(e) => {this.updateProperty('productPrice', this.Float(e.target.value))}}
-                                                           value={this.state.product.productPrice}/>
-                                                <label htmlFor="productPrice">Product Price</label>
-                                            </span>
-                                    </div>
-
-                                    <div className="p-col" style={{padding:'.75em'}}>
-                                        <span className="p-float-label p-fluid">
-                                                <InputText ref="productModel" maxLength={500} onChange={(e) => {this.updateProperty('productModel', e.target.value)}} value={this.state.product.productModel}/>
-                                                <label htmlFor="productModel">Product Model</label>
-                                            </span>
-                                    </div>
-
-                                    <div className="p-grid" style={{ paddingTop: '10px'}}>
-                                        <div className="p-col-6 p-fluid" style={{padding:'.75em'}}>
-                                            <Dropdown value={this.state.productType} options={itemTagsOptions} onChange={this.onProductTagsChange} placeholder="Select Category" optionLabel="label"/>
-                                        </div>
-                                        <div className="p-col-6 p-fluid" style={{padding:'.75em'}}>
-                                            <Dropdown value={this.state.productStatus} options={itemStatusOptions} onChange={this.onProductStatusChange} placeholder="Select Item Status" optionLabel="label"/>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
