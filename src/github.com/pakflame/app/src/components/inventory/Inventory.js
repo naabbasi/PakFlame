@@ -313,7 +313,7 @@ export default class Inventory extends GenericComponent {
                         </DataTable>
 
                         <Dialog visible={this.state.displayItemDialog} style={{width: '60%'}} header="Inventory Details"
-                                modal={true} footer={dialogItemFooter} closable={true} maximizable={false}
+                                modal={true} footer={dialogItemFooter} closable={true} maximizable={true} maximized={true}
                                 onHide={() => this.setState({company: null, displayItemDialog: false})}
                                 onShow={this.loadCompanies.bind(this)}>
                             {
@@ -392,7 +392,7 @@ export default class Inventory extends GenericComponent {
                         </Dialog>
 
                         <Dialog visible={this.state.displayCompanyDialog} style={{width: '60%'}} header="Company Details"
-                                modal={true} footer={dialogCompanyFooter} closable={true} maximizable={true}
+                                modal={true} footer={dialogCompanyFooter} closable={true} maximizable={true} maximized={true}
                                 onHide={() => this.setState({company: null, displayCompanyDialog: false})}
                                 onShow={this.loadCompanies.bind(this)}>
                             {

@@ -188,7 +188,7 @@ export default class Customer extends GenericComponent {
                             <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'customers', this.state, 'Manage')} style={{width: '12%'}}/>
                         </DataTable>
 
-                        <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Customer Details" modal={true} footer={dialogFooter} onHide={() => this.setState({displayDialog: false})}>
+                        <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Customer Details" modal={true} maximizable={true} maximized={true} footer={dialogFooter} onHide={() => this.setState({displayDialog: false})}>
                             {
                                 this.state.customer &&
                                 <div className="p-grid">

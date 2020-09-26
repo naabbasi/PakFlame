@@ -184,7 +184,7 @@ export default class Products extends GenericComponent {
                         <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'products', this.state)} style={{width: '12%'}}/>
                     </DataTable>
                     <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Product Details"
-                            modal={true} footer={dialogFooter} maximizable={true} blockScroll={true}
+                            modal={true} footer={dialogFooter} maximizable={true} maximized={true}
                             onShow={()=> this.refs['firstName']}
                             onHide={() => this.setState({displayDialog: false})}>
                         {

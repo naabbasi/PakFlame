@@ -183,7 +183,7 @@ export default class Worker extends GenericComponent {
                         </DataTable>
 
                         <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Worker Details"
-                                modal={true} footer={dialogFooter}
+                                modal={true} footer={dialogFooter} maximizable={true} maximized={true}
                                 onShow={()=> this.refs['firstName']}
                                 onHide={() => this.setState({displayDialog: false})}>
                             {

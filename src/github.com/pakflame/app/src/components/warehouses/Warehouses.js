@@ -156,7 +156,7 @@ export default class Warehouses extends GenericComponent {
                         <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'warehouses', this.state)} style={{width: '12%'}}/>
                     </DataTable>
                     <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Warehouse Details"
-                            modal={true} footer={dialogFooter}
+                            modal={true} footer={dialogFooter} maximizable={true} maximized={true}
                             onShow={()=> this.refs['firstName']}
                             onHide={() => this.setState({displayDialog: false})}>
                         {
