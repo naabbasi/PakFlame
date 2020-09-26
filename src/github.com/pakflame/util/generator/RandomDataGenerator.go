@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"fmt"
 	"github.com/brianvoe/gofakeit"
 	"github.com/jinzhu/gorm"
 	"github.com/pakflame/backend/models"
@@ -116,6 +117,36 @@ func (data *data) createInventories(company *models.Company, connection *gorm.DB
 	}
 }
 
+func (data *data) createProducts(connection *gorm.DB, client *models.Client) {
+	for num := 0; num < 5; num++ {
+		connection.Create(&models.Product{
+			ProductName:       fmt.Sprintf("Geyser - 000%d", num),
+			ProductType:       "Geyser",
+			ProductPrice:      float64(rand.Int63n(1000)),
+			ProductDiscount:   0,
+			ProductModel:      fmt.Sprintf("GMDL - 000%d", num),
+			ProductDate:       time.Time{},
+			ProductStatus:     "Available",
+			ProductQuantities: uint64(rand.Int63n(1000)),
+			ClientId:          client.ID,
+		})
+	}
+
+	for num := 0; num < 5; num++ {
+		connection.Create(&models.Product{
+			ProductName:       fmt.Sprintf("Stove - 000%d", num),
+			ProductType:       "Stove",
+			ProductPrice:      float64(rand.Int63n(1000)),
+			ProductDiscount:   float64(num),
+			ProductModel:      fmt.Sprintf("SMDL - 000%d", num),
+			ProductDate:       time.Time{},
+			ProductStatus:     "Available",
+			ProductQuantities: uint64(rand.Int63n(1000)),
+			ClientId:          client.ID,
+		})
+	}
+}
+
 func (data *data) Import(connection *gorm.DB) {
 	client := data.createClient(connection)
 	data.createClientConfiguration(connection, client)
@@ -123,6 +154,7 @@ func (data *data) Import(connection *gorm.DB) {
 	data.createCustomers(connection, client)
 	data.createWorkers(connection, client)
 	data.createWarehouses(connection, client)
+	data.createProducts(connection, client)
 	company := data.createCompanies(connection, client)
 	data.createInventories(company, connection, client)
 }

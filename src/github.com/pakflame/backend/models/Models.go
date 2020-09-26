@@ -150,15 +150,26 @@ func (inventory Inventory) ToString() string {
 	return fmt.Sprintf("id: %d\nname: %s\nprice: %0.3f\nquantity: %d\ncreated: %s", inventory.ID, inventory.ItemName, inventory.PurchaseRate, inventory.Quantities, inventory.CreatedAt.Format("02/01/2006"))
 }
 
+type IssueInventory struct {
+	Model
+	ItemName    string    `json:"itemName" xml:"itemName" form:"itemName" query:"itemName"`
+	Quantities  uint64    `gorm:"type: INT8 " json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
+	WorkerId    uuid.UUID `gorm:"ForeignKey:worker_id; type: uuid; NOT NULL" json:"workerId" xml:"workerId" form:"workerId" query:"workerId"`
+	CompanyId   uuid.UUID `gorm:"ForeignKey:company_id; type: uuid; NOT NULL" json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
+	WarehouseId uuid.UUID `gorm:"ForeignKey:warehouse_id; type: uuid; NOT NULL" json:"warehouse_id" xml:"warehouse_id" form:"warehouse_id" query:"warehouse_id"`
+	ClientId    uuid.UUID `gorm:"ForeignKey:client_id; type: uuid; NOT NULL" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+}
+
 type Product struct {
 	Model
 	ProductName       string    `json:"productName" xml:"productName" form:"productName" query:"productName"`
 	ProductType       string    `json:"productType" xml:"productType" form:"productType" query:"productType"`
 	ProductPrice      float64   `json:"productPrice" xml:"productPrice" form:"productPrice" query:"productPrice"`
+	ProductDiscount   float64   `json:"productDiscount" xml:"productDiscount" form:"productDiscount" query:"productDiscount"`
 	ProductModel      string    `json:"productModel" xml:"productModel" form:"productModel" query:"productModel"`
 	ProductDate       time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"productDate" xml:"productDate" form:"productDate" query:"productDate"`
 	ProductStatus     string    `json:"productStatus" xml:"productStatus" form:"productStatus" query:"productStatus"`
-	ProductQuantities float64   `json:"productQuantities" xml:"productQuantities" form:"productQuantities" query:"productQuantities"`
+	ProductQuantities uint64    `json:"productQuantities" xml:"productQuantities" form:"productQuantities" query:"productQuantities"`
 	ClientId          uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 

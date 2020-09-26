@@ -7,7 +7,7 @@ import GComp from "./learn/GComp";
 import CallChildFunction from './learn/CallChildFunction';
 import CustomerDetails from "./components/customer/CustomerDetails";
 import WorkerDetails from "./components/worker/WorkerDetails";
-import Companies from "./components/companies/Companies";
+
 
 const Login = lazy(() => import ("./components/user/Login"));
 const SignUp = lazy(() => import ("./components/user/SignUp"));
@@ -15,10 +15,12 @@ const Dashboard = lazy(() => import ("./components/dashboard/Dashboard"));
 const Customer = lazy(() => import ("./components/customer/Customer"));
 const Invoices = lazy(() => import ("./components/invoices/Invoices"));
 const Invoice = lazy(() => import ("./components/invoices/Invoice"));
+const ProductInvoice = lazy(() => import ("./components/invoices/ProductInvoice"));
 const Worker = lazy(() => import ("./components/worker/Worker"));
 const Inventory = lazy(() => import ("./components/inventory/Inventory"));
 const Products = lazy(() => import ("./components/products/Products"));
 const Warehouse = lazy(() => import ("./components/warehouses/Warehouses"));
+const Companies = lazy(() => import ("./components/companies/Companies"));
 
 class NotFound extends Component {
     render() {
@@ -60,6 +62,7 @@ function App() {
                     <Route path="/products" component={WaitingComponent(Products)}></Route>
                     <Route path="/invoices/all" component={WaitingComponent(Invoices)}></Route>
                     <Route path="/invoices/invoice" component={WaitingComponent(Invoice)}></Route>
+                    <Route path="/invoices/product_invoice" component={WaitingComponent(ProductInvoice)}></Route>
                     <Route path="/learn/callchildfunctionfrmparent" component={WaitingComponent(CallChildFunction)}></Route>
                     <Route path="/logout" component={Logout}></Route>
                     <Route component={NotFound}></Route>

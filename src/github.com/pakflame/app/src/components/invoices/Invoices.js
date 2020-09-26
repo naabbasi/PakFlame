@@ -106,7 +106,7 @@ export default class Invoices extends GenericComponent {
             invoice: Object.assign({}, e.data)
         });
 
-        window.location.hash = `#/invoices/invoice?invoiceId=${e.data['id']}`;
+        window.location.hash = `#/invoices/product_invoice?invoiceId=${e.data['id']}`;
     }
 
     addNew() {

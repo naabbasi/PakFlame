@@ -179,8 +179,8 @@ export default class Products extends GenericComponent {
                         <Column field="productModel" header="Product Model" sortable={true} style={{width: '19%'}}/>
                         <Column field="productQuantities" header="Product Quantity" sortable={true} style={{width: '19%'}}/>
                         <Column field="productPrice" header="Product Price" sortable={true} style={{width: '19%'}}/>
-                        <Column field="productStatus" header="Product Status" sortable={true} style={{textAlign: 'left', width: '19%'}}/>
-                        <Column field="productDate" header="Product Date" sortable={true} style={{textAlign: 'left', width: '19%'}}/>
+                        <Column field="productStatus" header="Product Status" sortable={true} style={{width: '19%'}}/>
+                        <Column field="productDate" header="Product Date" body={this.dateFormatter} sortable={true} style={{width: '19%'}}/>
                         <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'products', this.state)} style={{width: '12%'}}/>
                     </DataTable>
                     <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Product Details"

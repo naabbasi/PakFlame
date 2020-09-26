@@ -26,11 +26,30 @@ export default class Navigation extends GenericComponent {
                     },{
                         label:'Inventory',
                         icon:'pi pi-fw pi-folder-open',
-                        command:()=>{ window.location.hash="inventory"; }
+                        command:()=>{ window.location.hash="inventory"; },
+                        items: [
+                            {
+                                label:'Issue Inventory',
+                                icon:'pi pi-fw pi-folder-open',
+                                command:()=>{ window.location.hash="issue_inventory"; }
+                            }
+                        ]
                     },{
                         label:'Products',
                         icon:'pi pi-fw pi-folder-open',
-                        command:()=>{ window.location.hash="products"; }
+                        command:()=>{ window.location.hash="products"; },
+                        /*items: [
+                            {
+                                label:'Geyser',
+                                icon:'pi pi-fw pi-folder-open',
+                                command:()=>{ window.location.hash="geyser"; }
+                            },
+                            {
+                                label:'Stove',
+                                icon:'pi pi-fw pi-folder-open',
+                                command:()=>{ window.location.hash="stove"; }
+                            }
+                        ]*/
                     }
                 ]
             },
@@ -46,7 +65,7 @@ export default class Navigation extends GenericComponent {
                     {
                         label:'Invoice',
                         icon:'pi pi-fw pi-folder-open',
-                        command:()=>{ window.location.hash="invoices/invoice"; }
+                        command:()=>{ window.location.hash="invoices/product_invoice"; }
                     }
                 ]
             },
