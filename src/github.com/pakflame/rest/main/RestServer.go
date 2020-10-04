@@ -169,6 +169,13 @@ func main() {
 		productInvoices.DeleteInvoiceItem()
 		productInvoices.PrintInvoice()
 
+		issueInventory := api.NewIssueInventory(restrictedPath)
+		issueInventory.GetIssueInventories()
+		issueInventory.GetIssueInventoryById()
+		issueInventory.AddIssueInventory()
+		issueInventory.UpdateIssueInventory()
+		issueInventory.DeleteIssueInventory()
+
 		e.Static("/static", "app/static")
 		e.Static("/", "app")
 
