@@ -68,9 +68,7 @@ func (productInvoices *productInvoices) PrintInvoice() {
 	productInvoices.echo.GET(ProductInvoiceEndPoint+"/print/:id", func(c echo.Context) error {
 		connection := productInvoices.dbSettings.GetDBConnection()
 		id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-		//connection.Table("invoices").Where("id = ?", id).First(&getInvoice)
 
-		//result := new([]generate.Result)
 		result := new(generate.Result)
 		connection.Where("id = ? and client_id = ?", id, http_util.GetUserInfo(c).ClientId).
 			Find(&result.Invoice)
