@@ -137,14 +137,14 @@ export default class Warehouses extends GenericComponent {
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
             <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveWarehouses}/>
-            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteWarehouse}/>
+            {/*<Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteWarehouse}/>*/}
             <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeWarehouseDialog}/>
         </div>;
 
         return <div>
             <Navigation>
                 <div className="content-section implementation">
-                    <DataTable value={this.state.warehouses} paginator={true} rows={25}  header={header} footer={footer}
+                    <DataTable value={this.state.warehouses} paginator={true} rows={20} header={header} footer={footer}
                                scrollable={true} scrollHeight="700px" responsive={true}
                                selectionMode="none" selection={this.state.selectedWarehouse} onSelectionChange={e => this.setState({selectedWWarehouse: e.value})}
                                globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">

@@ -24,13 +24,12 @@ export default class Navigation extends GenericComponent {
                         icon:'pi pi-fw pi-folder-open',
                         command:()=>{ window.location.hash="companies"; },
                     },{
-                        label:'Inventory',
+                        label:'Stock Inventory',
                         icon:'pi pi-fw pi-folder-open',
                         command:()=>{ window.location.hash="inventory"; },
                         items: [
                             {
-                                label:'Issue Inventory',
-                                icon:'pi pi-fw pi-folder-open',
+                                label:'Issue Stock Inventory',
                                 command:()=>{ window.location.hash="issue_inventory"; }
                             }
                         ]

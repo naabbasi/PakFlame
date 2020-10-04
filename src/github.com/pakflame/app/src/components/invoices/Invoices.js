@@ -115,7 +115,7 @@ export default class Invoices extends GenericComponent {
             invoice: {invoiceNumber: 0, itemName: '', unit: '', quantities: 0, price: 0, amount: 0, discount: 0, totalAmount: 0},
             displayDialog: true
         });*/
-        window.location.href = '#/invoices/invoice';
+        window.location.href = '#/invoices/product_invoice';
     }
 
     loadCompanies() {
@@ -177,12 +177,14 @@ export default class Invoices extends GenericComponent {
             <div>
                 <Navigation>
                     <div className="content-section implementation">
-                        <DataTable refs="invoiceTable" value={this.state.invoices} paginator={true} rows={25}  header={header} footer={footer}
+                        <DataTable refs="invoiceTable" value={this.state.invoices} paginator={true} rows={20}  header={header} footer={footer}
                                    scrollable={true} scrollHeight="700px" responsive={true}
                                    selectionMode="none" selection={this.state.selectedInvoice} onSelectionChange={e => this.setState({selectedInvoice: e.value})}
                                    /*onRowSelect={this.onInvoiceSelect}*/
                                    globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
-                            <Column field="id" header="S. #" sortable={true} style={{textAlign: 'left', width: '8%'}}/>
+                            <Column field="id" header="S. #" sortable={true} style={{textAlign: 'left', width: '4%'}}/>
+                            <Column field="createdAt" body={this.dateFormatter} header="Date" sortable={true} style={{textAlign: 'center', width: '10%'}}/>
+                            <Column field="billNumber" header="Bill #" sortable={true} style={{textAlign: 'left', width: '8%'}}/>
                             <Column field="customerName" header="Customer Name" sortable={true} style={{textAlign: 'left', width: '20%'}}/>
                             <Column field="partyName" header="Party Name" sortable={true} style={{textAlign: 'left', width: '20%'}}/>
                             <Column field="transport" header="Transport" sortable={true} style={{textAlign: 'center', width: '12%'}}/>

@@ -100,7 +100,8 @@ export default class Products extends GenericComponent {
     addNewProduct() {
         this.NewProduct = true;
         this.setState({
-            product: {productName: '', productType: '', productPrice: 0, productQuantities: 0, productStatus: '', productModel: '', productDate: new Date()},
+            product: {productName: '', productPrice: 0, productQuantities: 0, productModel: '', productDate: new Date()},
+            productType: null, productStatus: null,
             displayDialog: true
         });
     }
@@ -121,7 +122,8 @@ export default class Products extends GenericComponent {
             displayDialog:true,
             product: Object.assign({}, e.data),
             productStatus: {label: e.data['productStatus'], status: e.data['productStatus']},
-            productType: {label: e.data['productType'], category: e.data['productType']}
+            productType: {label: e.data['productType'], category: e.data['productType']},
+            productDate: e.data['productDate']
         });
     }
 
@@ -163,14 +165,14 @@ export default class Products extends GenericComponent {
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
             <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveProduct}/>
-            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteProduct}/>
+            {/*<Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteProduct}/>*/}
             <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeProductDialog}/>
         </div>;
 
         return <div>
             <Navigation>
                 <div className="content-section implementation">
-                    <DataTable ref={this.productsDataTable} loading={false} value={this.state.products} paginator={true} rows={25}  header={header} footer={footer}
+                    <DataTable ref={this.productsDataTable} loading={false} value={this.state.products} paginator={true} rows={20} header={header} footer={footer}
                                scrollable={true} scrollHeight="700px" responsive={true}
                                selectionMode="none" selection={this.state.selectedProduct} onSelectionChange={e => this.setState({selectedProduct: e.value})}
                                globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">

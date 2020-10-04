@@ -142,14 +142,14 @@ export default class Companies extends GenericComponent {
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
             <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveCompany}/>
-            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteCompany}/>
+            {/*<Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteCompany}/>*/}
             <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeCompanyDialog}/>
         </div>;
 
         return <div>
             <Navigation>
                 <div className="content-section implementation">
-                    <DataTable ref={this.companiesDataTable} loading={false} value={this.state.companies} paginator={true} rows={25}  header={header} footer={footer}
+                    <DataTable ref={this.companiesDataTable} loading={false} value={this.state.companies} paginator={true} rows={20}  header={header} footer={footer}
                                scrollable={true} scrollHeight="700px" responsive={true}
                                selectionMode="none" selection={this.state.selectedCompany} onSelectionChange={e => this.setState({selectedWCompany: e.value})}
                                globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">

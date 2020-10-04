@@ -61,7 +61,7 @@ export default class ProductInvoice extends GenericComponent {
                 disableButtons: false,
                 disableSaveButton: false,
                 invoice: {
-                    id: data['id'], customerId: data['customerId'], customerName: data['customerName'], createdAt: new Date(data['createdAt']),
+                    id: data['id'], customerId: data['customerId'], customerName: data['customerName'], createdAt: new Date(data['createdAt']), billNumber: data['billNumber'],
                     partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'], readonly: data['readonly'],
                     details: {id: 0, itemName: '', createdAt: '', unit: '', productQuantities: 0, productPrice: 0, amount: 0, productDiscount: 0, totalAmount: 0, customerId: ''},
                 },
@@ -72,7 +72,7 @@ export default class ProductInvoice extends GenericComponent {
             this.setState({
                 disableButtons: false,
                 invoice: {
-                    id: 0, customerId: '', customerName: '', createdAt: new Date(), partyName: '', transport: '', transportCharges: 0, address: '', readonly: false,
+                    id: 0, customerId: '', customerName: '', createdAt: new Date(), billNumber: 0, partyName: '', transport: '', transportCharges: 0, address: '', readonly: false,
                     details: {id: 0, itemName: '', createdAt: '', unit: '', productQuantities: 0, productPrice: 0, amount: 0, productDiscount: 0, totalAmount: 0, customerId: ''},
                 },
             });
@@ -381,7 +381,18 @@ export default class ProductInvoice extends GenericComponent {
                                                 </span>
                                             </div>
 
-                                            <div className="p-col" style={{padding:'.50em'}}>
+                                            <div className="p-col-3" style={{padding:'.50em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <span className="p-float-label p-fluid">
+                                                        <InputText id="billNumber" maxLength={250} onChange={(e) => {this.updateProperty('billNumber', e.target.value)}}
+                                                                   onBlur={(e) => {this.updateProperty('billNumber', this.Float(e.target.value))}} value={this.state.invoice.billNumber}
+                                                                   value={this.state.invoice.billNumber}/>
+                                                        <label htmlFor="billNumber">Bill Number</label>
+                                                    </span>
+                                                </span>
+                                            </div>
+
+                                            <div className="p-col-3" style={{padding:'.50em'}}>
                                                 <span className="p-float-label p-fluid">
                                                     <Calendar id="createdAt" hideOnDateTimeSelect={true} showTime={true} onChange={(e) => {this.updateProperty('createdAt', e.target.value)}} value={this.state.invoice.createdAt}/>
                                                     <label htmlFor="createdAt">Date</label>
