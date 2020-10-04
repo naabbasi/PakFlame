@@ -7,7 +7,6 @@ import {InputText} from "primereact/inputtext";
 import {GenericComponent} from "../GenericComponent";
 import Navigation from "../layout/Navigation";
 import {Calendar} from "primereact/calendar";
-import ItemAutoComplete from "../autocomplete/ItemAutoComplete";
 import CustomerAutoComplete from "../autocomplete/CustomerAutoComplete";
 import {Fieldset} from "primereact/fieldset";
 import ProductAutoComplete from "../autocomplete/ProductAutoComplete";

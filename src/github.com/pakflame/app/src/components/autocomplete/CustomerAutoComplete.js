@@ -12,6 +12,7 @@ export default class CustomerAutoComplete extends GenericComponent {
         };
 
         this.suggestCustomers = this.suggestCustomers.bind(this);
+        this.customerTemplate = this.customerTemplate.bind(this);
     }
 
     componentDidMount() {
@@ -26,6 +27,12 @@ export default class CustomerAutoComplete extends GenericComponent {
             // handle error
             console.log(error);
         });
+    }
+
+    customerTemplate(customer) {
+        return (
+            <div>{customer.firstName} {customer.lastName}</div>
+        )
     }
 
     suggestCustomers(event) {
@@ -69,7 +76,7 @@ export default class CustomerAutoComplete extends GenericComponent {
             <AutoComplete dropdown={true}  field="firstName"
                   placeholder="Please Select Customer Name"
                   readonly={false}
-                  maxLength={250}
+                  maxLength={250} itemTemplate={this.customerTemplate}
                   value={this.state.customer} onChange={(e) => this.onSelectCustomer(e)}
                   suggestions={this.state.customerSuggestions} completeMethod={this.suggestCustomers.bind(this)}
             />

@@ -28,6 +28,12 @@ export default class WarehouseAutoComplete extends GenericComponent {
         });
     }
 
+    warehouseTemplate(warehouse) {
+        return (
+            <div>{warehouse.name} - {warehouse.location}</div>
+        )
+    }
+
     suggestCustomers(event) {
         setTimeout(() => {
             let results = new Array();
@@ -65,7 +71,7 @@ export default class WarehouseAutoComplete extends GenericComponent {
             <AutoComplete dropdown={true}  field="name"
                   placeholder="Please Select Warehouse"
                   readonly={false}
-                  maxLength={250}
+                  maxLength={250} itemTemplate={this.warehouseTemplate}
                   value={this.state.warehouse} onChange={(e) => this.onSelectWarehouse(e)}
                   suggestions={this.state.warehouseSuggestions} completeMethod={this.suggestCustomers.bind(this)}
             />

@@ -14,6 +14,7 @@ export default class ProductAutoComplete extends GenericComponent {
         };
 
         this.suggestProducts = this.suggestProducts.bind(this);
+        this.productTemplate = this.productTemplate.bind(this);
     }
 
     componentDidMount() {
@@ -32,6 +33,12 @@ export default class ProductAutoComplete extends GenericComponent {
             // handle error
             console.log(error);
         });
+    }
+
+    productTemplate(product) {
+        return (
+            <div>{product.productName} {product.productModel} - {product.productQuantities}</div>
+        )
     }
 
     suggestProducts(event) {
@@ -75,7 +82,7 @@ export default class ProductAutoComplete extends GenericComponent {
             <AutoComplete dropdown={true}  field="productName"
                   placeholder="Please Select Product Name"
                   readonly={false}
-                  maxLength={250}
+                  maxLength={250} itemTemplate={this.productTemplate}
                   value={this.state.product} onChange={(e) => this.onSelectProduct(e)}
                   suggestions={this.state.productSuggestions} completeMethod={this.suggestProducts.bind(this)}
             />

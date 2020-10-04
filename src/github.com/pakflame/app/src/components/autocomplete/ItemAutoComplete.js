@@ -14,6 +14,7 @@ export default class ItemAutoComplete extends GenericComponent {
         };
 
         this.suggestItems = this.suggestItems.bind(this);
+        this.itemTemplate = this.itemTemplate.bind(this);
     }
 
     componentDidMount() {
@@ -32,6 +33,12 @@ export default class ItemAutoComplete extends GenericComponent {
             // handle error
             console.log(error);
         });
+    }
+
+    itemTemplate(item) {
+        return (
+            <div>{item.itemName} {item.quantities} - {item.itemStatus}</div>
+        )
     }
 
     suggestItems(event) {
@@ -75,7 +82,7 @@ export default class ItemAutoComplete extends GenericComponent {
             <AutoComplete dropdown={true}  field="itemName"
                   placeholder="Please Select Item Name"
                   readonly={false}
-                  maxLength={250}
+                  maxLength={250} itemTemplate={this.itemTemplate}
                   value={this.state.item} onChange={(e) => this.onSelectItem(e)}
                   suggestions={this.state.itemSuggestions} completeMethod={this.suggestItems.bind(this)}
             />
