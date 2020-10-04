@@ -67,10 +67,12 @@ type Person struct {
 
 type Customer struct {
 	Person
-	ShopName    string    `json:"shopName" xml:"shopName" form:"shopName" query:"shopName"`
-	OrderStatus string    `json:"orderStatus" xml:"orderStatus" form:"orderStatus" query:"orderStatus"`
-	Address     string    `json:"address" xml:"address" form:"address" query:"address"`
-	ClientId    uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+	ShopName        string    `json:"shopName" xml:"shopName" form:"shopName" query:"shopName"`
+	OrderStatus     string    `json:"orderStatus" xml:"orderStatus" form:"orderStatus" query:"orderStatus"`
+	Address         string    `json:"address" xml:"address" form:"address" query:"address"`
+	AdvanceAmount   float64   `gorm:"default: 0" json:"advanceAmount" xml:"advanceAmount" form:"advanceAmount" query:"advanceAmount"`
+	RemainingAmount float64   `gorm:"default: 0" json:"remainingAmount" xml:"remainingAmount" form:"remainingAmount" query:"remainingAmount"`
+	ClientId        uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 func (customer Customer) ToString() string {
@@ -79,9 +81,11 @@ func (customer Customer) ToString() string {
 
 type Worker struct {
 	Person
-	Address       string    `json:"address" xml:"address" form:"address" query:"address"`
-	WorkingStatus string    `json:"workingStatus" xml:"workingStatus" form:"workingStatus" query:"workingStatus"`
-	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+	Address         string    `json:"address" xml:"address" form:"address" query:"address"`
+	AdvanceAmount   float64   `gorm:"default: 0" json:"advanceAmount" xml:"advanceAmount" form:"advanceAmount" query:"advanceAmount"`
+	RemainingAmount float64   `gorm:"default: 0" json:"remainingAmount" xml:"remainingAmount" form:"remainingAmount" query:"remainingAmount"`
+	WorkingStatus   string    `json:"workingStatus" xml:"workingStatus" form:"workingStatus" query:"workingStatus"`
+	ClientId        uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 func (worker Worker) ToString() string {

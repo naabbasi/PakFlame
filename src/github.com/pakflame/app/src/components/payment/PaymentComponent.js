@@ -102,7 +102,7 @@ export default class PaymentComponent extends GenericComponent {
                                     <InputText id="amount" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('amount', e.target.value)}}
                                                onBlur={(e) => {this.updateProperty('amount', this.Float(e.target.value))}}
                                                value={this.state.payment.amount}/>
-                                    <label htmlFor="amount">Amount</label>
+                                    <label htmlFor="amount">{this.props.type === 'customer' ? 'Received Amount' : 'Paid Amount'}</label>
                                 </span>
                             </div>
 
@@ -111,7 +111,7 @@ export default class PaymentComponent extends GenericComponent {
                                     <InputText id="remaining" maxLength={10} keyfilter="num" onChange={(e) => {this.updateProperty('remaining', e.target.value)}}
                                                onBlur={(e) => {this.updateProperty('remaining', this.Float(e.target.value))}}
                                                value={this.state.payment.remaining}/>
-                                    <label htmlFor="remaining">Remaining Amount</label>
+                                    <label htmlFor="remaining">{this.props.type === 'customer' ? 'Receivable Amount' : 'Payable Amount'}</label>
                                 </span>
                             </div>
 
@@ -155,8 +155,8 @@ export default class PaymentComponent extends GenericComponent {
                                            onSelectionChange={e => this.setState({selectedInventory: e.value})}
                                            onRowSelect={this.onInventorySelect} emptyMessage="No record(s) found">
 
-                                    <Column field="amount" header="Amount" sortable={true} style={{textAlign: 'right'}}/>
-                                    <Column field="remaining" header="Remaining" sortable={true} style={{textAlign: 'right'}}/>
+                                    <Column field="amount" header={this.props.type === 'customer' ? 'Received Amount' : 'Paid Amount'} sortable={true} style={{textAlign: 'right'}}/>
+                                    <Column field="remaining" header={this.props.type === 'customer' ? 'Receivable Amount' : 'Payable Amount'} sortable={true} style={{textAlign: 'right'}}/>
                                     <Column field="total" header="Total Amount" sortable={true}/>
                                     <Column field="createdAt" header="Date" body={this.dateFormatter} sortable={true} style={{textAlign: 'right'}}/>
                                     <Column header="Action" body={(rowData, column)=> this.deleteActionColumn(rowData, column, 'payments', this.state)} style={{width: '12%'}}/>

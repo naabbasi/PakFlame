@@ -122,7 +122,7 @@ export default class Customer extends GenericComponent {
     addNewCustomer() {
         this.newCustomer = true;
         this.setState({
-            customer: {firstName: '', lastName: '', mobileNumber: '', shopName: '', address: '', orderStatus: ''},
+            customer: {firstName: '', lastName: '', mobileNumber: '', shopName: '', address: '', orderStatus: '', advanceAmount: 0, remainingAmount: 0},
             displayDialog: true
         });
     }
@@ -184,6 +184,8 @@ export default class Customer extends GenericComponent {
                             <Column field="mobileNumber" header="Mobile #" sortable={true} style={{textAlign: 'center', width: '14%'}}/>
                             <Column field="shopName" header="Shop Name" sortable={true} style={{textAlign: 'left', width: '10%'}}/>
                             <Column field="address" header="Address" sortable={true} style={{textAlign: 'left', width: '25%'}}/>
+                            <Column field="advanceAmount" header="Advance" sortable={true} style={{textAlign: 'right', width: '10%'}}/>
+                            <Column field="remainingAmount" header="Remaining" sortable={true} style={{textAlign: 'right', width: '10%'}}/>
                             <Column field="orderStatus" header="Status" sortable={true} style={{textAlign: 'center', width: '11%'}}/>
                             <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'customers', this.state, 'Manage')} style={{width: '12%'}}/>
                         </DataTable>
@@ -230,6 +232,28 @@ export default class Customer extends GenericComponent {
                                                 <span className="p-float-label p-fluid">
                                                     <InputText ref="address" maxLength={500} onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.customer.address}/>
                                                     <label htmlFor="address">Address</label>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                            <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText ref="advanceAmount" maxLength={11}
+                                                               onChange={(e) => {this.updateProperty('advanceAmount', e.target.value)}}
+                                                               onBlur={(e) => {this.updateProperty('advanceAmount', this.Float(e.target.value))}}
+                                                               value={this.state.customer.advanceAmount}/>
+                                                    <label htmlFor="advanceAmount">Advance Amount</label>
+                                                </span>
+                                            </div>
+
+                                            <div className="p-col-6" style={{padding:'.75em'}}>
+                                                <span className="p-float-label p-fluid">
+                                                    <InputText ref="remainingAmount" maxLength={255}
+                                                               onChange={(e) => {this.updateProperty('remainingAmount', e.target.value)}}
+                                                               onBlur={(e) => {this.updateProperty('remainingAmount', this.Float(e.target.value))}}
+                                                               value={this.state.customer.remainingAmount}/>
+                                                    <label htmlFor="remainingAmount">Remaining Amount</label>
                                                 </span>
                                             </div>
                                         </div>

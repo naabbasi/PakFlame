@@ -36,8 +36,8 @@ func (customer *customers) GetCustomers() {
 	customer.echo.GET(CustomerEndPoint, func(c echo.Context) error {
 		var allCustomer = new([]models.Customer)
 		connection := customer.dbSettings.GetDBConnection()
-		connection.Select("id, first_name, last_name, mobile_number, order_status, shop_name,"+
-			" address").
+		connection.Select("id, first_name, last_name, mobile_number, order_status, shop_name"+
+			", address, advance_amount, remaining_amount").
 			Where("client_id = ? ", http_util.GetUserInfo(c).ClientId).
 			Order("first_name ASC").
 			Find(&allCustomer)

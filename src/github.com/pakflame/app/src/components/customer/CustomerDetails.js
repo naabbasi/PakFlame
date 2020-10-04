@@ -73,15 +73,31 @@ export default class CustomerDetails extends GenericComponent {
                             <div className="p-grid" style={{ paddingTop: '10px'}}>
                                 <div className="p-col-6" style={{padding:'.75em'}}>
                                     <span className="p-float-label p-fluid">
-                                        <InputText ref="firstName" readOnly={true} maxLength={255} onChange={(e) => {this.updateProperty('firstName', e.target.value)}} value={this.state.customer.firstName}/>
+                                        <InputText ref="firstName" readOnly={true} value={this.state.customer.firstName}/>
                                         <label htmlFor="firstName">First Name</label>
                                     </span>
                                 </div>
 
                                 <div className="p-col-6" style={{padding:'.75em'}}>
                                     <span className="p-float-label p-fluid">
-                                        <InputText ref="lastName" readOnly={true} maxLength={255} onChange={(e) => {this.updateProperty('lastName', e.target.value)}} value={this.state.customer.lastName}/>
+                                        <InputText ref="lastName" readOnly={true} value={this.state.customer.lastName}/>
                                         <label htmlFor="lastName">Last Name</label>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="p-grid" style={{ paddingTop: '10px'}}>
+                                <div className="p-col-6" style={{padding:'.75em'}}>
+                                    <span className="p-float-label p-fluid">
+                                        <InputText ref="advanceAmount" readOnly={true} maxLength={255} value={this.state.customer.advanceAmount}/>
+                                        <label htmlFor="advanceAmount">Advance Amount</label>
+                                    </span>
+                                </div>
+
+                                <div className="p-col-6" style={{padding:'.75em'}}>
+                                    <span className="p-float-label p-fluid">
+                                        <InputText ref="remainingAmount" readOnly={true} value={this.state.customer.remainingAmount}/>
+                                        <label htmlFor="remainingAmount">Remaining Amount</label>
                                     </span>
                                 </div>
                             </div>
