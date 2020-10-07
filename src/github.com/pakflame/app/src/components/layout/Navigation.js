@@ -16,7 +16,7 @@ export default class Navigation extends GenericComponent {
                 items: [
                     {
                         label:'Warehouses',
-                        icon:'pi pi-fw pi-folder-open',
+                        icon:'pi pi-home',
                         command:()=>{ window.location.hash="warehouses"; },
                     },
                     {
@@ -53,17 +53,17 @@ export default class Navigation extends GenericComponent {
                 ]
             },
             {
-                label:'Invoices',
-                icon:'pi pi-fw pi-folder-open',
+                label:'Bills',
+                icon:'pi pi-money-bill',
                 items: [
                     {
-                        label:'Show All Invoices',
-                        icon:'pi pi-fw pi-folder-open',
+                        label:'Show All Bills',
+                        icon:'pi pi-money-bill',
                         command:()=>{ window.location.hash="invoices/all"; }
                     },
                     {
-                        label:'Invoice',
-                        icon:'pi pi-fw pi-folder-open',
+                        label:'Create Bill',
+                        icon:'pi pi-money-bill',
                         command:()=>{ window.location.hash="invoices/product_invoice"; }
                     }
                 ]

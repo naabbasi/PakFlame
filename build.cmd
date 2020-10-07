@@ -5,7 +5,7 @@ set CURR_DIR=%cd%
 echo GOROOT %GOROOT%
 
 echo Checking new changes from server
-git pull .
+git pull origin master
 
 echo Downloading project dependencies
 cd src\github.com\pakflame
