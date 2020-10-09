@@ -161,16 +161,16 @@ export default class Invoices extends GenericComponent {
     }
 
     render() {
-        let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
-            <div style={{float: 'left'}}>Invoices Information</div>
-            <div style={{'textAlign':'left', float: 'right'}}>
-                <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
-                <InputText type="search" maxLength={255} onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search Invoices" size="50"/>
-            </div>
+        let header = <div style={{display: 'flex', justifyContent: 'space-between', padding: '0px'}}>
+            <div style={{lineHeight: '30px'}}>Invoices Information</div>
+            <span className="p-float-label p-fluid">
+                <InputText id="search" type="search" maxLength={255} onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search Invoices" size="50"/>
+                <label htmlFor="search">Search Invoices</label>
+            </span>
         </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button className="p-button-rounded" style={{float:'left'}} label="Add Invoice" icon="pi pi-plus" onClick={this.addNew}/>
+            <Button className="p-button-rounded" label="Add Invoice" icon="pi pi-plus" onClick={this.addNew}/>
         </div>;
 
         return (
@@ -182,7 +182,7 @@ export default class Invoices extends GenericComponent {
                                    selectionMode="none" selection={this.state.selectedInvoice} onSelectionChange={e => this.setState({selectedInvoice: e.value})}
                                    /*onRowSelect={this.onInvoiceSelect}*/
                                    globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
-                            <Column field="id" header="S. #" sortable={true} style={{textAlign: 'left', width: '4%'}}/>
+                            <Column field="id" header="S. #" sortable={true} style={{textAlign: 'left', width: '5%'}}/>
                             <Column field="createdAt" body={this.dateFormatter} header="Date" sortable={true} style={{textAlign: 'center', width: '10%'}}/>
                             <Column field="billNumber" header="Bill #" sortable={true} style={{textAlign: 'left', width: '8%'}}/>
                             <Column field="customerName" header="Customer Name" sortable={true} style={{textAlign: 'left', width: '20%'}}/>

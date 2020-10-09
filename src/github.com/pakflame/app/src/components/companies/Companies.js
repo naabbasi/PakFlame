@@ -137,7 +137,7 @@ export default class Companies extends GenericComponent {
         </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button className="p-button-rounded" style={{float:'left'}} label="Add Company" icon="pi pi-plus" onClick={this.addNewCompany}/>
+            <Button className="p-button-rounded" label="Add Company" icon="pi pi-plus" onClick={this.addNewCompany}/>
         </div>;
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">

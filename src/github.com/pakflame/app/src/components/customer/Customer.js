@@ -146,22 +146,21 @@ export default class Customer extends GenericComponent {
             {label: 'Cancel', status: 'Cancel'}
         ];
 
-        let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
-            <div style={{float: 'left'}}>Customers Information</div>
-            <div style={{'textAlign':'left', float: 'right'}}>
-                <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
-                <InputText type="search" maxLength={255} onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search Customer(s)" size="50"/>
-            </div>
+        let header = <div style={{display: 'flex', justifyContent: 'space-between', padding: '0px'}}>
+            <div style={{lineHeight: '30px'}}>Customers Information</div>
+            <span className="p-input-icon-left">
+                <i className="pi pi-search"></i>
+                <InputText type="search" maxLength={255} onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search Warehouse(s)" size="50"/>
+            </span>
         </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button className="p-button-rounded" style={{float:'left'}} label="Add Customer" icon="pi pi-plus" onClick={this.addNewCustomer}/>
+            <Button className="p-button-rounded" label="Add Customer" icon="pi pi-plus" onClick={this.addNewCustomer}/>
         </div>;
 
         let dialogFooter = <div className="p-grid p-align-center" style={{ paddingTop: '10px'}}>
             <div style={{textAlign: 'right', width: '100%'}}>
                 <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveCustomer}/>
-                <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteCustomer}/>
                 <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeCustomerDialog}/>
             </div>
         </div>;
