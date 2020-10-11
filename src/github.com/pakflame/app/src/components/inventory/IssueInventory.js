@@ -7,6 +7,9 @@ import {DataTable} from "primereact/datatable";
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 import {Dialog} from "primereact/dialog";
+import ItemAutoComplete from "../autocomplete/ItemAutoComplete";
+import WorkerAutoComplete from "../autocomplete/WorkerAutoComplete";
+import CustomerAutoComplete from "../autocomplete/CustomerAutoComplete";
 
 export default class IssueInventory extends GenericComponent {
     constructor(props) {
@@ -19,6 +22,14 @@ export default class IssueInventory extends GenericComponent {
         this.newIssueInventory = this.newIssueInventory.bind(this);
         this.saveIssueInventory = this.saveIssueInventory.bind(this);
         this.closeIssueInventoryDialog = this.closeIssueInventoryDialog.bind(this);
+
+        this.getSelectedItem = this.getSelectedItem.bind(this);
+        this.getSelectedWorker = this.getSelectedWorker.bind(this);
+        this.getSelectedIssuer = this.getSelectedIssuer.bind(this);
+
+        //create reference
+        this.workerAutoComplete = React.createRef();
+        this.issuerAutoComplete = React.createRef();
     }
 
     async componentDidMount() {
@@ -41,7 +52,7 @@ export default class IssueInventory extends GenericComponent {
     }
 
     saveIssueInventory() {
-        if(this.issueInventory){
+        if(this.IssueInventory){
             delete this.state.issueInventory['id'];
             this.axios.post('/issue_inventory', this.state.issueInventory)
                 .then( response => {
@@ -97,7 +108,7 @@ export default class IssueInventory extends GenericComponent {
     newIssueInventory() {
         this.IssueInventory = true;
         this.setState({
-            issueInventory: {itemId: '', itemName: '', quantities: 0, workerId: '', companyId: '', issuerId: '', warehouseId: '', clientId: ''},
+            issueInventory: {itemId: '', itemName: '', quantities: 0, workerId: '', workerName: '', issuerId: '', issuerName: '', companyId: ''},
             displayDialog: true
         });
     }
@@ -106,6 +117,38 @@ export default class IssueInventory extends GenericComponent {
         let issueInventory = this.state.issueInventory;
         issueInventory[property] = value;
         this.setState({issueInventory: issueInventory});
+    }
+
+    getSelectedItem(item) {
+        let issueInventory = {...this.state.issueInventory};
+        issueInventory['itemId'] = item.id;
+        issueInventory['itemName'] = item.itemName;
+        issueInventory['quantities'] = item.quantities;
+        issueInventory['companyId'] = item.companyId;
+
+        setTimeout(()=>{
+            this.setState({issueInventory});
+        });
+    }
+
+    getSelectedWorker(worker) {
+        let issueInventory = {...this.state.issueInventory};
+        issueInventory['workerId'] = worker.id;
+        issueInventory['workerName'] = worker.firstName;
+
+        setTimeout(()=>{
+            this.setState({issueInventory});
+        });
+    }
+
+    getSelectedIssuer(issuer) {
+        let issueInventory = {...this.state.issueInventory};
+        issueInventory['issuerId'] = issuer.id;
+        issueInventory['issuerName'] = issuer.firstName;
+
+        setTimeout(()=>{
+            this.setState({issueInventory});
+        });
     }
 
     render() {
@@ -150,15 +193,16 @@ export default class IssueInventory extends GenericComponent {
                                     <div className="p-col-12">
                                         <div className="p-grid" style={{ paddingTop: '10px'}}>
                                             <div className="p-col-6" style={{padding:'.75em'}}>
-                                                <span className="p-float-label p-fluid">
-                                                    <InputText ref="itemName" maxLength={255} onChange={(e) => {this.updateProperty('itemName', e.target.value)}} value={this.state.issueInventory.firstName}/>
-                                                    <label htmlFor="itemName">Item Name</label>
+                                               <span className="p-float-label p-fluid">
+                                                    <ItemAutoComplete ref={this.itemAutoComplete} onChange={this.getSelectedItem}></ItemAutoComplete>
                                                 </span>
                                             </div>
 
                                             <div className="p-col-6" style={{padding:'.75em'}}>
                                                 <span className="p-float-label p-fluid">
-                                                    <InputText ref="quantities" maxLength={255} onChange={(e) => {this.updateProperty('quantities', e.target.value)}} value={this.state.issueInventory.lastName}/>
+                                                    <InputText ref="quantities" maxLength={255}
+                                                               onChange={(e) => {this.updateProperty('quantities', this.Int(e.target.value), true)}}
+                                                               value={this.state.issueInventory.quantities}/>
                                                     <label htmlFor="quantities">Quantities</label>
                                                 </span>
                                             </div>
@@ -167,15 +211,13 @@ export default class IssueInventory extends GenericComponent {
                                         <div className="p-grid" style={{ paddingTop: '10px'}}>
                                             <div className="p-col-6" style={{padding:'.75em'}}>
                                                 <span className="p-float-label p-fluid">
-                                                    <InputText ref="issuerId" maxLength={11} onChange={(e) => {this.updateProperty('issuerId', e.target.value)}} value={this.state.issueInventory.issuerId}/>
-                                                    <label htmlFor="issuerId">Issue By</label>
+                                                    <WorkerAutoComplete ref={this.issuerAutoComplete} onChange={this.getSelectedIssuer}></WorkerAutoComplete>
                                                 </span>
                                             </div>
 
                                             <div className="p-col-6" style={{padding:'.75em'}}>
                                                 <span className="p-float-label p-fluid">
-                                                    <InputText ref="workerId" maxLength={255} onChange={(e) => {this.updateProperty('workerId', e.target.value)}} value={this.state.issueInventory.workerId}/>
-                                                    <label htmlFor="workerId">Worker Name</label>
+                                                    <WorkerAutoComplete ref={this.workerAutoComplete} onChange={this.getSelectedWorker}></WorkerAutoComplete>
                                                 </span>
                                             </div>
                                         </div>

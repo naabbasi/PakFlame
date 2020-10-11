@@ -60,7 +60,7 @@ func (issueInventory *issueInventories) AddIssueInventory() {
 		if err := c.Bind(newIssueInventory); err != nil {
 			return err
 		}
-		log.Printf("issueInventory saved with %s", newIssueInventory)
+		log.Printf("issueInventory saved with %v", newIssueInventory)
 
 		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err == nil {
