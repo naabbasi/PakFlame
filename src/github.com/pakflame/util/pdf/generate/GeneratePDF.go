@@ -41,7 +41,7 @@ func Pdf(result *Result) {
 	if runtime.GOOS == "windows" {
 		path = "E:\\PakFlame\\invoices\\"
 	} else {
-		path = "/opt/"
+		path = "/opt/PakFlame/invoices/"
 	}
 	err := pdf.OutputFileAndClose(fmt.Sprintf("%sSaleInvoice-%d.pdf", path, invoiceId))
 
@@ -159,6 +159,7 @@ func generateTable(result *Result, pdf *gofpdf.Fpdf) {
 		pdf.CellFormat(20, 5, fmt.Sprintf("%.2f", sumOfTotalAmount+transportCharges), "1", 0, "R", false, 0, "")
 	})
 
-	result.Payment.Amount = sumOfTotalAmount + transportCharges
+	//TODO: Update Received/Receivable amount from invoice or customer payment section
+	//result.Payment.Amount = sumOfTotalAmount + transportCharges
 	result.Payment.Total = sumOfTotalAmount + transportCharges
 }

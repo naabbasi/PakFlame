@@ -436,9 +436,9 @@ export default class ProductInvoice extends GenericComponent {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="p-grid">
+                                    <div className="p-col-12">
                                         <div className="p-col p-clearfix" style={{padding:'.50em'}}>
-                                            <Button disabled={this.state.disableSaveButton} label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInvoice}/>
+                                            <Button disabled={this.state.disableSaveButton} style={{marginRight: '7px'}} label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInvoice}/>
                                             <Button disabled={this.state.disableButtons} label="Back" icon="pi pi-arrow-circle-left" className="p-button-rounded p-button-info" onClick={(e)=>{window.location = '#/invoices/all'}}/>
                                         </div>
                                     </div>
@@ -484,9 +484,9 @@ export default class ProductInvoice extends GenericComponent {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="p-grid">
+                                        <div className="p-col-12">
                                             <div className="p-col" style={{padding:'.50em'}}>
-                                                <Button label="Add" disabled={this.state.disableAddItemButton} icon="pi pi-plus" className="p-button-rounded" onClick={this.addNewItem}/>
+                                                <Button label="Add" disabled={this.state.disableAddItemButton} style={{marginRight: '7px'}} icon="pi pi-plus" className="p-button-rounded" onClick={this.addNewItem}/>
                                                 <Button disabled={false} label="Print" icon="pi pi-print" className="p-button-rounded" onClick={this.print}/>
                                             </div>
                                         </div>
@@ -496,7 +496,7 @@ export default class ProductInvoice extends GenericComponent {
                                                            scrollable={true} scrollHeight="200px" responsive={true}
                                                            selectionMode="none" selection={this.state.selectedInventory}
                                                            onSelectionChange={e => this.setState({selectedInventory: e.value})}
-                                                           onRowSelect={this.onProductSelect} emptyMessage="No record(s) found">
+                                                           emptyMessage="No record(s) found">
 
                                                     <Column field="itemName" header="Item Name" sortable={true} style={{textAlign: 'left', width: '25%'}}/>
                                                     {/*<Column field="unit" header="Unit" sortable={true} style={{textAlign: 'right'}}/>*/}

@@ -1,4 +1,4 @@
-@import '~primereact/resources/themes/saga-blue/theme.css';
+@import '~primereact/resources/themes/bootstrap4-dark-blue/theme.css';
 @import '~primereact/resources/primereact.css';
 @import '~primeicons/primeicons.css';
 @import 'primeflex.css';
@@ -10,7 +10,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: inherit;
+  background-color: #343e4d;
 }
 
 a {

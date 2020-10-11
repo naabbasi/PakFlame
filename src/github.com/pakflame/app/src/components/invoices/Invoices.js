@@ -160,6 +160,11 @@ export default class Invoices extends GenericComponent {
         }, 250);
     }
 
+    customerInfo(rowData,column, componentState){
+        let date = rowData['customerName'];
+        return "" + date;
+    }
+
     render() {
         let header = <div style={{display: 'flex', justifyContent: 'space-between', padding: '0px'}}>
             <div style={{lineHeight: '30px'}}>Invoices Information</div>
@@ -182,11 +187,12 @@ export default class Invoices extends GenericComponent {
                                    selectionMode="none" selection={this.state.selectedInvoice} onSelectionChange={e => this.setState({selectedInvoice: e.value})}
                                    /*onRowSelect={this.onInvoiceSelect}*/
                                    globalFilter={this.state.globalFilter} emptyMessage="No record(s) found">
-                            <Column field="id" header="S. #" sortable={true} style={{textAlign: 'left', width: '5%'}}/>
-                            <Column field="createdAt" body={this.dateFormatter} header="Date" sortable={true} style={{textAlign: 'center', width: '10%'}}/>
+                            <Column field="id" header="S. #" sortable={true} style={{textAlign: 'left', width: '6%'}}/>
+                            <Column field="createdAt" body={this.dateFormatter} header="Date" sortable={true} style={{textAlign: 'center', width: '12%'}}/>
+                            <Column field="customerName" header="Customer Name" body={this.customerInfo} sortable={true} style={{textAlign: 'left', width: '15%'}}/>
+                            <Column field="partyName" header="Party Name" sortable={true} style={{textAlign: 'left', width: '15%'}}/>
                             <Column field="billNumber" header="Bill #" sortable={true} style={{textAlign: 'left', width: '8%'}}/>
-                            <Column field="customerName" header="Customer Name" sortable={true} style={{textAlign: 'left', width: '20%'}}/>
-                            <Column field="partyName" header="Party Name" sortable={true} style={{textAlign: 'left', width: '20%'}}/>
+                            <Column field="invoiceAmount" header="Bill Amount" sortable={true} style={{textAlign: 'center', width: '10%'}}/>
                             <Column field="transport" header="Transport" sortable={true} style={{textAlign: 'center', width: '12%'}}/>
                             <Column field="transportCharges" header="Charges" sortable={true} style={{textAlign: 'center', width: '10%'}}/>
                             <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'invoices', this.state)} style={{width: '12%'}}/>

@@ -7,25 +7,25 @@ export default class Navigation extends GenericComponent {
         const items = [
             {
                 label: 'Dashboard',
-                icon:'pi pi-fw pi-users',
+                icon:'pi pi-fw pi-home',
                 command:()=>{ window.location.hash="dashboard"; },
             },
             {
                 label:'Manage Inventory',
-                icon:'pi pi-fw pi-folder-open',
+                icon:'pi pi-fw pi-file',
                 items: [
                     {
                         label:'Warehouses',
-                        icon:'pi pi-home',
+                        icon:'pi pi-sitemap',
                         command:()=>{ window.location.hash="warehouses"; },
                     },
                     {
                         label:'Companies',
-                        icon:'pi pi-fw pi-folder-open',
+                        icon:'pi pi-fw pi-user',
                         command:()=>{ window.location.hash="companies"; },
                     },{
                         label:'Stock Inventory',
-                        icon:'pi pi-fw pi-folder-open',
+                        icon:'pi pi-fw pi-file',
                         command:()=>{ window.location.hash="inventory"; },
                         items: [
                             {
@@ -35,7 +35,7 @@ export default class Navigation extends GenericComponent {
                         ]
                     },{
                         label:'Products',
-                        icon:'pi pi-fw pi-folder-open',
+                        icon:'pi pi-th-large',
                         command:()=>{ window.location.hash="products"; },
                         /*items: [
                             {
@@ -54,7 +54,7 @@ export default class Navigation extends GenericComponent {
             },
             {
                 label:'Bills',
-                icon:'pi pi-money-bill',
+                icon:'pi pi-shopping-cart',
                 items: [
                     {
                         label:'Show All Bills',

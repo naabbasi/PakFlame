@@ -93,14 +93,15 @@ func (worker Worker) ToString() string {
 }
 
 type Payment struct {
-	ID        uuid.UUID `gorm:"PRIMARY_KEY; type:uuid default gen_random_uuid();" json:"id" xml:"id" form:"id" query:"id"`
-	Amount    float64   `json:"amount" xml:"amount" form:"amount" query:"amount"`
-	Remaining float64   `json:"remaining" xml:"remaining" form:"remaining" query:"remaining"`
-	Total     float64   `json:"total" xml:"total" form:"total" query:"total"`
-	CreatedAt time.Time `json:"createdAt" xml:"createdAt" form:"createdAt" query:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
-	EntityId  uuid.UUID `json:"entityId" xml:"entityId" form:"entityId" query:"entityId"`
-	ClientId  uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+	ID            uuid.UUID `gorm:"PRIMARY_KEY; type:uuid default gen_random_uuid();" json:"id" xml:"id" form:"id" query:"id"`
+	Amount        float64   `json:"amount" xml:"amount" form:"amount" query:"amount"`
+	InvoiceNumber int64     `json:"invoiceNumber" xml:"invoiceNumber" form:"invoiceNumber" query:"invoiceNumber"`
+	Remaining     float64   `json:"remaining" xml:"remaining" form:"remaining" query:"remaining"`
+	Total         float64   `json:"total" xml:"total" form:"total" query:"total"`
+	CreatedAt     time.Time `json:"createdAt" xml:"createdAt" form:"createdAt" query:"createdAt"`
+	UpdatedAt     time.Time `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
+	EntityId      uuid.UUID `json:"entityId" xml:"entityId" form:"entityId" query:"entityId"`
+	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 func (payment Payment) ToString() string {
@@ -191,7 +192,8 @@ type Invoice struct {
 	BillNumber       int64            `json:"billNumber" xml:"billNumber" form:"billNumber" query:"billNumber"`
 	Readonly         bool             `gorm:"not null; default: false;" json:"readonly" xml:"readonly" form:"readonly" query:"readonly"`
 	InvoiceDetails   []InvoiceDetails `json:"invoiceDetails" xml:"invoiceDetails" form:"invoiceDetails" query:"invoiceDetails"`
-	CustomerId       uuid.UUID        `json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
+	InvoiceAmount    float64          `gorm:"invoiceAmount" json:"invoiceAmount" xml:"invoiceAmount" form:"invoiceAmount" query:"invoiceAmount"`
+	CustomerId       uuid.UUID        `gorm:"ForeignKey:customer_id; type: uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
 	ClientId         uuid.UUID        `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
@@ -205,6 +207,7 @@ type InvoiceDetails struct {
 	Price         float64   `json:"price" xml:"price" form:"price" query:"price"`
 	Amount        float64   `json:"amount" xml:"amount" form:"amount" query:"amount"`
 	Discount      float64   `json:"discount" xml:"discount" form:"discount" query:"discount"`
+	Readonly      bool      `gorm:"not null; default: false;" json:"readonly" xml:"readonly" form:"readonly" query:"readonly"`
 	TotalAmount   float64   `json:"totalAmount" xml:"totalAmount" form:"totalAmount" query:"totalAmount"`
 	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }

@@ -79,14 +79,14 @@ func (productInvoices *productInvoices) PrintInvoice() {
 			Find(&result.InvoiceDetails)
 
 		payment := new(models.Payment)
-		connection.Where("entity_id = ? and client_id = ?", result.Invoice.CustomerId, result.Invoice.ClientId).
+		connection.Where("entity_id = ? and invoice_number = ? and client_id = ?", result.Invoice.CustomerId, result.Invoice.ID, result.Invoice.ClientId).
 			First(&payment)
 
 		generate.Pdf(result)
 
 		if payment.ID == uuid.Nil {
 			result.Payment.CreatedAt = time.Now()
-			result.Payment.UpdatedAt = time.Now()
+			result.Payment.InvoiceNumber = result.Invoice.ID
 			result.Payment.EntityId = result.Invoice.CustomerId
 			result.Payment.ClientId = result.Invoice.ClientId
 			savePayment := connection.Save(&result.Payment)
@@ -95,6 +95,7 @@ func (productInvoices *productInvoices) PrintInvoice() {
 				log.Print("Invoice payment has been added")
 			}
 		} else {
+			payment.UpdatedAt = time.Now()
 			payment.Total = result.Payment.Total
 			updatePayment := connection.Table("payments").Update(&payment)
 			if updatePayment.RowsAffected == 1 {
@@ -103,9 +104,14 @@ func (productInvoices *productInvoices) PrintInvoice() {
 		}
 
 		result.Readonly = true
-		makeInvoiceRealonly := connection.Table("invoices").Update(&result.Invoice)
-		if makeInvoiceRealonly.RowsAffected == 1 {
+		makeInvoiceReadonly := connection.Table("invoices").Update(&result.Invoice)
+		if makeInvoiceReadonly.RowsAffected == 1 {
 			log.Print("Invoice has been set to readonly")
+		}
+
+		makeInvoiceItemsReadonly := connection.Exec("update invoice_details set readonly = ? and invoice_number = ?", result.Readonly, result.Invoice.ID)
+		if makeInvoiceItemsReadonly.RowsAffected > 0 {
+			log.Print("Invoice items have been set to readonly")
 		}
 
 		return c.JSON(http.StatusOK, "Invoice printed successfully")
@@ -202,7 +208,7 @@ func (productInvoices *productInvoices) AddInvoiceItem() {
 		if err := c.Bind(newInvoiceItem); err != nil {
 			return err
 		}
-		log.Printf("Item saved with %s", newInvoiceItem)
+		log.Printf("Item saved with %v", newInvoiceItem)
 
 		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err == nil {
@@ -217,6 +223,12 @@ func (productInvoices *productInvoices) AddInvoiceItem() {
 		remainingItemInInventory := product.ProductQuantities - newInvoiceItem.Quantities
 		product.ProductQuantities = remainingItemInInventory
 		updateItemInInventory := connection.Exec("update products set product_quantities = ? where id = ?", product.ProductQuantities, product.ID)
+
+		//Update invoice amount
+		var totalInvoiceAmount = 0.0
+		connection.Select("sum(total_amount)").Where("invoice_number = ? ", newInvoiceItem.InvoiceNumber).Model(models.InvoiceDetails{}).Row().Scan(&totalInvoiceAmount)
+		totalInvoiceAmount = totalInvoiceAmount + newInvoiceItem.TotalAmount
+		connection.Exec("update invoices set invoice_amount = ? where id = ?", totalInvoiceAmount, newInvoiceItem.InvoiceNumber)
 
 		var save *gorm.DB
 		if updateItemInInventory.RowsAffected == 1 {
@@ -267,12 +279,32 @@ func (productInvoices *productInvoices) DeleteInvoiceItem() {
 		}
 
 		connection := productInvoices.dbSettings.GetDBConnection()
-		delete := connection.Where("id = ? and client_id = ?", c.Param("id"), clientId).Delete(models.InvoiceDetails{})
 
-		if delete.RowsAffected == 1 {
-			return c.JSON(http.StatusNoContent, "Invoice has been deleted")
-		} else {
-			return c.JSON(http.StatusInternalServerError, "Unable to delete Invoice")
+		invoiceDetails := new(models.InvoiceDetails)
+		connection.Where("id = ?", c.Param("id")).Model(models.InvoiceDetails{}).First(invoiceDetails)
+
+		if invoiceDetails.ID != uuid.Nil {
+			//Update product inventory
+			product := new(models.Product)
+			connection.Where("id = ?", invoiceDetails.ItemId).Model(models.Product{}).First(product)
+			productQuantity := product.ProductQuantities + invoiceDetails.Quantities
+			connection.Exec("update products set product_quantities = ? where id = ?", productQuantity, invoiceDetails.ItemId)
+
+			//Update invoice amount
+			var totalInvoiceAmount = 0.0
+			connection.Select("sum(total_amount)").Where("invoice_number = ? ", invoiceDetails.InvoiceNumber).Model(models.InvoiceDetails{}).Row().Scan(&totalInvoiceAmount)
+			totalInvoiceAmount = totalInvoiceAmount - invoiceDetails.TotalAmount
+			connection.Exec("update invoices set invoice_amount = ? where id = ?", totalInvoiceAmount, invoiceDetails.InvoiceNumber)
+
+			delete := connection.Where("id = ? and client_id = ?", c.Param("id"), clientId).Delete(models.InvoiceDetails{})
+
+			if delete.RowsAffected == 1 {
+				return c.JSON(http.StatusNoContent, "Invoice item has been deleted")
+			} else {
+				return c.JSON(http.StatusInternalServerError, "Unable to delete Invoice item")
+			}
 		}
+
+		return c.JSON(http.StatusNoContent, "Invoice item is already deleted")
 	})
 }

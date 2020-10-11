@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 
 import {GenericComponent} from "../GenericComponent";
 import Navigation from "../layout/Navigation";

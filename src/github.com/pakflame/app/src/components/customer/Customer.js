@@ -150,7 +150,7 @@ export default class Customer extends GenericComponent {
             <div style={{lineHeight: '30px'}}>Customers Information</div>
             <span className="p-input-icon-left">
                 <i className="pi pi-search"></i>
-                <InputText type="search" maxLength={255} onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search Warehouse(s)" size="50"/>
+                <InputText type="search" maxLength={255} onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search CUstomer(s)" size="50"/>
             </span>
         </div>;
 
