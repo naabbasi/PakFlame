@@ -157,14 +157,16 @@ func (inventory Inventory) ToString() string {
 
 type IssueInventory struct {
 	Model
-	ItemId      uuid.UUID `gorm:"ForeignKey:item_id; type: uuid; NOT NULL", json:"itemId" xml:"itemId" form:"itemId" query:"itemId"`
-	ItemName    string    `json:"itemName" xml:"itemName" form:"itemName" query:"itemName"`
-	Quantities  uint64    `gorm:"type: INT8 " json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
-	IssuerId    uuid.UUID `gorm:"ForeignKey:worker_id; type: uuid; NOT NULL" json:"issuerId" xml:"issuerId" form:"issuerId" query:"issuerId"`
-	WorkerId    uuid.UUID `gorm:"ForeignKey:worker_id; type: uuid; NOT NULL" json:"workerId" xml:"workerId" form:"workerId" query:"workerId"`
-	CompanyId   uuid.UUID `gorm:"ForeignKey:company_id; type: uuid; NOT NULL" json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
-	WarehouseId uuid.UUID `gorm:"ForeignKey:warehouse_id; type: uuid; NOT NULL" json:"warehouseId" xml:"warehouseId" form:"warehouseId" query:"warehouseId"`
-	ClientId    uuid.UUID `gorm:"ForeignKey:client_id; type: uuid; NOT NULL" json:"clientId" xml:"clientId" form:"clientId" query:"clientId"`
+	ItemId     uuid.UUID `gorm:"ForeignKey:item_id; type: uuid; NOT NULL", json:"itemId" xml:"itemId" form:"itemId" query:"itemId"`
+	ItemName   string    `json:"itemName" xml:"itemName" form:"itemName" query:"itemName"`
+	Quantities uint64    `gorm:"type: INT8 " json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
+	IssuerId   uuid.UUID `gorm:"ForeignKey:worker_id; type: uuid; NOT NULL" json:"issuerId" xml:"issuerId" form:"issuerId" query:"issuerId"`
+	IssuerName string    `gorm:"-" json:"issuerName" xml:"issuerName" form:"issuerName" query:"issuerName"`
+	WorkerId   uuid.UUID `gorm:"ForeignKey:worker_id; type: uuid; NOT NULL" json:"workerId" xml:"workerId" form:"workerId" query:"workerId"`
+	WorkerName string    `gorm:"-" json:"workerName" xml:"workerName" form:"workerName" query:"workerName"`
+	//CompanyId   uuid.UUID `gorm:"ForeignKey:company_id; type: uuid; NOT NULL" json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
+	//WarehouseId uuid.UUID `gorm:"ForeignKey:warehouse_id; type: uuid; NOT NULL" json:"warehouseId" xml:"warehouseId" form:"warehouseId" query:"warehouseId"`
+	ClientId uuid.UUID `gorm:"ForeignKey:client_id; type: uuid; NOT NULL" json:"clientId" xml:"clientId" form:"clientId" query:"clientId"`
 }
 
 type Product struct {
