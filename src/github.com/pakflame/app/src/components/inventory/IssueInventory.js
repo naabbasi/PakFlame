@@ -186,7 +186,9 @@ export default class IssueInventory extends GenericComponent {
                             <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'issueInventory', this.state, 'Action')} style={{width: '12%'}}/>
                         </DataTable>
 
-                        <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Issued Inventory Details" modal={true} maximizable={false} footer={dialogFooter} onHide={() => this.setState({displayDialog: false})}>
+                        <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Issued Inventory Details"
+                                modal={true} maximizable={true} maximized={true} footer={dialogFooter}
+                                onHide={() => this.setState({displayDialog: false})}>
                             {
                                 this.state.issueInventory &&
                                 <div className="p-grid">

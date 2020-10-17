@@ -218,9 +218,9 @@ func (invoices *invoices) AddInvoiceItem() {
 		updateItemInInventory := connection.Exec("update inventories set quantities = ? where id = ?", itemInInventory.Quantities, itemInInventory.ID)
 
 		//Update invoice amount
-		var totalAnvoiceAmount = 0.0
-		connection.Select("sum(total_amount)").Where("id = ? ", newInvoiceItem.InvoiceNumber).Row().Scan(&totalAnvoiceAmount)
-		fmt.Printf(fmt.Sprintf("Total amount: %f"), totalAnvoiceAmount)
+		var totalInvoiceAmount = 0.0
+		connection.Select("sum(total_amount)").Where("id = ? ", newInvoiceItem.InvoiceNumber).Row().Scan(&totalInvoiceAmount)
+		fmt.Printf(fmt.Sprintf("Total amount: %.2f", totalInvoiceAmount))
 		//connection.Exec("update invoice_details set invoice_amount = ? where id = ?", invoice.InvoiceAmount, itemInInventory.ID)
 
 		var save *gorm.DB

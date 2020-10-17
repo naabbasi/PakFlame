@@ -70,13 +70,31 @@ func (issueInventory *issueInventories) AddIssueInventory() {
 		}
 
 		connection := issueInventory.dbSettings.GetDBConnection()
+		connection.Begin()
 		save := connection.Save(newIssueInventory)
 
-		if save.RowsAffected == 1 {
-			return c.JSON(http.StatusCreated, "Inventory has been issued")
+		//Update inventory table to update quantities
+		itemInInventory := new(models.Inventory)
+		connection.Model(models.Inventory{}).Where("id = ?", newIssueInventory.ItemId).First(itemInInventory)
+		remainingItemInInventory := itemInInventory.Quantities - newIssueInventory.Quantities
+		itemInInventory.Quantities = remainingItemInInventory
+		updateItemInInventory := connection.Exec("update inventories set quantities = ? where id = ?", itemInInventory.Quantities, itemInInventory.ID)
+
+		if updateItemInInventory.Error == nil {
+			log.Printf("Item quantity has been updated: %.d", updateItemInInventory.RowsAffected)
 		} else {
+			connection.Rollback()
 			return c.JSON(http.StatusInternalServerError, "Unable to issue new Inventory")
 		}
+
+		if save.RowsAffected == 1 {
+			connection.Commit()
+			return c.JSON(http.StatusCreated, "Inventory has been issued")
+		} else {
+			connection.Rollback()
+			return c.JSON(http.StatusInternalServerError, "Unable to issue new Inventory")
+		}
+
 	})
 }
 
