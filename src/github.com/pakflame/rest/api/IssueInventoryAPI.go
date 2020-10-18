@@ -36,7 +36,7 @@ func (issueInventory *issueInventories) GetIssueInventories() {
 	issueInventory.echo.GET(IssueInventoryEndPoint, func(c echo.Context) error {
 		var allIssueInventories = new([]models.IssueInventory)
 		connection := issueInventory.dbSettings.GetDBConnection()
-		connection.Select("issue_inventories.*, w1.first_name as issuer_name, w2.first_name as worker_name").
+		connection.Select("issue_inventories.*, concat(w1.first_name, ' ', w1.last_name) as issuer_name, concat(w2.first_name, ' ', w2.last_name) as worker_name").
 			Joins("inner join workers w1 on issue_inventories.issuer_id = w1.id inner join workers w2 on issue_inventories.worker_id = w2.id").
 			Where("issue_inventories.client_id = ? ", http_util.GetUserInfo(c).ClientId).
 			Find(&allIssueInventories)

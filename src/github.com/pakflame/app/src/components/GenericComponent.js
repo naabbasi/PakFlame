@@ -115,6 +115,8 @@ export class GenericComponent extends Component {
             this.onInvoiceSelect({data: rowData});
         } else if(entityName === 'products') {
             this.onProductSelect({data: rowData});
+        } else if(entityName === 'issueInventory') {
+            this.onIssuedInventorySelect({data: rowData});
         }
     }
 

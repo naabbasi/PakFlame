@@ -35,6 +35,10 @@ export default class WorkerAutoComplete extends GenericComponent {
         )
     }
 
+    selectedWorkerTemplate(worker) {
+        return worker.firstName + " " + worker.lastName;
+    }
+
     suggestWorkers(event) {
         setTimeout(() => {
             let results = [];
@@ -54,8 +58,6 @@ export default class WorkerAutoComplete extends GenericComponent {
 
     onSelectWorker(event) {
         this.setState({worker:  event.value});
-        console.log("child: nSelectItem");
-        console.log(event.value);
         if(this.props.onChange === undefined) {
             console.log("Please add onChange() handler in parent");
             console.log(`<WorkerAutoComplete ref={this.getItemAutoComplete} onChange={this.handler}></WorkerAutoComplete>`);
@@ -76,7 +78,7 @@ export default class WorkerAutoComplete extends GenericComponent {
             <AutoComplete dropdown={true}  field="firstName"
                   placeholder="Please Select Worker Name"
                   readonly={false}
-                  maxLength={250} itemTemplate={this.workerTemplate}
+                  maxLength={250} itemTemplate={this.workerTemplate} selectedItemTemplate={this.selectedWorkerTemplate}
                   value={this.state.worker} onChange={(e) => this.onSelectWorker(e)}
                   suggestions={this.state.workerSuggestions} completeMethod={this.suggestWorkers.bind(this)}
             />

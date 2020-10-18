@@ -9,7 +9,6 @@ import {Button} from "primereact/button";
 import {Dialog} from "primereact/dialog";
 import ItemAutoComplete from "../autocomplete/ItemAutoComplete";
 import WorkerAutoComplete from "../autocomplete/WorkerAutoComplete";
-import CustomerAutoComplete from "../autocomplete/CustomerAutoComplete";
 
 export default class IssueInventory extends GenericComponent {
     constructor(props) {
@@ -23,11 +22,12 @@ export default class IssueInventory extends GenericComponent {
         this.saveIssueInventory = this.saveIssueInventory.bind(this);
         this.closeIssueInventoryDialog = this.closeIssueInventoryDialog.bind(this);
 
-        this.getSelectedItem = this.getSelectedItem.bind(this);
+        this.getSelectedIssueItem = this.getSelectedIssueItem.bind(this);
         this.getSelectedWorker = this.getSelectedWorker.bind(this);
         this.getSelectedIssuer = this.getSelectedIssuer.bind(this);
 
         //create reference
+        this.issueItemAutoComplete = React.createRef();
         this.workerAutoComplete = React.createRef();
         this.issuerAutoComplete = React.createRef();
     }
@@ -119,7 +119,7 @@ export default class IssueInventory extends GenericComponent {
         this.setState({issueInventory: issueInventory});
     }
 
-    getSelectedItem(item) {
+    getSelectedIssueItem(item) {
         let issueInventory = {...this.state.issueInventory};
         issueInventory['itemId'] = item.id;
         issueInventory['itemName'] = item.itemName;
@@ -149,6 +149,23 @@ export default class IssueInventory extends GenericComponent {
         setTimeout(()=>{
             this.setState({issueInventory});
         });
+    }
+
+    onIssuedInventorySelect(e){
+        this.issueItemAutoComplete = React.createRef();
+        this.issuerAutoComplete = React.createRef();
+        this.workerAutoComplete = React.createRef();
+
+        setTimeout(()=>{
+            this.setState({
+                displayDialog:true,
+                issueInventory: Object.assign({}, e.data)
+            });
+
+            this.issueItemAutoComplete.current.selectInventoryItem(this.state.issueInventory);
+            this.issuerAutoComplete.current.selectWorker({firstName: e.data['issuerName']});
+            this.workerAutoComplete.current.selectWorker({firstName: e.data['workerName']});
+        },1000);
     }
 
     render() {
@@ -183,7 +200,7 @@ export default class IssueInventory extends GenericComponent {
                             <Column field="quantities" header="Quantities" sortable={true} style={{textAlign: 'left', width: '15%'}}/>
                             <Column field="issuerName" header="Issued By" sortable={true} style={{textAlign: 'center', width: '14%'}}/>
                             <Column field="workerName" header="Received By" sortable={true} style={{textAlign: 'center', width: '10%'}}/>
-                            <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'issueInventory', this.state, 'Action')} style={{width: '12%'}}/>
+                            <Column header="Action" body={(rowData, column)=> this.actionColumn(rowData, column, 'issueInventory', this.state)} style={{width: '12%'}}/>
                         </DataTable>
 
                         <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Issued Inventory Details"
@@ -196,7 +213,9 @@ export default class IssueInventory extends GenericComponent {
                                         <div className="p-grid" style={{ paddingTop: '10px'}}>
                                             <div className="p-col-6" style={{padding:'.75em'}}>
                                                <span className="p-float-label p-fluid">
-                                                    <ItemAutoComplete ref={this.itemAutoComplete} onChange={this.getSelectedItem}></ItemAutoComplete>
+                                                   {/*prop value is being used b/c component on dialog doesn't have ref.
+                                                   refs are not available b/c component is on diloag and being initialized while opening dialog*/}
+                                                    <ItemAutoComplete ref={this.issueItemAutoComplete} onChange={this.getSelectedIssueItem}></ItemAutoComplete>
                                                 </span>
                                             </div>
 

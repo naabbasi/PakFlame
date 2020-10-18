@@ -273,7 +273,7 @@ export default class Invoice extends GenericComponent {
 
     onItemSelect(e){
         console.log(e)
-        this.getItemAutoComplete.current.selectItem({itemName: e.data['itemName']});
+        this.getItemAutoComplete.current.selectInventoryItem({itemName: e.data['itemName']});
         let invoice = {...this.state.invoice};
         invoice.details['itemName'] = e.data['itemName'];
         invoice.details['quantities'] = e.data['quantities'];
@@ -294,7 +294,7 @@ export default class Invoice extends GenericComponent {
         setTimeout(()=>{
             this.setState({invoice});
         });
-        this.getItemAutoComplete.current.selectItem({itemName: ''});
+        this.getItemAutoComplete.current.selectInventoryItem({itemName: ''});
     }
 
     print() {

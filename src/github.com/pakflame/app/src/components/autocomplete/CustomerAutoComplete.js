@@ -35,6 +35,10 @@ export default class CustomerAutoComplete extends GenericComponent {
         )
     }
 
+    selectedCustomerTemplate(customer) {
+        return customer.firstName + " " + customer.lastName;
+    }
+
     suggestCustomers(event) {
         setTimeout(() => {
             let results = [];
@@ -76,7 +80,7 @@ export default class CustomerAutoComplete extends GenericComponent {
             <AutoComplete dropdown={true}  field="firstName"
                   placeholder="Please Select Customer Name"
                   readonly={false}
-                  maxLength={250} itemTemplate={this.customerTemplate}
+                  maxLength={250} itemTemplate={this.customerTemplate} selectedItemTemplate={this.selectedCustomerTemplate}
                   value={this.state.customer} onChange={(e) => this.onSelectCustomer(e)}
                   suggestions={this.state.customerSuggestions} completeMethod={this.suggestCustomers.bind(this)}
             />
