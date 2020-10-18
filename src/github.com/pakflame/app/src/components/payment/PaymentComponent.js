@@ -136,7 +136,7 @@ export default class PaymentComponent extends GenericComponent {
                     </div>
                     <div className="p-col-12">
                         <div style={{textAlign: 'right', width: '100%'}}>
-                            <Button label="Save Payment" icon="pi pi-save" className="p-button-rounded" onClick={this.savePayment}/>
+                            <Button label="Save Payment" style={{marginRight: '7px'}} icon="pi pi-save" className="p-button-rounded" onClick={this.savePayment}/>
                             <Button label="Back" className="p-button-rounded" onClick={()=>{
                                 if(this.props.type === 'customer'){
                                     window.location.hash = '#/customers';
@@ -159,7 +159,7 @@ export default class PaymentComponent extends GenericComponent {
                                     <Column field="remaining" header={this.props.type === 'customer' ? 'Receivable Amount' : 'Payable Amount'} sortable={true} style={{textAlign: 'right'}}/>
                                     <Column field="total" header="Total Amount" sortable={true}/>
                                     <Column field="createdAt" header="Date" body={this.dateFormatter} sortable={true} style={{textAlign: 'right'}}/>
-                                    <Column header="Action" body={(rowData, column)=> this.deleteActionColumn(rowData, column, 'payments', this.state)} style={{width: '12%'}}/>
+                                    {/*<Column header="Action" body={(rowData, column)=> this.deleteActionColumn(rowData, column, 'payments', this.state)} style={{width: '12%'}}/>*/}
                                 </DataTable>
                             </div>
                         </div>

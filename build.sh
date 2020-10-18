@@ -8,6 +8,9 @@ echo $CURRENT_DIR
 
 rm -vfr $CURRENT_DIR/bin/*
 
+echo Checking new changes from server
+git pull origin master
+
 cd $CURRENT_DIR/src/github.com/pakflame
 
 $GOROOT/bin/go get ./...

@@ -143,21 +143,20 @@ export default class Worker extends GenericComponent {
             {label: 'Terminate', status: 'Terminate'},
         ];
 
-        let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
-            <div style={{float: 'left'}}>Workers Information</div>
-            <div style={{'textAlign':'left', float: 'right'}}>
-                <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
+        let header = <div style={{display: 'flex', justifyContent: 'space-between', padding: '0px'}}>
+            <div style={{lineHeight: '30px'}}>Workers Information</div>
+            <span className="p-input-icon-left">
+                <i className="pi pi-search"></i>
                 <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search Worker(s)" size="50"/>
-            </div>
+            </span>
         </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button className="p-button-rounded" style={{float:'left'}} label="Add Worker" icon="pi pi-plus" onClick={this.addNew}/>
+            <Button className="p-button-rounded" label="Add Worker" icon="pi pi-plus" onClick={this.addNew}/>
         </div>;
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
             <Button label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveWorker}/>
-            <Button label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteWorker}/>
             <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.closeWorkerDialog}/>
         </div>;
 

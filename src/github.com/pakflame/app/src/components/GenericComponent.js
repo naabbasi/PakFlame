@@ -79,9 +79,15 @@ export class GenericComponent extends Component {
     }
 
     deleteActionColumn = (rowData,column, entityName, componentState, label) => {
-        return <div className="p-clearfix ui-column-filter" style={{textAlign: 'center'}}>
-            <a onClick={(e)=> this.deleteEntity(rowData, entityName, componentState)}>Delete</a>
-        </div>;
+        if(rowData['readonly']) {
+            return <div className="p-clearfix" style={{textAlign: 'center'}}>
+                <i className="pi pi-ban"></i> <span>Delete</span>
+            </div>;
+        } else {
+            return <div className="p-clearfix ui-column-filter" style={{textAlign: 'center'}}>
+                <a onClick={(e)=> this.deleteEntity(rowData, entityName, componentState)}>Delete</a>
+            </div>;
+        }
     };
 
     actionColumn = (rowData,column, entityName, componentState, label) => {
@@ -109,6 +115,8 @@ export class GenericComponent extends Component {
             this.onInvoiceSelect({data: rowData});
         } else if(entityName === 'products') {
             this.onProductSelect({data: rowData});
+        } else if(entityName === 'issueInventory') {
+            this.onIssuedInventorySelect({data: rowData});
         }
     }
 

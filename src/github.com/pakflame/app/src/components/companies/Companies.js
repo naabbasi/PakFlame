@@ -128,16 +128,16 @@ export default class Companies extends GenericComponent {
     }
 
     render() {
-        let header = <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
-            <div style={{float: 'left'}}>Companies Information</div>
-            <div style={{'textAlign':'left', float: 'right'}}>
-                <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
+        let header = <div style={{display: 'flex', justifyContent: 'space-between', padding: '0px'}}>
+            <div style={{lineHeight: '30px'}}>Companies Information</div>
+            <span className="p-input-icon-left">
+                <i className="pi pi-search"></i>
                 <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search Companies" size="50"/>
-            </div>
+            </span>
         </div>;
 
         let footer = <div className="p-clearfix" style={{width:'100%'}}>
-            <Button className="p-button-rounded" style={{float:'left'}} label="Add Company" icon="pi pi-plus" onClick={this.addNewCompany}/>
+            <Button className="p-button-rounded" label="Add Company" icon="pi pi-plus" onClick={this.addNewCompany}/>
         </div>;
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">

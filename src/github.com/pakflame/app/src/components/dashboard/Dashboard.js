@@ -172,11 +172,7 @@ export default class Dashboard extends GenericComponent {
 
                         <div className={"p-col-4"}>
                             <Card>
-                                <DataTable header={
-                                    <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
-                                        <div style={{float: 'left'}}>Inventory - Quantity Alter</div>
-                                    </div>
-                                } value={this.state.quantityAlert} rows={25}
+                                <DataTable header="Inventory - Quantity Alter" value={this.state.quantityAlert} rows={25}
                                            scrollable={true} scrollHeight="265px" responsive={true}
                                            selectionMode="none" emptyMessage="No record(s) found">
 
@@ -188,11 +184,7 @@ export default class Dashboard extends GenericComponent {
 
                         <div className={"p-col-4"}>
                             <Card>
-                                <DataTable header={
-                                    <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
-                                        <div style={{float: 'left'}}>Inventory - Remaining Items</div>
-                                    </div>
-                                } value={this.state.remainingItemsByQuantities} rows={25}
+                                <DataTable header="Inventory - Remaining Items" value={this.state.remainingItemsByQuantities} rows={25}
                                            scrollable={true} scrollHeight="265px" responsive={true}
                                            selectionMode="none" emptyMessage="No record(s) found">
 
@@ -204,11 +196,7 @@ export default class Dashboard extends GenericComponent {
 
                         <div className={"p-col-4"}>
                             <Card>
-                                <DataTable header={
-                                    <div className="p-clearfix" style={{lineHeight:'1.87em'}}>
-                                        <div style={{float: 'left'}}>Inventory - Excessive Items</div>
-                                    </div>
-                                } value={this.state.excessItemsByQuantities} rows={25}
+                                <DataTable header="Inventory - Excessive Items" value={this.state.excessItemsByQuantities} rows={25}
                                            scrollable={true} scrollHeight="265px" responsive={true}
                                            selectionMode="none" emptyMessage="No record(s) found">
                                     <Column field="itemName" header="Item Name" sortable={false} style={{textAlign: 'left', width: '70%'}}/>

@@ -93,14 +93,15 @@ func (worker Worker) ToString() string {
 }
 
 type Payment struct {
-	ID        uuid.UUID `gorm:"PRIMARY_KEY; type:uuid default gen_random_uuid();" json:"id" xml:"id" form:"id" query:"id"`
-	Amount    float64   `json:"amount" xml:"amount" form:"amount" query:"amount"`
-	Remaining float64   `json:"remaining" xml:"remaining" form:"remaining" query:"remaining"`
-	Total     float64   `json:"total" xml:"total" form:"total" query:"total"`
-	CreatedAt time.Time `json:"createdAt" xml:"createdAt" form:"createdAt" query:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
-	EntityId  uuid.UUID `json:"entityId" xml:"entityId" form:"entityId" query:"entityId"`
-	ClientId  uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+	ID            uuid.UUID `gorm:"PRIMARY_KEY; type:uuid default gen_random_uuid();" json:"id" xml:"id" form:"id" query:"id"`
+	Amount        float64   `json:"amount" xml:"amount" form:"amount" query:"amount"`
+	InvoiceNumber int64     `json:"invoiceNumber" xml:"invoiceNumber" form:"invoiceNumber" query:"invoiceNumber"`
+	Remaining     float64   `json:"remaining" xml:"remaining" form:"remaining" query:"remaining"`
+	Total         float64   `json:"total" xml:"total" form:"total" query:"total"`
+	CreatedAt     time.Time `json:"createdAt" xml:"createdAt" form:"createdAt" query:"createdAt"`
+	UpdatedAt     time.Time `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
+	EntityId      uuid.UUID `json:"entityId" xml:"entityId" form:"entityId" query:"entityId"`
+	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 func (payment Payment) ToString() string {
@@ -156,14 +157,16 @@ func (inventory Inventory) ToString() string {
 
 type IssueInventory struct {
 	Model
-	ItemId      uuid.UUID `gorm:"ForeignKey:item_id; type: uuid; NOT NULL", json:"itemId" xml:"itemId" form:"itemId" query:"itemId"`
-	ItemName    string    `json:"itemName" xml:"itemName" form:"itemName" query:"itemName"`
-	Quantities  uint64    `gorm:"type: INT8 " json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
-	IssuerId    uuid.UUID `gorm:"ForeignKey:worker_id; type: uuid; NOT NULL" json:"issuerId" xml:"issuerId" form:"issuerId" query:"issuerId"`
-	WorkerId    uuid.UUID `gorm:"ForeignKey:worker_id; type: uuid; NOT NULL" json:"workerId" xml:"workerId" form:"workerId" query:"workerId"`
-	CompanyId   uuid.UUID `gorm:"ForeignKey:company_id; type: uuid; NOT NULL" json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
-	WarehouseId uuid.UUID `gorm:"ForeignKey:warehouse_id; type: uuid; NOT NULL" json:"warehouseId" xml:"warehouseId" form:"warehouseId" query:"warehouseId"`
-	ClientId    uuid.UUID `gorm:"ForeignKey:client_id; type: uuid; NOT NULL" json:"clientId" xml:"clientId" form:"clientId" query:"clientId"`
+	ItemId     uuid.UUID `gorm:"ForeignKey:item_id; type: uuid; NOT NULL", json:"itemId" xml:"itemId" form:"itemId" query:"itemId"`
+	ItemName   string    `json:"itemName" xml:"itemName" form:"itemName" query:"itemName"`
+	Quantities uint64    `gorm:"type: INT8 " json:"quantities" xml:"quantities" form:"quantities" query:"quantities"`
+	IssuerId   uuid.UUID `gorm:"ForeignKey:worker_id; type: uuid; NOT NULL" json:"issuerId" xml:"issuerId" form:"issuerId" query:"issuerId"`
+	IssuerName string    `gorm:"-" json:"issuerName" xml:"issuerName" form:"issuerName" query:"issuerName"`
+	WorkerId   uuid.UUID `gorm:"ForeignKey:worker_id; type: uuid; NOT NULL" json:"workerId" xml:"workerId" form:"workerId" query:"workerId"`
+	WorkerName string    `gorm:"-" json:"workerName" xml:"workerName" form:"workerName" query:"workerName"`
+	//CompanyId   uuid.UUID `gorm:"ForeignKey:company_id; type: uuid; NOT NULL" json:"companyId" xml:"companyId" form:"companyId" query:"companyId"`
+	//WarehouseId uuid.UUID `gorm:"ForeignKey:warehouse_id; type: uuid; NOT NULL" json:"warehouseId" xml:"warehouseId" form:"warehouseId" query:"warehouseId"`
+	ClientId uuid.UUID `gorm:"ForeignKey:client_id; type: uuid; NOT NULL" json:"clientId" xml:"clientId" form:"clientId" query:"clientId"`
 }
 
 type Product struct {
@@ -180,19 +183,22 @@ type Product struct {
 }
 
 type Invoice struct {
-	ID               int64            `gorm:"PRIMARY_KEY; type: integer default nextval('invoice_seq');" json:"id" xml:"id" form:"id" query:"id"`
-	CreatedAt        time.Time        `json:"createdAt" xml:"createdAt" form:"createdAt" query:"createdAt"`
-	UpdatedAt        time.Time        `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
-	CustomerName     string           `json:"customerName" xml:"customerName" form:"customerName" query:"customerName"`
-	PartyName        string           `json:"partyName" xml:"partyName" form:"partyName" query:"partyName"`
-	Address          string           `json:"address" xml:"address" form:"address" query:"address"`
-	Transport        string           `json:"transport" xml:"transport" form:"transport" query:"transport"`
-	TransportCharges float64          `json:"transportCharges" xml:"transportCharges" form:"transportCharges" query:"transportCharges"`
-	BillNumber       int64            `json:"billNumber" xml:"billNumber" form:"billNumber" query:"billNumber"`
-	Readonly         bool             `gorm:"not null; default: false;" json:"readonly" xml:"readonly" form:"readonly" query:"readonly"`
-	InvoiceDetails   []InvoiceDetails `json:"invoiceDetails" xml:"invoiceDetails" form:"invoiceDetails" query:"invoiceDetails"`
-	CustomerId       uuid.UUID        `json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
-	ClientId         uuid.UUID        `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
+	ID                     int64            `gorm:"PRIMARY_KEY; type: integer default nextval('invoice_seq');" json:"id" xml:"id" form:"id" query:"id"`
+	CreatedAt              time.Time        `json:"createdAt" xml:"createdAt" form:"createdAt" query:"createdAt"`
+	UpdatedAt              time.Time        `json:"updatedAt" xml:"updatedAt" form:"updatedAt" query:"updatedAt"`
+	CustomerName           string           `json:"customerName" xml:"customerName" form:"customerName" query:"customerName"`
+	PartyName              string           `json:"partyName" xml:"partyName" form:"partyName" query:"partyName"`
+	Address                string           `json:"address" xml:"address" form:"address" query:"address"`
+	Transport              string           `json:"transport" xml:"transport" form:"transport" query:"transport"`
+	TransportCharges       float64          `json:"transportCharges" xml:"transportCharges" form:"transportCharges" query:"transportCharges"`
+	BillNumber             int64            `json:"billNumber" xml:"billNumber" form:"billNumber" query:"billNumber"`
+	Readonly               bool             `gorm:"not null; default: false;" json:"readonly" xml:"readonly" form:"readonly" query:"readonly"`
+	InvoiceDetails         []InvoiceDetails `json:"invoiceDetails" xml:"invoiceDetails" form:"invoiceDetails" query:"invoiceDetails"`
+	InvoiceAmount          float64          `gorm:"invoiceAmount" json:"invoiceAmount" xml:"invoiceAmount" form:"invoiceAmount" query:"invoiceAmount"`
+	InvoicePaidAmount      float64          `gorm:"invoicePaidAmount" json:"invoicePaidAmount" xml:"invoicePaidAmount" form:"invoicePaidAmount" query:"invoicePaidAmount"`
+	InvoiceRemainingAmount float64          `gorm:"invoiceRemainingAmount" json:"invoiceRemainingAmount" xml:"invoicePaidAmount" form:"invoiceRemainingAmount" query:"invoiceRemainingAmount"`
+	CustomerId             uuid.UUID        `gorm:"ForeignKey:customer_id; type: uuid;" json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
+	ClientId               uuid.UUID        `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }
 
 type InvoiceDetails struct {
@@ -205,6 +211,7 @@ type InvoiceDetails struct {
 	Price         float64   `json:"price" xml:"price" form:"price" query:"price"`
 	Amount        float64   `json:"amount" xml:"amount" form:"amount" query:"amount"`
 	Discount      float64   `json:"discount" xml:"discount" form:"discount" query:"discount"`
+	Readonly      bool      `gorm:"not null; default: false;" json:"readonly" xml:"readonly" form:"readonly" query:"readonly"`
 	TotalAmount   float64   `json:"totalAmount" xml:"totalAmount" form:"totalAmount" query:"totalAmount"`
 	ClientId      uuid.UUID `gorm:"ForeignKey:client_id; type: uuid;" json:"client_id" xml:"client_id" form:"client_id" query:"client_id"`
 }

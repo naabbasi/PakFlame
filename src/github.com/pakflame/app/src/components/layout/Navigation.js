@@ -7,25 +7,25 @@ export default class Navigation extends GenericComponent {
         const items = [
             {
                 label: 'Dashboard',
-                icon:'pi pi-fw pi-users',
+                icon:'pi pi-fw pi-home',
                 command:()=>{ window.location.hash="dashboard"; },
             },
             {
                 label:'Manage Inventory',
-                icon:'pi pi-fw pi-folder-open',
+                icon:'pi pi-fw pi-file',
                 items: [
                     {
                         label:'Warehouses',
-                        icon:'pi pi-fw pi-folder-open',
+                        icon:'pi pi-sitemap',
                         command:()=>{ window.location.hash="warehouses"; },
                     },
                     {
                         label:'Companies',
-                        icon:'pi pi-fw pi-folder-open',
+                        icon:'pi pi-fw pi-user',
                         command:()=>{ window.location.hash="companies"; },
                     },{
                         label:'Stock Inventory',
-                        icon:'pi pi-fw pi-folder-open',
+                        icon:'pi pi-fw pi-file',
                         command:()=>{ window.location.hash="inventory"; },
                         items: [
                             {
@@ -35,7 +35,7 @@ export default class Navigation extends GenericComponent {
                         ]
                     },{
                         label:'Products',
-                        icon:'pi pi-fw pi-folder-open',
+                        icon:'pi pi-th-large',
                         command:()=>{ window.location.hash="products"; },
                         /*items: [
                             {
@@ -53,17 +53,17 @@ export default class Navigation extends GenericComponent {
                 ]
             },
             {
-                label:'Invoices',
-                icon:'pi pi-fw pi-folder-open',
+                label:'Bills',
+                icon:'pi pi-shopping-cart',
                 items: [
                     {
-                        label:'Show All Invoices',
-                        icon:'pi pi-fw pi-folder-open',
+                        label:'Show All Bills',
+                        icon:'pi pi-money-bill',
                         command:()=>{ window.location.hash="invoices/all"; }
                     },
                     {
-                        label:'Invoice',
-                        icon:'pi pi-fw pi-folder-open',
+                        label:'Create Bill',
+                        icon:'pi pi-money-bill',
                         command:()=>{ window.location.hash="invoices/product_invoice"; }
                     }
                 ]

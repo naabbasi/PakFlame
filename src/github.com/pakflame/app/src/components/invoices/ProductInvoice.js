@@ -10,16 +10,20 @@ import {Calendar} from "primereact/calendar";
 import CustomerAutoComplete from "../autocomplete/CustomerAutoComplete";
 import {Fieldset} from "primereact/fieldset";
 import ProductAutoComplete from "../autocomplete/ProductAutoComplete";
+import {Dialog} from "primereact/dialog";
 
 export default class ProductInvoice extends GenericComponent {
     constructor(props) {
         super(props);
         const params = new URLSearchParams(props.location.search);
         console.log(params.get('invoiceId'));
+        this.tempRemainingAmount = 0.0;
+        this.tempAdvanceAmount = 0.0;
 
         this.state = {
             invoice: null,
             invoiceDetails: [],
+            invoicePayment: {customerId: '', invoiceNumber: 0, advanceAmount: 0.0, remainingAmount: 0.0, invoiceAmount: 0.0, amount: 0.0, remaining: 0.0},
             products: [],
             invoiceId: params.get('invoiceId') == null ? 0 : params.get('invoiceId'),
             disableButtons: true,
@@ -41,6 +45,9 @@ export default class ProductInvoice extends GenericComponent {
         this.getSelectedProduct = this.getSelectedProduct.bind(this);
         this.getSelectedCustomer = this.getSelectedCustomer.bind(this);
         this.onProductSelect = this.onProductSelect.bind(this);
+        this.updateProductInvoicePaymentDialog = this.updateProductInvoicePaymentDialog.bind(this);
+        this.updateProductInvoicePaymentCloseDialog = this.updateProductInvoicePaymentCloseDialog.bind(this);
+        this.updateProductInvoicePayment = this.updateProductInvoicePayment.bind(this);
     }
 
     async componentDidMount() {
@@ -61,7 +68,7 @@ export default class ProductInvoice extends GenericComponent {
                 disableSaveButton: false,
                 invoice: {
                     id: data['id'], customerId: data['customerId'], customerName: data['customerName'], createdAt: new Date(data['createdAt']), billNumber: data['billNumber'],
-                    partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'], readonly: data['readonly'],
+                    invoiceAmount: data['invoiceAmount'],partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'], readonly: data['readonly'],
                     details: {id: 0, itemName: '', createdAt: '', unit: '', productQuantities: 0, productPrice: 0, amount: 0, productDiscount: 0, totalAmount: 0, customerId: ''},
                 },
             });
@@ -71,7 +78,7 @@ export default class ProductInvoice extends GenericComponent {
             this.setState({
                 disableButtons: false,
                 invoice: {
-                    id: 0, customerId: '', customerName: '', createdAt: new Date(), billNumber: 0, partyName: '', transport: '', transportCharges: 0, address: '', readonly: false,
+                    id: 0, customerId: '', customerName: '', createdAt: new Date(), billNumber: 0, partyName: '', transport: '', transportCharges: 0, address: '', readonly: false, invoiceAmount: 0,
                     details: {id: 0, itemName: '', createdAt: '', unit: '', productQuantities: 0, productPrice: 0, amount: 0, productDiscount: 0, totalAmount: 0, customerId: ''},
                 },
             });
@@ -223,7 +230,12 @@ export default class ProductInvoice extends GenericComponent {
             invoice.details[property] = value;
             this.setState({invoice});
         }
+    }
 
+    updatePaymentProperty(property, value) {
+        let invoicePayment = this.state.invoicePayment;
+        invoicePayment[property] = value;
+        this.setState({invoicePayment: invoicePayment});
     }
 
     calculateAmount() {
@@ -321,6 +333,72 @@ export default class ProductInvoice extends GenericComponent {
         }
     }
 
+    updateProductInvoicePaymentDialog() {
+        console.log(this.state.invoice['customerId'])
+        // Make a request for a invoices
+        this.axios.get(`/customers/${this.state.invoice['customerId']}`)
+        .then( response => {
+            // handle success
+            if(response.status === 200){
+                console.log(response.data)
+                let invoicePayment = {...this.state.invoicePayment}
+                invoicePayment.advanceAmount = response.data['advanceAmount'];
+                invoicePayment.remainingAmount = response.data['remainingAmount'];
+                invoicePayment.invoiceAmount = this.state.invoice['invoiceAmount'];
+                this.setState({invoicePayment: invoicePayment});
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        });
+
+        if(this.state.invoiceId !== 0) {
+            this.setState({
+                displayDialog: true
+            });
+        }
+    }
+
+    updateProductInvoicePaymentCloseDialog() {
+        this.setState({
+            displayDialog: false
+        });
+    }
+
+    calculateProductInvoiceAmount() {
+        let invoicePayment = this.state.invoicePayment;
+        let paidAmount = invoicePayment.amount;
+        let remainingInvoiceAmount = invoicePayment.invoiceAmount - paidAmount;
+        invoicePayment.invoiceNumber = this.Int(this.state.invoiceId);
+        invoicePayment.customerId = this.state.invoice['customerId'];
+        invoicePayment.advanceAmount = this.tempAdvanceAmount;
+        invoicePayment.remainingAmount = this.tempRemainingAmount;
+        if(paidAmount !== 0) {
+            invoicePayment.advanceAmount = this.tempAdvanceAmount - paidAmount;
+            invoicePayment.remainingAmount = invoicePayment.remainingAmount + remainingInvoiceAmount;
+        }
+        invoicePayment.remaining = this.tempAdvanceAmount - paidAmount;
+        this.setState({invoicePayment: invoicePayment});
+    }
+
+    updateProductInvoicePayment() {
+        if(this.state.invoiceId !== 0) {
+            // Make a request for a invoices
+            this.axios.post('/product_invoices/pay', this.state.invoicePayment)
+                .then( response => {
+                    // handle success
+                    if(response.status === 200){
+                        console.log("Invoice payment done")
+                    }
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });
+        }
+    }
+
     getSelectedProduct(product) {
         let invoice = {...this.state.invoice};
         invoice.details['itemId'] = product.id;
@@ -362,6 +440,11 @@ export default class ProductInvoice extends GenericComponent {
     }
 
     render() {
+        let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
+            <Button label="Update Payment" icon="pi pi-save" className="p-button-rounded" onClick={this.updateProductInvoicePayment}/>
+            <Button label="Close" icon="pi pi-sign-out" className="p-button-rounded" onClick={this.updateProductInvoicePaymentCloseDialog}/>
+        </div>;
+
         return (
             <div>
                 <Navigation>
@@ -436,10 +519,10 @@ export default class ProductInvoice extends GenericComponent {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="p-grid">
+                                    <div className="p-col-12">
                                         <div className="p-col p-clearfix" style={{padding:'.50em'}}>
-                                            <Button disabled={this.state.disableSaveButton} label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInvoice}/>
-                                            <Button disabled={this.state.disableButtons} label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteInvoice}/>
+                                            <Button disabled={this.state.disableSaveButton} style={{marginRight: '7px'}} label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInvoice}/>
+                                            <Button disabled={this.state.disableButtons} label="Back" icon="pi pi-arrow-circle-left" className="p-button-rounded p-button-info" onClick={(e)=>{window.location = '#/invoices/all'}}/>
                                         </div>
                                     </div>
                                 </div>
@@ -484,10 +567,11 @@ export default class ProductInvoice extends GenericComponent {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="p-grid">
+                                        <div className="p-col-12">
                                             <div className="p-col" style={{padding:'.50em'}}>
-                                                <Button label="Add" disabled={this.state.disableAddItemButton} icon="pi pi-plus" className="p-button-rounded" onClick={this.addNewItem}/>
-                                                <Button disabled={false} label="Print" icon="pi pi-print" className="p-button-rounded" onClick={this.print}/>
+                                                <Button label="Add" disabled={this.state.disableAddItemButton} style={{marginRight: '7px'}} icon="pi pi-plus" className="p-button-rounded" onClick={this.addNewItem}/>
+                                                <Button disabled={false} label="Print" icon="pi pi-print" style={{marginRight: '7px'}} className="p-button-rounded" onClick={this.print}/>
+                                                <Button disabled={false} label="Payment" icon="pi pi-money-bill" className="p-button-rounded" onClick={this.updateProductInvoicePaymentDialog}/>
                                             </div>
                                         </div>
                                         <div className="p-grid">
@@ -496,7 +580,7 @@ export default class ProductInvoice extends GenericComponent {
                                                            scrollable={true} scrollHeight="200px" responsive={true}
                                                            selectionMode="none" selection={this.state.selectedInventory}
                                                            onSelectionChange={e => this.setState({selectedInventory: e.value})}
-                                                           onRowSelect={this.onProductSelect} emptyMessage="No record(s) found">
+                                                           emptyMessage="No record(s) found">
 
                                                     <Column field="itemName" header="Item Name" sortable={true} style={{textAlign: 'left', width: '25%'}}/>
                                                     {/*<Column field="unit" header="Unit" sortable={true} style={{textAlign: 'right'}}/>*/}
@@ -514,6 +598,83 @@ export default class ProductInvoice extends GenericComponent {
                             </div>
                         }
                     </div>
+                    <Dialog visible={this.state.displayDialog} style={{width: '50%'}} header="Payment Details"
+                            modal={true} footer={dialogFooter} maximizable={true} maximized={false}
+                            onShow={() => {
+                                let invoicePayment = {...this.state.invoicePayment};
+                                invoicePayment.amount = 0.0;
+                                this.tempAdvanceAmount = invoicePayment.advanceAmount;
+                                this.tempRemainingAmount = invoicePayment.remainingAmount;
+                                this.setState({invoicePayment: invoicePayment});
+                            }}
+                            onHide={() => this.setState({displayDialog: false})}>
+                        {
+                            this.state.invoicePayment &&
+                            <div className="p-grid">
+                                <div className="p-col-12">
+                                    <div className="p-grid">
+                                        <div className="p-col-6" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="advanceAmount" maxLength={255} readOnly={true}
+                                                           onChange={(e) => {this.updatePaymentProperty('advanceAmount', this.Float(e.target.value))}}
+                                                           onBlur={(e) => {this.updatePaymentProperty('advanceAmount', this.Float(e.target.value))}}
+                                                           value={this.state.invoicePayment.advanceAmount}/>
+                                                <label htmlFor="advanceAmount">Advance Amount</label>
+                                            </span>
+                                        </div>
+
+                                        <div className="p-col-6" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="remainingAmount" maxLength={255} readOnly={true}
+                                                           onChange={(e) => {this.updatePaymentProperty('remainingAmount', this.Float(e.target.value))}}
+                                                           onBlur={(e) => {this.updatePaymentProperty('remainingAmount', this.Float(e.target.value))}}
+                                                           value={this.state.invoicePayment.remainingAmount}/>
+                                                <label htmlFor="remainingAmount">Remaining Amount</label>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-grid">
+                                        <div className="p-col-6" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="invoiceAmount" maxLength={255} readOnly={true}
+                                                           onChange={(e) => {this.updatePaymentProperty('invoiceAmount', this.Float(e.target.value))}}
+                                                           onBlur={(e) => {this.updatePaymentProperty('invoiceAmount', this.Float(e.target.value))}}
+                                                           value={this.state.invoicePayment.invoiceAmount}/>
+                                                <label htmlFor="advanceAmount">Invoice Amount</label>
+                                            </span>
+                                        </div>
+
+                                        <div className="p-col-6" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="paidAmount" maxLength={255}
+                                                           onChange={(e) => {this.updatePaymentProperty('amount', this.Float(e.target.value))}}
+                                                           onFocus={(e) => {
+                                                               let invoicePayment = {...this.state.invoicePayment};
+                                                               //invoicePayment.remainingAmount = this.tempRemainingAmount;
+                                                               this.setState({invoicePayment: invoicePayment});
+                                                           }}
+                                                           onBlur={(e) => {this.calculateProductInvoiceAmount()}}
+                                                           value={this.state.invoicePayment.amount}/>
+                                                <label htmlFor="paidAmount">Paid Amount</label>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-grid">
+                                        <div className="p-col p-fluid" style={{padding:'.75em'}}>
+                                            <span className="p-float-label p-fluid">
+                                                <InputText ref="invoiceAmount" maxLength={255} readOnly={true}
+                                                           onChange={(e) => {this.updatePaymentProperty('remaining', this.Float(e.target.value))}}
+                                                           value={this.state.invoicePayment.remaining}/>
+                                                <label htmlFor="advanceAmount">Balance Amount</label>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </Dialog>
                 </Navigation>
             </div>
         );

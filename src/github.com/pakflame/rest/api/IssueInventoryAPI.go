@@ -36,7 +36,9 @@ func (issueInventory *issueInventories) GetIssueInventories() {
 	issueInventory.echo.GET(IssueInventoryEndPoint, func(c echo.Context) error {
 		var allIssueInventories = new([]models.IssueInventory)
 		connection := issueInventory.dbSettings.GetDBConnection()
-		connection.Where("client_id = ? ", http_util.GetUserInfo(c).ClientId).
+		connection.Select("issue_inventories.*, concat(w1.first_name, ' ', w1.last_name) as issuer_name, concat(w2.first_name, ' ', w2.last_name) as worker_name").
+			Joins("inner join workers w1 on issue_inventories.issuer_id = w1.id inner join workers w2 on issue_inventories.worker_id = w2.id").
+			Where("issue_inventories.client_id = ? ", http_util.GetUserInfo(c).ClientId).
 			Find(&allIssueInventories)
 
 		return c.JSON(http.StatusOK, &allIssueInventories)
@@ -60,7 +62,7 @@ func (issueInventory *issueInventories) AddIssueInventory() {
 		if err := c.Bind(newIssueInventory); err != nil {
 			return err
 		}
-		log.Printf("issueInventory saved with %s", newIssueInventory)
+		log.Printf("issueInventory saved with %v", newIssueInventory)
 
 		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
 		if err == nil {
@@ -68,13 +70,31 @@ func (issueInventory *issueInventories) AddIssueInventory() {
 		}
 
 		connection := issueInventory.dbSettings.GetDBConnection()
+		connection.Begin()
 		save := connection.Save(newIssueInventory)
 
-		if save.RowsAffected == 1 {
-			return c.JSON(http.StatusCreated, "Inventory has been issued")
+		//Update inventory table to update quantities
+		itemInInventory := new(models.Inventory)
+		connection.Model(models.Inventory{}).Where("id = ?", newIssueInventory.ItemId).First(itemInInventory)
+		remainingItemInInventory := itemInInventory.Quantities - newIssueInventory.Quantities
+		itemInInventory.Quantities = remainingItemInInventory
+		updateItemInInventory := connection.Exec("update inventories set quantities = ? where id = ?", itemInInventory.Quantities, itemInInventory.ID)
+
+		if updateItemInInventory.Error == nil {
+			log.Printf("Item quantity has been updated: %.d", updateItemInInventory.RowsAffected)
 		} else {
+			connection.Rollback()
 			return c.JSON(http.StatusInternalServerError, "Unable to issue new Inventory")
 		}
+
+		if save.RowsAffected == 1 {
+			connection.Commit()
+			return c.JSON(http.StatusCreated, "Inventory has been issued")
+		} else {
+			connection.Rollback()
+			return c.JSON(http.StatusInternalServerError, "Unable to issue new Inventory")
+		}
+
 	})
 }
 

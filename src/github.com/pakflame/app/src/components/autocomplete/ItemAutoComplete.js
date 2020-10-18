@@ -41,6 +41,10 @@ export default class ItemAutoComplete extends GenericComponent {
         )
     }
 
+    selectedInventoryItemTemplate(item) {
+        return item.itemName;
+    }
+
     suggestItems(event) {
         setTimeout(() => {
             let results = [];
@@ -60,8 +64,6 @@ export default class ItemAutoComplete extends GenericComponent {
 
     onSelectItem(event) {
         this.setState({item:  event.value});
-        console.log("child: nSelectItem");
-        console.log(event.value);
         if(this.props.onChange === undefined) {
             console.log("Please add onChange() handler in parent");
             console.log(`<ItemAutoComplete ref={this.getItemAutoComplete} onChange={this.handler}></ItemAutoComplete>`);
@@ -73,7 +75,7 @@ export default class ItemAutoComplete extends GenericComponent {
         }
     }
 
-    selectItem(item) {
+    selectInventoryItem(item) {
         this.setState({item: item});
     }
 
@@ -82,7 +84,7 @@ export default class ItemAutoComplete extends GenericComponent {
             <AutoComplete dropdown={true}  field="itemName"
                   placeholder="Please Select Item Name"
                   readonly={false}
-                  maxLength={250} itemTemplate={this.itemTemplate}
+                  maxLength={250} itemTemplate={this.itemTemplate} selectedItemTemplate={this.selectedInventoryItemTemplate}
                   value={this.state.item} onChange={(e) => this.onSelectItem(e)}
                   suggestions={this.state.itemSuggestions} completeMethod={this.suggestItems.bind(this)}
             />

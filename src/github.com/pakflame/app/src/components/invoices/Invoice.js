@@ -273,7 +273,7 @@ export default class Invoice extends GenericComponent {
 
     onItemSelect(e){
         console.log(e)
-        this.getItemAutoComplete.current.selectItem({itemName: e.data['itemName']});
+        this.getItemAutoComplete.current.selectInventoryItem({itemName: e.data['itemName']});
         let invoice = {...this.state.invoice};
         invoice.details['itemName'] = e.data['itemName'];
         invoice.details['quantities'] = e.data['quantities'];
@@ -294,7 +294,7 @@ export default class Invoice extends GenericComponent {
         setTimeout(()=>{
             this.setState({invoice});
         });
-        this.getItemAutoComplete.current.selectItem({itemName: ''});
+        this.getItemAutoComplete.current.selectInventoryItem({itemName: ''});
     }
 
     print() {
@@ -420,7 +420,7 @@ export default class Invoice extends GenericComponent {
                                     <div className="p-grid">
                                         <div className="p-col p-clearfix" style={{padding:'.50em'}}>
                                             <Button disabled={this.state.disableSaveButton} label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInvoice}/>
-                                            <Button disabled={this.state.disableButtons} label="Delete" icon="pi pi-times" className="p-button-rounded p-button-danger" onClick={this.deleteInvoice}/>
+                                            <Button disabled={this.state.disableButtons} label="Back" icon="pi pi-arrow-circle-left" className="p-button-rounded p-button-info" onClick={(e)=>{window.location = '#/invoices/all'}}/>
                                         </div>
                                     </div>
                                 </div>
