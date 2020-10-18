@@ -168,6 +168,7 @@ func main() {
 		productInvoices.UpdateInvoiceItem()
 		productInvoices.DeleteInvoiceItem()
 		productInvoices.PrintInvoice()
+		productInvoices.PaymentAgainstProductInvoice()
 
 		issueInventory := api.NewIssueInventory(restrictedPath)
 		issueInventory.GetIssueInventories()

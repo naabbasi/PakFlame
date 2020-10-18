@@ -16,6 +16,12 @@ import (
 	"time"
 )
 
+type CustomerPayment struct {
+	CustomerId uuid.UUID `json:"customerId" xml:"customerId" form:"customerId" query:"customerId"`
+	models.Customer
+	models.Payment
+}
+
 const (
 	ProductInvoiceEndPoint = "/api/product_invoices"
 )
@@ -61,6 +67,77 @@ func (productInvoices *productInvoices) GetProductInvoiceById() {
 		} else {
 			return c.JSON(http.StatusNotFound, "No invoice found")
 		}
+	})
+}
+
+func (productInvoices *productInvoices) PaymentAgainstProductInvoice() {
+	productInvoices.echo.POST(ProductInvoiceEndPoint+"/pay", func(c echo.Context) error {
+		customerPayment := new(CustomerPayment)
+
+		if err := c.Bind(customerPayment); err != nil {
+			return err
+		}
+		log.Printf("Invoice payment entity: %v", customerPayment)
+
+		clientId, err := uuid.Parse(http_util.GetUserInfo(c).ClientId)
+		if err == nil {
+			customerPayment.Customer.ClientId = clientId
+		}
+
+		customerAdvanceAmount := customerPayment.Customer.AdvanceAmount
+		customerRemainingAmount := customerPayment.Customer.RemainingAmount
+
+		fmt.Printf("Customer: Avance: %.2f, Remaining: %.2f", customerAdvanceAmount, customerRemainingAmount)
+
+		invoiceNumber := customerPayment.Payment.InvoiceNumber
+		invoiceAmount := customerPayment.Payment.Amount
+		invoiceRemaining := customerPayment.Payment.Remaining
+
+		fmt.Printf("Payment: Number: %d, Amount: %.2f, Remaining: %.2f", invoiceNumber, invoiceAmount, invoiceRemaining)
+		connection := productInvoices.dbSettings.GetDBConnection()
+		connection.Begin()
+
+		customer := new(models.Customer)
+		connection.Where("id = ? and client_id = ?", customerPayment.CustomerId, customerPayment.Customer.ClientId).
+			First(&customer)
+
+		if customer.ID != uuid.Nil {
+			customer.AdvanceAmount = customerPayment.Customer.AdvanceAmount
+			customer.RemainingAmount = customerPayment.Customer.RemainingAmount
+			saveCustomer := connection.Save(&customer)
+			if saveCustomer.RowsAffected == 1 {
+				log.Print("Customer payment has been updated")
+			}
+		}
+
+		payment := new(models.Payment)
+		connection.Where("entity_id = ? and invoice_number = ? and client_id = ?", customerPayment.CustomerId, customerPayment.Payment.InvoiceNumber, customerPayment.Customer.ClientId).
+			First(&payment)
+
+		if payment.ID == uuid.Nil {
+			payment.CreatedAt = time.Now()
+			payment.InvoiceNumber = customerPayment.Payment.InvoiceNumber
+			payment.EntityId = customerPayment.CustomerId
+			payment.ClientId = customerPayment.Customer.ClientId
+			payment.Amount = customerPayment.Payment.Amount
+			payment.Remaining = customerPayment.Payment.Remaining
+			savePayment := connection.Save(&payment)
+
+			if savePayment.RowsAffected == 1 {
+				log.Print("Invoice payment has been added")
+			}
+		} else {
+			payment.UpdatedAt = time.Now()
+			payment.Remaining = payment.Amount - customerPayment.Payment.Amount
+			payment.Amount = customerPayment.Payment.Amount
+			updatePayment := connection.Table("payments").Update(&payment)
+			if updatePayment.RowsAffected == 1 {
+				log.Print("Invoice payment has been updated")
+			}
+		}
+
+		connection.Commit()
+		return c.JSON(http.StatusOK, "Invoice Payment successfully")
 	})
 }
 

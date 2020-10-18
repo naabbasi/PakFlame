@@ -165,7 +165,7 @@ export default class IssueInventory extends GenericComponent {
             this.issueItemAutoComplete.current.selectInventoryItem(this.state.issueInventory);
             this.issuerAutoComplete.current.selectWorker({firstName: e.data['issuerName']});
             this.workerAutoComplete.current.selectWorker({firstName: e.data['workerName']});
-        },1000);
+        },500);
     }
 
     render() {
