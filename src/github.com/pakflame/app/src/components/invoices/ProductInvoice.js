@@ -11,6 +11,7 @@ import CustomerAutoComplete from "../autocomplete/CustomerAutoComplete";
 import {Fieldset} from "primereact/fieldset";
 import ProductAutoComplete from "../autocomplete/ProductAutoComplete";
 import {Dialog} from "primereact/dialog";
+import {Message} from "primereact/message";
 
 export default class ProductInvoice extends GenericComponent {
     constructor(props) {
@@ -28,7 +29,17 @@ export default class ProductInvoice extends GenericComponent {
             invoiceId: params.get('invoiceId') == null ? 0 : params.get('invoiceId'),
             disableButtons: true,
             disableSaveButton: false,
-            disableAddItemButton: true
+            disableAddItemButton: true,
+            invoicePrintMessage: {
+                severity: 'info',
+                text: '',
+                visible: 'hidden'
+            },
+            invoicePaymentMessage: {
+                severity: 'info',
+                text: '',
+                visible: 'hidden'
+            }
         };
 
         this.newInvoice = false;
@@ -325,7 +336,12 @@ export default class ProductInvoice extends GenericComponent {
             .then( response => {
                 // handle success
                 if(response.status === 200){
-                    console.log("Invoice printed")
+                    console.log("Invoice printed");
+                    let invoicePrintMessage = {...this.state.invoicePrintMessage}
+                    invoicePrintMessage.severity = 'info';
+                    invoicePrintMessage.text = response.data;
+                    invoicePrintMessage.visible = 'visible';
+                    this.setState({invoicePrintMessage: invoicePrintMessage});
                 }
             })
             .catch(function (error) {
@@ -415,7 +431,12 @@ export default class ProductInvoice extends GenericComponent {
                 .then( response => {
                     // handle success
                     if(response.status === 200){
-                        console.log("Invoice payment done")
+                        console.log("Invoice payment done");
+                        let invoicePaymentMessage = {...this.state.invoicePaymentMessage}
+                        invoicePaymentMessage.severity = 'info';
+                        invoicePaymentMessage.text = response.data;
+                        invoicePaymentMessage.visible = 'visible';
+                        this.setState({invoicePaymentMessage: invoicePaymentMessage});
                     }
                 })
                 .catch(function (error) {
@@ -594,10 +615,14 @@ export default class ProductInvoice extends GenericComponent {
                                             </div>
                                         </div>
                                         <div className="p-col-12">
-                                            <div className="p-col" style={{padding:'.50em'}}>
+                                            <div className="p-col-4" style={{padding:'.50em'}}>
                                                 <Button label="Add" style={{marginRight: this.state.invoice.readonly ? '0px' : '7px', display: this.state.invoice.readonly ? 'none' : 'inline'}} icon="pi pi-plus" className="p-button-rounded" onClick={this.addNewItem}/>
                                                 <Button disabled={false} label="Print" icon="pi pi-print" style={{marginRight: '7px'}} className="p-button-rounded" onClick={this.print}/>
-                                                <Button disabled={false} label="Payment" icon="pi pi-money-bill" className="p-button-rounded" onClick={this.updateProductInvoicePaymentDialog}/>
+                                                <Button disabled={false} label="Payment" icon="pi pi-money-bill" style={{marginRight: '7px'}} className="p-button-rounded" onClick={this.updateProductInvoicePaymentDialog}/>
+                                                <Message style={{visibility: this.state.invoicePrintMessage.visible}}
+                                                    severity={this.state.invoicePrintMessage.severity}
+                                                    text={this.state.invoicePrintMessage.text}>
+                                                </Message>
                                             </div>
                                         </div>
                                         <div className="p-grid">
@@ -695,6 +720,15 @@ export default class ProductInvoice extends GenericComponent {
                                                            value={this.state.invoicePayment.remaining}/>
                                                 <label htmlFor="advanceAmount">Balance Amount</label>
                                             </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-grid">
+                                        <div className="p-col p=fluid">
+                                            <Message style={{visibility: this.state.invoicePaymentMessage.visible}}
+                                                     severity={this.state.invoicePaymentMessage.severity}
+                                                     text={this.state.invoicePaymentMessage.text}>
+                                            </Message>
                                         </div>
                                     </div>
                                 </div>

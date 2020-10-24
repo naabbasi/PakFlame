@@ -232,7 +232,7 @@ export default class IssueInventory extends GenericComponent {
                                         <div className="p-grid" style={{ paddingTop: '10px'}}>
                                             <div className="p-col-6" style={{padding:'.75em'}}>
                                                 <span className="p-float-label p-fluid">
-                                                    <WorkerAutoComplete ref={this.issuerAutoComplete} onChange={this.getSelectedIssuer}></WorkerAutoComplete>
+                                                    <WorkerAutoComplete label={"Please Select Issuer Name"} ref={this.issuerAutoComplete} onChange={this.getSelectedIssuer}></WorkerAutoComplete>
                                                 </span>
                                             </div>
 

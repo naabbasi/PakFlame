@@ -121,38 +121,40 @@ func (productInvoices *productInvoices) PaymentAgainstProductInvoice() {
 			}
 		}
 
-		payment := new(models.Payment)
-		connection.Where("entity_id = ? and invoice_number = ? and client_id = ?", customerPayment.CustomerId, customerPayment.Payment.InvoiceNumber, customerPayment.Customer.ClientId).
-			First(&payment)
+		if invoice.Readonly == false {
+			payment := new(models.Payment)
+			connection.Where("entity_id = ? and invoice_number = ? and client_id = ?", customerPayment.CustomerId, customerPayment.Payment.InvoiceNumber, customerPayment.Customer.ClientId).
+				First(&payment)
 
-		if payment.ID == uuid.Nil {
-			payment.CreatedAt = time.Now()
-			payment.InvoiceNumber = customerPayment.Payment.InvoiceNumber
-			payment.EntityId = customerPayment.CustomerId
-			payment.ClientId = customerPayment.Customer.ClientId
-			payment.Amount = customerPayment.Payment.Amount
-			payment.Remaining = customerPayment.Customer.RemainingAmount
-			payment.Total = invoice.InvoiceAmount
-			savePayment := connection.Save(&payment)
-
-			if savePayment.RowsAffected == 1 {
-				log.Print("Invoice payment has been added")
-			}
-		} else {
-			payment.UpdatedAt = time.Now()
-			if payment.Remaining == 0 {
+			if payment.ID == uuid.Nil {
+				payment.CreatedAt = time.Now()
+				payment.InvoiceNumber = customerPayment.Payment.InvoiceNumber
+				payment.EntityId = customerPayment.CustomerId
+				payment.ClientId = customerPayment.Customer.ClientId
 				payment.Amount = customerPayment.Payment.Amount
-				payment.Remaining = payment.Amount - customerPayment.Payment.Amount
-			} else {
-				payment.Amount = payment.Amount + customerPayment.Payment.Amount
-				payment.Remaining = payment.Remaining - customerPayment.Payment.Amount
-			}
+				payment.Remaining = customerPayment.Customer.RemainingAmount
+				payment.Total = invoice.InvoiceAmount
+				savePayment := connection.Save(&payment)
 
-			payment.Total = invoice.InvoiceAmount
-			//updatePayment := connection.Table("payments").Where("id = ?", payment.ID).Update(&payment)
-			updatePayment := connection.Save(&payment)
-			if updatePayment.RowsAffected == 1 {
-				log.Print("Invoice payment has been updated")
+				if savePayment.RowsAffected == 1 {
+					log.Print("Invoice payment has been added")
+				}
+			} else {
+				payment.UpdatedAt = time.Now()
+				if payment.Remaining == 0 {
+					payment.Amount = customerPayment.Payment.Amount
+					payment.Remaining = payment.Amount - customerPayment.Payment.Amount
+				} else {
+					payment.Amount = payment.Amount + customerPayment.Payment.Amount
+					payment.Remaining = payment.Remaining - customerPayment.Payment.Amount
+				}
+
+				payment.Total = invoice.InvoiceAmount
+				//updatePayment := connection.Table("payments").Where("id = ?", payment.ID).Update(&payment)
+				updatePayment := connection.Save(&payment)
+				if updatePayment.RowsAffected == 1 {
+					log.Print("Invoice payment has been updated")
+				}
 			}
 		}
 
@@ -168,7 +170,7 @@ func (productInvoices *productInvoices) PaymentAgainstProductInvoice() {
 		}
 
 		//connection.Commit()
-		return c.JSON(http.StatusOK, "Invoice Payment successfully")
+		return c.JSON(http.StatusOK, "Invoice Payment updated successfully")
 	})
 }
 

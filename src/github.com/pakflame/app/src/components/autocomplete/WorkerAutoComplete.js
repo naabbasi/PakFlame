@@ -8,7 +8,9 @@ export default class WorkerAutoComplete extends GenericComponent {
         this.state = {
             workerSuggestions: [],
             workers: [],
-            worker: null
+            worker: null,
+            disableWorkerAutoComplete: false,
+            workerAutoCompleteLabel: "Please Select Worker Name"
         };
 
         this.suggestWorkers = this.suggestWorkers.bind(this);
@@ -27,6 +29,14 @@ export default class WorkerAutoComplete extends GenericComponent {
             // handle error
             console.log(error);
         });
+
+        if(this.props.disabled !== undefined) {
+            this.setState({disableWorkerAutoComplete: this.props.disabled});
+        }
+
+        if(this.props.label !== undefined) {
+            this.setState({workerAutoCompleteLabel: this.props.label});
+        }
     }
 
     workerTemplate(worker) {
@@ -75,8 +85,8 @@ export default class WorkerAutoComplete extends GenericComponent {
 
     render() {
         return <div>
-            <AutoComplete dropdown={true}  field="firstName"
-                  placeholder="Please Select Worker Name"
+            <AutoComplete dropdown={true} disabled={this.state.disableWorkerAutoComplete} field="firstName"
+                  placeholder={this.state.workerAutoCompleteLabel}
                   readonly={false}
                   maxLength={250} itemTemplate={this.workerTemplate} selectedItemTemplate={this.selectedWorkerTemplate}
                   value={this.state.worker} onChange={(e) => this.onSelectWorker(e)}

@@ -9,7 +9,8 @@ export default class CustomerAutoComplete extends GenericComponent {
             customerSuggestions: [],
             customers: [],
             customer: null,
-            disabledAutoComplete: false
+            disableCustomerAutoComplete: false,
+            customerAutoCompleteLabel: "Please Select Customer Name"
         };
 
         this.suggestCustomers = this.suggestCustomers.bind(this);
@@ -30,7 +31,11 @@ export default class CustomerAutoComplete extends GenericComponent {
         });
 
         if(this.props.disabled !== undefined) {
-            this.setState({disabledAutoComplete: this.props.disabled});
+            this.setState({disableCustomerAutoComplete: this.props.disabled});
+        }
+
+        if(this.props.label !== undefined) {
+            this.setState({customerAutoCompleteLabel: this.props.label});
         }
     }
 
@@ -82,8 +87,8 @@ export default class CustomerAutoComplete extends GenericComponent {
 
     render() {
         return <div>
-            <AutoComplete dropdown={true} disabled={this.state.disabledAutoComplete} field="firstName"
-                  placeholder="Please Select Customer Name"
+            <AutoComplete dropdown={true} disabled={this.state.disableCustomerAutoComplete} field="firstName"
+                  placeholder={this.state.customerAutoCompleteLabel}
                   readonly={false}
                   maxLength={250} itemTemplate={this.customerTemplate} selectedItemTemplate={this.selectedCustomerTemplate}
                   value={this.state.customer} onChange={(e) => this.onSelectCustomer(e)}
