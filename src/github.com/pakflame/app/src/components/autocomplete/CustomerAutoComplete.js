@@ -8,7 +8,8 @@ export default class CustomerAutoComplete extends GenericComponent {
         this.state = {
             customerSuggestions: [],
             customers: [],
-            customer: null
+            customer: null,
+            disabledAutoComplete: false
         };
 
         this.suggestCustomers = this.suggestCustomers.bind(this);
@@ -27,6 +28,10 @@ export default class CustomerAutoComplete extends GenericComponent {
             // handle error
             console.log(error);
         });
+
+        if(this.props.disabled !== undefined) {
+            this.setState({disabledAutoComplete: this.props.disabled});
+        }
     }
 
     customerTemplate(customer) {
@@ -77,7 +82,7 @@ export default class CustomerAutoComplete extends GenericComponent {
 
     render() {
         return <div>
-            <AutoComplete dropdown={true}  field="firstName"
+            <AutoComplete dropdown={true} disabled={this.state.disabledAutoComplete} field="firstName"
                   placeholder="Please Select Customer Name"
                   readonly={false}
                   maxLength={250} itemTemplate={this.customerTemplate} selectedItemTemplate={this.selectedCustomerTemplate}

@@ -371,27 +371,40 @@ export default class ProductInvoice extends GenericComponent {
     calculateProductInvoiceAmount() {
         let invoicePayment = this.state.invoicePayment;
         let paidAmount = invoicePayment.amount;
-        let remainingInvoiceAmount = invoicePayment.invoiceAmount - paidAmount;
+        let remainingInvoiceAmount = 0;
+
+        if(invoicePayment.amount > invoicePayment.invoiceAmount){
+            paidAmount = invoicePayment.invoiceAmount;
+            invoicePayment.amount = paidAmount;
+        }
+
         invoicePayment.invoiceNumber = this.Int(this.state.invoiceId);
         invoicePayment.customerId = this.state.invoice['customerId'];
         invoicePayment.advanceAmount = this.tempAdvanceAmount;
         invoicePayment.remainingAmount = this.tempRemainingAmount;
 
+        if(invoicePayment.remainingAmount === 0) {
+            remainingInvoiceAmount = invoicePayment.invoiceAmount - paidAmount
+        } else {
+            remainingInvoiceAmount = invoicePayment.remainingAmount - paidAmount
+        }
+
         if(paidAmount !== 0) {
             if(remainingInvoiceAmount === 0) {
                 invoicePayment.remainingAmount = remainingInvoiceAmount;
             } else {
-                invoicePayment.remainingAmount = invoicePayment.remainingAmount + remainingInvoiceAmount;
+                //invoicePayment.remainingAmount = invoicePayment.remainingAmount + remainingInvoiceAmount;
+                invoicePayment.remainingAmount = remainingInvoiceAmount;
             }
-
-            invoicePayment.remainingAmount = remainingInvoiceAmount;
         }
 
         if(this.tempAdvanceAmount !== 0) {
             invoicePayment.advanceAmount = this.tempAdvanceAmount - paidAmount;
+            invoicePayment.remaining = this.tempAdvanceAmount - paidAmount;
+        } else {
+            invoicePayment.remaining = remainingInvoiceAmount;
         }
 
-        invoicePayment.remaining = this.tempAdvanceAmount - paidAmount;
         this.setState({invoicePayment: invoicePayment});
     }
 
@@ -472,14 +485,14 @@ export default class ProductInvoice extends GenericComponent {
                                         <div className="p-grid">
                                             <div className="p-col" style={{padding:'.50em'}}>
                                                 <span className="p-float-label p-fluid">
-                                                    <CustomerAutoComplete ref={this.getCustomerAutoComplete} onChange={this.getSelectedCustomer}></CustomerAutoComplete>
+                                                    <CustomerAutoComplete disabled={this.state.invoice.readonly} ref={this.getCustomerAutoComplete} onChange={this.getSelectedCustomer}></CustomerAutoComplete>
                                                 </span>
                                             </div>
 
                                             <div className="p-col-3" style={{padding:'.50em'}}>
                                                 <span className="p-float-label p-fluid">
                                                     <span className="p-float-label p-fluid">
-                                                        <InputText id="billNumber" maxLength={250} onChange={(e) => {this.updateProperty('billNumber', e.target.value)}}
+                                                        <InputText id="billNumber" readOnly={this.state.invoice.readonly} maxLength={250} onChange={(e) => {this.updateProperty('billNumber', e.target.value)}}
                                                                    onBlur={(e) => {this.updateProperty('billNumber', this.Float(e.target.value))}} value={this.state.invoice.billNumber}
                                                                    value={this.state.invoice.billNumber}/>
                                                         <label htmlFor="billNumber">Bill Number</label>
@@ -489,7 +502,7 @@ export default class ProductInvoice extends GenericComponent {
 
                                             <div className="p-col-3" style={{padding:'.50em'}}>
                                                 <span className="p-float-label p-fluid">
-                                                    <Calendar id="createdAt" hideOnDateTimeSelect={true} showTime={true} onChange={(e) => {this.updateProperty('createdAt', e.target.value)}} value={this.state.invoice.createdAt}/>
+                                                    <Calendar id="createdAt" disabled={this.state.invoice.readonly} hideOnDateTimeSelect={true} showTime={true} onChange={(e) => {this.updateProperty('createdAt', e.target.value)}} value={this.state.invoice.createdAt}/>
                                                     <label htmlFor="createdAt">Date</label>
                                                 </span>
                                             </div>
@@ -500,21 +513,21 @@ export default class ProductInvoice extends GenericComponent {
                                         <div className="p-grid">
                                             <div className="p-col" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
-                                                        <InputText id="partyName" maxLength={250} onChange={(e) => {this.updateProperty('partyName', e.target.value)}} value={this.state.invoice.partyName}/>
+                                                        <InputText id="partyName" readOnly={this.state.invoice.readonly} maxLength={250} onChange={(e) => {this.updateProperty('partyName', e.target.value)}} value={this.state.invoice.partyName}/>
                                                         <label htmlFor="partyName">Party Name</label>
                                                     </span>
                                             </div>
 
                                             <div className="p-col-3" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
-                                                        <InputText id="transport" onChange={(e) => {this.updateProperty('transport', e.target.value)}} value={this.state.invoice.transport}/>
+                                                        <InputText id="transport" readOnly={this.state.invoice.readonly} onChange={(e) => {this.updateProperty('transport', e.target.value)}} value={this.state.invoice.transport}/>
                                                         <label htmlFor="transport">Transport</label>
                                                     </span>
                                             </div>
 
                                             <div className="p-col-3" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
-                                                        <InputText id="transportCharges"
+                                                        <InputText id="transportCharges" readOnly={this.state.invoice.readonly}
                                                                    onChange={(e) => {this.updateProperty('transportCharges', e.target.value)}}
                                                                    onBlur={(e) => {this.updateProperty('transportCharges', this.Float(e.target.value))}} value={this.state.invoice.transportCharges}/>
                                                         <label htmlFor="transportCharges">Transport Charges</label>
@@ -526,7 +539,7 @@ export default class ProductInvoice extends GenericComponent {
                                         <div className="p-grid">
                                             <div className="p-col" style={{padding:'.50em'}}>
                                                     <span className="p-float-label p-fluid">
-                                                        <InputText ref="address" maxLength={500} onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.invoice.address}/>
+                                                        <InputText ref="address" readOnly={this.state.invoice.readonly} maxLength={500} onChange={(e) => {this.updateProperty('address', e.target.value)}} value={this.state.invoice.address}/>
                                                         <label htmlFor="address">Address</label>
                                                     </span>
                                             </div>
@@ -582,7 +595,7 @@ export default class ProductInvoice extends GenericComponent {
                                         </div>
                                         <div className="p-col-12">
                                             <div className="p-col" style={{padding:'.50em'}}>
-                                                <Button label="Add" style={{marginRight: this.state.invoice.readonly ? '0px' : '7px', display: this.state.invoice.readonly ? 'none' : 'block'}} icon="pi pi-plus" className="p-button-rounded" onClick={this.addNewItem}/>
+                                                <Button label="Add" style={{marginRight: this.state.invoice.readonly ? '0px' : '7px', display: this.state.invoice.readonly ? 'none' : 'inline'}} icon="pi pi-plus" className="p-button-rounded" onClick={this.addNewItem}/>
                                                 <Button disabled={false} label="Print" icon="pi pi-print" style={{marginRight: '7px'}} className="p-button-rounded" onClick={this.print}/>
                                                 <Button disabled={false} label="Payment" icon="pi pi-money-bill" className="p-button-rounded" onClick={this.updateProductInvoicePaymentDialog}/>
                                             </div>

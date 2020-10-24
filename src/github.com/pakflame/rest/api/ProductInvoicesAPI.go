@@ -181,20 +181,40 @@ func (productInvoices *productInvoices) PrintInvoice() {
 		connection.Where("id = ? and client_id = ?", id, http_util.GetUserInfo(c).ClientId).
 			Find(&result.Invoice)
 
-		result.Invoice.Readonly = true
-
 		connection.Where("invoice_number = ? and client_id = ?", id, http_util.GetUserInfo(c).ClientId).
 			Find(&result.InvoiceDetails)
+
+		generate.Pdf(result)
+
+		customer := new(models.Customer)
+		connection.Where("id = ? and client_id = ?", result.Invoice.CustomerId, http_util.GetUserInfo(c).ClientId).
+			First(&customer)
+
+		if customer.ID != uuid.Nil {
+			if false == result.Invoice.Readonly {
+				if customer.RemainingAmount != 0 {
+					customer.RemainingAmount = customer.RemainingAmount + (result.InvoiceAmount + result.TransportCharges)
+				} else {
+					customer.RemainingAmount = result.Payment.Total
+				}
+
+				updateCustomerPayment := connection.Model(&customer).Updates(map[string]interface{}{"remaining_amount": customer.RemainingAmount})
+				if updateCustomerPayment.RowsAffected == 1 {
+					log.Print("Customer payment has been updated")
+				}
+			} else {
+				log.Print("Invoice has been marked as Readonly so no update in customer payment")
+			}
+		}
 
 		payment := new(models.Payment)
 		connection.Where("entity_id = ? and invoice_number = ? and client_id = ?", result.Invoice.CustomerId, result.Invoice.ID, result.Invoice.ClientId).
 			First(&payment)
 
-		generate.Pdf(result)
-
 		if payment.ID == uuid.Nil {
 			result.Payment.CreatedAt = time.Now()
 			result.Payment.InvoiceNumber = result.Invoice.ID
+			result.Payment.Remaining = result.InvoiceAmount + result.TransportCharges
 			result.Payment.EntityId = result.Invoice.CustomerId
 			result.Payment.ClientId = result.Invoice.ClientId
 			savePayment := connection.Save(&result.Payment)
