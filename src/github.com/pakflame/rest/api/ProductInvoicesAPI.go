@@ -11,6 +11,7 @@ import (
 	"github.com/pakflame/util/http_util"
 	"github.com/pakflame/util/pdf/generate"
 	"log"
+	"math"
 	"net/http"
 	"strconv"
 	"time"
@@ -95,7 +96,11 @@ func (productInvoices *productInvoices) PaymentAgainstProductInvoice() {
 
 		fmt.Printf("Payment: Number: %d, Amount: %.2f, Remaining: %.2f", invoiceNumber, invoiceAmount, invoiceRemaining)
 		connection := productInvoices.dbSettings.GetDBConnection()
-		connection.Begin()
+		//connection.Begin()
+
+		invoice := new(models.Invoice)
+		connection.Where("id = ? and client_id = ?", customerPayment.Payment.InvoiceNumber, customerPayment.Customer.ClientId).
+			First(&invoice)
 
 		customer := new(models.Customer)
 		connection.Where("id = ? and client_id = ?", customerPayment.CustomerId, customerPayment.Customer.ClientId).
@@ -103,7 +108,13 @@ func (productInvoices *productInvoices) PaymentAgainstProductInvoice() {
 
 		if customer.ID != uuid.Nil {
 			customer.AdvanceAmount = customerPayment.Customer.AdvanceAmount
-			customer.RemainingAmount = customerPayment.Customer.RemainingAmount
+			if customerPayment.Customer.RemainingAmount == 0 {
+				customer.RemainingAmount = 0
+			} else if customer.RemainingAmount != 0 {
+				customer.RemainingAmount = customer.RemainingAmount - customerPayment.Payment.Amount
+			} else {
+				customer.RemainingAmount = customer.RemainingAmount - customerPayment.Payment.Amount
+			}
 			saveCustomer := connection.Save(&customer)
 			if saveCustomer.RowsAffected == 1 {
 				log.Print("Customer payment has been updated")
@@ -120,7 +131,8 @@ func (productInvoices *productInvoices) PaymentAgainstProductInvoice() {
 			payment.EntityId = customerPayment.CustomerId
 			payment.ClientId = customerPayment.Customer.ClientId
 			payment.Amount = customerPayment.Payment.Amount
-			payment.Remaining = customerPayment.Payment.Remaining
+			payment.Remaining = customerPayment.Customer.RemainingAmount
+			payment.Total = invoice.InvoiceAmount
 			savePayment := connection.Save(&payment)
 
 			if savePayment.RowsAffected == 1 {
@@ -128,15 +140,34 @@ func (productInvoices *productInvoices) PaymentAgainstProductInvoice() {
 			}
 		} else {
 			payment.UpdatedAt = time.Now()
-			payment.Remaining = payment.Amount - customerPayment.Payment.Amount
-			payment.Amount = customerPayment.Payment.Amount
-			updatePayment := connection.Table("payments").Update(&payment)
+			if payment.Remaining == 0 {
+				payment.Amount = customerPayment.Payment.Amount
+				payment.Remaining = payment.Amount - customerPayment.Payment.Amount
+			} else {
+				payment.Amount = payment.Amount + customerPayment.Payment.Amount
+				payment.Remaining = payment.Remaining - customerPayment.Payment.Amount
+			}
+
+			payment.Total = invoice.InvoiceAmount
+			//updatePayment := connection.Table("payments").Where("id = ?", payment.ID).Update(&payment)
+			updatePayment := connection.Save(&payment)
 			if updatePayment.RowsAffected == 1 {
 				log.Print("Invoice payment has been updated")
 			}
 		}
 
-		connection.Commit()
+		if invoice.InvoicePaidAmount == 0 {
+			invoice.InvoicePaidAmount = math.Abs(customerPayment.Payment.Amount)
+		} else {
+			invoice.InvoicePaidAmount = invoice.InvoicePaidAmount + math.Abs(customerPayment.Payment.Amount)
+		}
+		invoice.InvoiceRemainingAmount = invoice.InvoiceAmount - invoice.InvoicePaidAmount
+		makeInvoiceReadonly := connection.Save(invoice)
+		if makeInvoiceReadonly.RowsAffected == 1 {
+			log.Print("Invoice has been set to readonly")
+		}
+
+		//connection.Commit()
 		return c.JSON(http.StatusOK, "Invoice Payment successfully")
 	})
 }
@@ -174,14 +205,16 @@ func (productInvoices *productInvoices) PrintInvoice() {
 		} else {
 			payment.UpdatedAt = time.Now()
 			payment.Total = result.Payment.Total
-			updatePayment := connection.Table("payments").Update(&payment)
+			updatePayment := connection.Table("payments").Where("invoice_number = ?", result.Invoice.ID).Update(&payment)
 			if updatePayment.RowsAffected == 1 {
 				log.Print("Invoice payment has been updated")
 			}
 		}
 
 		result.Readonly = true
-		makeInvoiceReadonly := connection.Table("invoices").Update(&result.Invoice)
+		result.InvoiceAmount = result.Payment.Total
+		result.InvoiceRemainingAmount = result.Payment.Total
+		makeInvoiceReadonly := connection.Table("invoices").Where("id = ?", result.Invoice.ID).Update(&result.Invoice)
 		if makeInvoiceReadonly.RowsAffected == 1 {
 			log.Print("Invoice has been set to readonly")
 		}

@@ -68,7 +68,8 @@ export default class ProductInvoice extends GenericComponent {
                 disableSaveButton: false,
                 invoice: {
                     id: data['id'], customerId: data['customerId'], customerName: data['customerName'], createdAt: new Date(data['createdAt']), billNumber: data['billNumber'],
-                    invoiceAmount: data['invoiceAmount'],partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'], readonly: data['readonly'],
+                    partyName: data['partyName'], transport: data['transport'], transportCharges: data['transportCharges'], address: data['address'], readonly: data['readonly'],
+                    invoiceAmount: data['invoiceAmount'], invoicePaidAmount: data['invoicePaidAmount'], invoiceRemainingAmount: data['invoiceRemainingAmount'],
                     details: {id: 0, itemName: '', createdAt: '', unit: '', productQuantities: 0, productPrice: 0, amount: 0, productDiscount: 0, totalAmount: 0, customerId: ''},
                 },
             });
@@ -78,7 +79,8 @@ export default class ProductInvoice extends GenericComponent {
             this.setState({
                 disableButtons: false,
                 invoice: {
-                    id: 0, customerId: '', customerName: '', createdAt: new Date(), billNumber: 0, partyName: '', transport: '', transportCharges: 0, address: '', readonly: false, invoiceAmount: 0,
+                    id: 0, customerId: '', customerName: '', createdAt: new Date(), billNumber: 0, partyName: '', transport: '', transportCharges: 0, address: '', readonly: false,
+                    invoiceAmount: 0, invoicePaidAmount: 0, invoiceRemainingAmount: 0,
                     details: {id: 0, itemName: '', createdAt: '', unit: '', productQuantities: 0, productPrice: 0, amount: 0, productDiscount: 0, totalAmount: 0, customerId: ''},
                 },
             });
@@ -344,7 +346,7 @@ export default class ProductInvoice extends GenericComponent {
                 let invoicePayment = {...this.state.invoicePayment}
                 invoicePayment.advanceAmount = response.data['advanceAmount'];
                 invoicePayment.remainingAmount = response.data['remainingAmount'];
-                invoicePayment.invoiceAmount = this.state.invoice['invoiceAmount'];
+                invoicePayment.invoiceAmount = this.state.invoice['invoiceRemainingAmount'];
                 this.setState({invoicePayment: invoicePayment});
             }
         })
@@ -374,10 +376,21 @@ export default class ProductInvoice extends GenericComponent {
         invoicePayment.customerId = this.state.invoice['customerId'];
         invoicePayment.advanceAmount = this.tempAdvanceAmount;
         invoicePayment.remainingAmount = this.tempRemainingAmount;
+
         if(paidAmount !== 0) {
-            invoicePayment.advanceAmount = this.tempAdvanceAmount - paidAmount;
-            invoicePayment.remainingAmount = invoicePayment.remainingAmount + remainingInvoiceAmount;
+            if(remainingInvoiceAmount === 0) {
+                invoicePayment.remainingAmount = remainingInvoiceAmount;
+            } else {
+                invoicePayment.remainingAmount = invoicePayment.remainingAmount + remainingInvoiceAmount;
+            }
+
+            invoicePayment.remainingAmount = remainingInvoiceAmount;
         }
+
+        if(this.tempAdvanceAmount !== 0) {
+            invoicePayment.advanceAmount = this.tempAdvanceAmount - paidAmount;
+        }
+
         invoicePayment.remaining = this.tempAdvanceAmount - paidAmount;
         this.setState({invoicePayment: invoicePayment});
     }
@@ -569,7 +582,7 @@ export default class ProductInvoice extends GenericComponent {
                                         </div>
                                         <div className="p-col-12">
                                             <div className="p-col" style={{padding:'.50em'}}>
-                                                <Button label="Add" disabled={this.state.disableAddItemButton} style={{marginRight: '7px'}} icon="pi pi-plus" className="p-button-rounded" onClick={this.addNewItem}/>
+                                                <Button label="Add" style={{marginRight: this.state.invoice.readonly ? '0px' : '7px', display: this.state.invoice.readonly ? 'none' : 'block'}} icon="pi pi-plus" className="p-button-rounded" onClick={this.addNewItem}/>
                                                 <Button disabled={false} label="Print" icon="pi pi-print" style={{marginRight: '7px'}} className="p-button-rounded" onClick={this.print}/>
                                                 <Button disabled={false} label="Payment" icon="pi pi-money-bill" className="p-button-rounded" onClick={this.updateProductInvoicePaymentDialog}/>
                                             </div>
