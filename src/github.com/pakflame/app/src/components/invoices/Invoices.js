@@ -191,7 +191,7 @@ export default class Invoices extends GenericComponent {
                             <Column field="createdAt" body={this.dateFormatter} header="Date" sortable={true} style={{textAlign: 'center', width: '12%'}}/>
                             <Column field="customerName" header="Customer Name" body={this.customerInfo} sortable={true} style={{textAlign: 'left', width: '15%'}}/>
                             <Column field="partyName" header="Party Name" sortable={true} style={{textAlign: 'left', width: '15%'}}/>
-                            <Column field="billNumber" header="Bill #" sortable={true} style={{textAlign: 'left', width: '8%'}}/>
+                            {/*<Column field="billNumber" header="Bill #" sortable={true} style={{textAlign: 'left', width: '8%'}}/>*/}
                             <Column field="invoiceAmount" header="Bill Amount" sortable={true} style={{textAlign: 'center', width: '13%'}}/>
                             <Column field="invoicePaidAmount" header="Bill Paid Amount" sortable={true} style={{textAlign: 'center', width: '15%'}}/>
                             <Column field="invoiceRemainingAmount" header="Bill Remaining Amount" sortable={true} style={{textAlign: 'center', width: '15%'}}/>
