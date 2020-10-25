@@ -584,11 +584,11 @@ export default class ProductInvoice extends GenericComponent {
                                         </div>
                                     </div>
                                     <div className="p-col-12">
-                                        <div className="p-col-2" style={{padding:'.50em', float: 'left'}}>
+                                        <div className="p-col-3" style={{padding:'.50em', float: 'left'}}>
                                             <Button disabled={this.state.disableSaveButton} style={{marginRight: '7px'}} label="Save/Update" icon="pi pi-save" className="p-button-rounded" onClick={this.saveInvoice}/>
                                             <Button disabled={this.state.disableButtons} label="Back" icon="pi pi-arrow-circle-left" className="p-button-rounded p-button-info" onClick={(e)=>{window.location = '#/invoices/all'}}/>
                                         </div>
-                                        <div className="p-col-10" style={{padding:'.50em', float: 'right'}}>
+                                        <div className="p-col-9" style={{padding:'.50em', float: 'right'}}>
                                             <Message style={{visibility: this.state.invoiceMessage.visible}}
                                                      severity={this.state.invoiceMessage.severity}
                                                      text={this.state.invoiceMessage.text}>
