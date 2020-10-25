@@ -16,7 +16,7 @@ type Result struct {
 
 var (
 	align     = []string{"C", "L", "R", "R", "R", "R", "R"}
-	colsWidth = []float64{6, 39, 10, 15, 20, 20, 20}
+	colsWidth = []float64{8, 50, 23, 24, 25}
 )
 
 func Pdf(result *Result) {
@@ -79,7 +79,7 @@ func generateHeader(result *Result, pdf *gofpdf.Fpdf) int64 {
 }
 
 func generateTable(result *Result, pdf *gofpdf.Fpdf) {
-	headers := []string{"S #", "Item Description", "Qty", "Price", "Amount", "Discount", "Total Amount"}
+	headers := []string{"S #", "Item Description", "Quantity", "Price" /*"Amount",*/, "Total Amount"}
 
 	pdf.SetFont("Arial", "B", 8)
 	pdf.SetFillColor(240, 240, 240)
@@ -141,9 +141,9 @@ func generateTable(result *Result, pdf *gofpdf.Fpdf) {
 		pdf.CellFormat(colsWidth[1], 5, invoiceDetails.ItemName, "1", 0, align[1], false, 0, "")
 		pdf.CellFormat(colsWidth[2], 5, fmt.Sprintf("%d", quantities), "1", 0, align[2], false, 0, "")
 		pdf.CellFormat(colsWidth[3], 5, fmt.Sprintf("%.2f", price), "1", 0, align[3], false, 0, "")
-		pdf.CellFormat(colsWidth[4], 5, fmt.Sprintf("%.2f", amount), "1", 0, align[4], false, 0, "")
-		pdf.CellFormat(colsWidth[5], 5, fmt.Sprintf("%.0f", discountOnItem), "1", 0, align[5], false, 0, "")
-		pdf.CellFormat(colsWidth[6], 5, fmt.Sprintf("%.2f", totalAmount), "1", 0, align[6], false, 0, "")
+		/*pdf.CellFormat(colsWidth[4], 5, fmt.Sprintf("%.2f", amount), "1", 0, align[4], false, 0, "")*/
+		/*pdf.CellFormat(colsWidth[5], 5, fmt.Sprintf("%.0f", discountOnItem), "1", 0, align[5], false, 0, "")*/
+		pdf.CellFormat(colsWidth[4], 5, fmt.Sprintf("%.2f", totalAmount), "1", 0, align[4], false, 0, "")
 		pdf.Ln(0)
 	}
 
@@ -151,12 +151,12 @@ func generateTable(result *Result, pdf *gofpdf.Fpdf) {
 	//Add grand total
 	pdf.SetFooterFunc(func() {
 		pdf.CellFormat(25, 5, "", "0", 0, "L", false, 0, "")
-		pdf.CellFormat(20, 5, "Gross Amount", "1", 0, "L", false, 0, "")
-		pdf.CellFormat(10, 5, fmt.Sprintf("%.d", totalQuantities), "1", 0, "R", false, 0, "")
-		pdf.CellFormat(15, 5, fmt.Sprintf("%.2f", totalPrice), "1", 0, "R", false, 0, "")
-		pdf.CellFormat(20, 5, fmt.Sprintf("%.2f", totalAmount), "1", 0, "R", false, 0, "")
-		pdf.CellFormat(20, 5, fmt.Sprintf("%.0f", totalDiscount), "1", 0, "R", false, 0, "")
-		pdf.CellFormat(20, 5, fmt.Sprintf("%.2f", sumOfTotalAmount+transportCharges), "1", 0, "R", false, 0, "")
+		pdf.CellFormat(33, 5, "Gross Amount", "1", 0, "L", false, 0, "")
+		pdf.CellFormat(23, 5, fmt.Sprintf("%.d", totalQuantities), "1", 0, "R", false, 0, "")
+		pdf.CellFormat(24, 5, fmt.Sprintf("%.2f", totalPrice), "1", 0, "R", false, 0, "")
+		/*pdf.CellFormat(20, 5, fmt.Sprintf("%.2f", totalAmount), "1", 0, "R", false, 0, "")*/
+		/*pdf.CellFormat(20, 5, fmt.Sprintf("%.0f", totalDiscount), "1", 0, "R", false, 0, "")*/
+		pdf.CellFormat(25, 5, fmt.Sprintf("%.2f", sumOfTotalAmount+transportCharges), "1", 0, "R", false, 0, "")
 	})
 
 	//TODO: Update Received/Receivable amount from invoice or customer payment section
